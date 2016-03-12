@@ -1,0 +1,87 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition  xmlns="http://www.w3.org/1999/xhtml"
+                 xmlns:h="http://java.sun.com/jsf/html"
+                 xmlns:p="http://primefaces.org/ui"
+                 xmlns:ui="http://java.sun.com/jsf/facelets"
+                 xmlns:f="http://java.sun.com/jsf/core"
+                 template="#{sessionState.pathTemplate}"
+                 xmlns:bap="http://java.sun.com/jsf/composite/bap.comp">
+
+    <ui:define name="content">
+        <f:view>
+            <p:panel header="LISTA DE USUARIOS" style="border-style: hidden;text-align: center">
+                <h:form id="form">
+                    <div align="center" style="padding:1em 2.2em;">
+                        <div align="center" style="padding:1em 2.2em;">
+                            <p:commandButton value="REGISTRAR USUARIO" action="#{admUsuarioListaBacking.irRegistraUsuario()}" ajax="false" style="width: 200px;height: 25px" icon="ui-icon-disk"/>
+                        </div> 
+                        <p:dataTable var="item" 
+                                     value="#{admUsuarioListaBacking.listaUsuarios}"
+                                     rowKey="#{item.idUsuario}" 
+                                     id="itemsTable"
+                                     widgetVar="itemsTable"
+                                     emptyMessage="No existen datos para listar"
+                                     style="height: 60%;width: 50%;border: 1px solid #3C82B4;background-color: #E6F1F9;"
+                                     scrollable="true" scrollHeight="200">  
+                            <f:facet name="header">  
+                                <p:outputLabel value="Listado de Usuarios Active Directory Registrados " style="color: #3C82B4"/>
+                            </f:facet>  
+
+                            <p:column  headerText="Login"
+                                       width="30%">  
+                                #{item.login}
+                            </p:column>  
+                            <p:column headerText="Estado Usuario"
+                                      width="20%">
+                                #{item.estadoUsuario}  
+                            </p:column>
+                            <p:column  headerText="Tipo Usuario"
+                                       width="20%">  
+                                #{item.tipoUsuario}
+                            </p:column>  
+                            <p:column  headerText="Editar"
+                                       width="15%" style="text-align: center">  
+                                <p:commandButton ajax="false" 
+                                                 action="#{admUsuarioListaBacking.irModificarUsuario(item)}"
+                                                 icon="ui-icon-pencil" 
+                                                 />    
+                            </p:column>
+                            <p:column  headerText="Eliminar"
+                                       width="15%" style="text-align: center">  
+                                <p:commandButton ajax="false" 
+                                                 action="#{admUsuarioListaBacking.seleccionaAdmUsuario(item)}"
+                                                 icon="ui-icon-trash" 
+                                                 />    
+
+                            </p:column>
+                            <f:facet name="footer">  
+
+                            </f:facet>  
+                        </p:dataTable>
+                        <p:dialog id="dialogoDetalle" header="Dialogo Confirmacion" widgetVar="dialogoDetalle" 
+                                  modal="true" showEffect="fade" hideEffect="fade" resizable="false" width="50%" height="80%" closable="false">
+
+                            <div style="padding:1em 2.2em;" align="center" >
+
+
+                            </div>
+                        </p:dialog>
+                    </div>
+
+                    <p:dialog id="eliminacion" header="Dialogo Confirmación" widgetVar="dialogoEliminacion" 
+                              modal="true" showEffect="fade" hideEffect="fade" resizable="false" width="50%" height="80%" closable="false">
+
+                        <div align="center" style="padding:1em 2.2em;">
+                            <bap:informacion mensaje="Esta seguro de eliminar el Proyecto." dimension="90%"/>
+                            <h:panelGrid columns="2">
+                                <p:commandButton value="SI" action="#{admUsuarioListaBacking.eliminarUsuario()}" ajax="false" update=":form:itemsTable"/>
+                                <p:commandButton value="NO" styleClass="ui-confirmdialog-yes" onclick="PF(dialogoEliminacion).hide();" ajax="false"/>
+                            </h:panelGrid>
+                        </div>
+                    </p:dialog>
+                </h:form>
+            </p:panel>
+        </f:view>
+    </ui:define>
+</ui:composition>

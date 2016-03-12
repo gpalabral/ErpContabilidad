@@ -1,0 +1,519 @@
+<?xml version='1.0' encoding='UTF-8'?>
+
+<!-- =========== FULL CONFIGURATION FILE ================================== -->
+
+<faces-config version="2.0"
+              xmlns="http://java.sun.com/xml/ns/javaee" 
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+              xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_2_0.xsd">
+
+    <application>
+        <locale-config>
+            <default-locale>es</default-locale>
+        </locale-config>
+        <variable-resolver>
+            org.springframework.web.jsf.SpringBeanVariableResolver
+        </variable-resolver>
+    </application>
+    
+    <navigation-rule>
+        <navigation-case>
+            <from-outcome>index</from-outcome>
+            <to-view-id>/index.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    
+    
+    <!-- **************REGLAS DE NAVEGACION PARA CRM****************-->        
+    <navigation-rule>
+        <navigation-case>
+            <from-outcome>nivelesMascara</from-outcome>
+            <to-view-id>/entidades/nivelesMascara.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    
+    <navigation-rule>
+        <navigation-case>
+            <from-outcome>nivelesMascaraCentroCosto</from-outcome>
+            <to-view-id>/entidades/nivelesMascaraCentroCosto.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    
+    <navigation-rule>
+        <navigation-case>
+            <from-outcome>entidades</from-outcome>
+            <to-view-id>/entidades/entidades.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    
+    <navigation-rule>
+        <navigation-case>
+            <from-outcome>auxiliares</from-outcome>
+            <to-view-id>/auxiliares/auxiliares.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+
+    <navigation-rule>
+        <navigation-case>
+            <from-outcome>objetosAdicionar</from-outcome>
+            <to-view-id>/entidades/objetosAdicionar.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    
+    <navigation-rule>
+        <navigation-case>
+            <from-outcome>objetosAdicionar</from-outcome>
+            <to-view-id>/entidades/objetosAdicionar.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    
+    <navigation-rule>
+        <navigation-case>
+            <from-outcome>objetosModificar</from-outcome>
+            <to-view-id>/entidades/objetosModificar.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    
+    <navigation-rule>
+        <navigation-case>
+            <from-outcome>definicionCuentas</from-outcome>
+            <to-view-id>/entidades/definicionCuentas.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+        
+    <navigation-rule>
+        <navigation-case>
+            <from-outcome>planCuentas</from-outcome>
+            <to-view-id>/entidades/planCuentas.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    
+    <navigation-rule>
+        <navigation-case>
+            <from-outcome>gestionesForm</from-outcome>
+            <to-view-id>/parametrosGestion/gestionesForm.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    
+    <navigation-rule>
+        <navigation-case>
+            <from-outcome>auxiliaresForm</from-outcome>
+            <to-view-id>/auxiliares/auxiliaresForm.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+        
+    <navigation-rule>
+        <navigation-case>
+            <from-outcome>empresa</from-outcome>
+            <to-view-id>/parametrizacion/empresa.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    
+    <navigation-rule>
+        <navigation-case>
+            <from-outcome>datosEmpresa</from-outcome>
+            <to-view-id>/parametrizacion/datosEmpresa.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    
+    <navigation-rule>
+        <navigation-case>
+            <from-outcome>datosDeEmpresa</from-outcome>
+            <to-view-id>/parametrizacion/datosDeEmpresa.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+     
+    <navigation-rule>
+        <navigation-case>
+            <from-outcome>tipoCambioList</from-outcome>
+            <to-view-id>/parametrizacion/tipoCambioList.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    
+    <navigation-rule>
+        <navigation-case>
+            <from-outcome>tipoCambioForm</from-outcome>
+            <to-view-id>/parametrizacion/tipoCambioForm.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    
+    <navigation-rule>
+        <navigation-case>
+            <from-outcome>centrosDeCosto</from-outcome>
+            <to-view-id>/centrosDeCosto/centrosDeCosto.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    
+    <navigation-rule>
+        <navigation-case>
+            <from-outcome>listaDistribucionDeCentrosDeCosto</from-outcome>
+            <to-view-id>/centrosDeCosto/listaDistribucionDeCentrosDeCosto.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    
+    <navigation-rule>
+        <navigation-case>
+            <from-outcome>centroDeCostoAdicionar</from-outcome>
+            <to-view-id>/centrosDeCosto/centroDeCostoAdicionar.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    
+    <navigation-rule>
+        <navigation-case>
+            <from-outcome>centroDeCostoModificar</from-outcome>
+            <to-view-id>/centrosDeCosto/centroDeCostoModificar.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    
+    <navigation-rule>
+        <navigation-case>
+            <from-outcome>asignacionCentroDeCosto</from-outcome>
+            <to-view-id>/centrosDeCosto/asignacionCentroDeCosto.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    
+    <navigation-rule>
+        <navigation-case>
+            <from-outcome>distribucionDeCentroDeCosto</from-outcome>
+            <to-view-id>/centrosDeCosto/distribucionDeCentroDeCosto.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    
+    <navigation-rule>
+        <navigation-case>
+            <from-outcome>planCuentasAdicionar</from-outcome>
+            <to-view-id>/entidades/planCuentasAdicionar.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    
+    <navigation-rule>
+        <navigation-case>
+            <from-outcome>planCuentasModificar</from-outcome>
+            <to-view-id>/entidades/planCuentasModificar.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule> 
+    
+    <navigation-rule>
+        <navigation-case>
+            <from-outcome>comprobantesList</from-outcome>
+            <to-view-id>/comprobantes/comprobantesList.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule> 
+    
+    <navigation-rule>
+        <navigation-case>
+            <from-outcome>comprobantesMigracionForm</from-outcome>
+            <to-view-id>/comprobantes/comprobantesMigracionForm.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule> 
+    
+    <navigation-rule>
+        <navigation-case>
+            <from-outcome>formularioComprobante</from-outcome>
+            <to-view-id>/comprobantes/formularioComprobante.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    <navigation-rule>
+        <navigation-case>
+            <from-outcome>formularioComprobanteElimina</from-outcome>
+            <to-view-id>/comprobantes/formularioComprobanteElimina.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    <navigation-rule>
+        <navigation-case>
+            <from-outcome>formularioDetalleComprobante</from-outcome>
+            <to-view-id>/comprobantes/formularioDetalleComprobante.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    
+    <navigation-rule>
+        <navigation-case>
+            <from-outcome>parametrosDeGestion</from-outcome>
+            <to-view-id>/parametrizacion/parametrosDeGestion.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    
+    <navigation-rule>
+        <navigation-case>
+            <from-outcome>parametrosGestion</from-outcome>
+            <to-view-id>/parametrizacion/parametrosGestion.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    
+    <navigation-rule>
+        <navigation-case>
+            <from-outcome>facturaCompra</from-outcome>
+            <to-view-id>/facturacion/facturaCompra.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    
+    <navigation-rule>
+        <navigation-case>
+            <from-outcome>facturaVenta</from-outcome>
+            <to-view-id>/facturacion/facturaVenta.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    
+    <navigation-rule>
+        <navigation-case>
+            <from-outcome>libroMayor</from-outcome>
+            <to-view-id>/libroMayor/libroMayor.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    <navigation-rule>
+        <navigation-case>
+            <from-outcome>guardarComprobante</from-outcome>
+            <to-view-id>/comprobantes/guardarComprobante.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    <navigation-rule>
+        <navigation-case>
+            <from-outcome>imprimeComprobante</from-outcome>
+            <to-view-id>/comprobantes/imprimeComprobante.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    <navigation-rule>
+        <navigation-case>
+            <from-outcome>imprimeSumasSaldosComprobantes</from-outcome>
+            <to-view-id>/comprobantes/imprimeSumasSaldosComprobantes.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    
+    <navigation-rule>
+        <navigation-case>
+            <from-outcome>asignacionDeAuxiliaresADetalleComprobante</from-outcome>
+            <to-view-id>/auxiliares/asignacionDeAuxiliaresADetalleComprobante.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    
+    <navigation-rule>
+        <navigation-case>
+            <from-outcome>proyectos</from-outcome>
+            <to-view-id>/proyectos/proyectos.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    
+    <navigation-rule>
+        <navigation-case>
+            <from-outcome>proyectosForm</from-outcome>
+            <to-view-id>/proyectos/proyectosForm.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    
+    <navigation-rule>
+        <navigation-case>
+            <from-outcome>proyectosFormModificacion</from-outcome>
+            <to-view-id>/proyectos/proyectosFormModificacion.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+        
+    <navigation-rule>
+        <navigation-case>
+            <from-outcome>asignacionDeProyectosADetalleComprobante</from-outcome>
+            <to-view-id>/proyectos/asignacionDeProyectosADetalleComprobante.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    
+<!--    <navigation-rule>
+        <navigation-case>
+            <from-outcome>tipoProveedor</from-outcome>
+            <to-view-id>/cuentasPorPagar/tipoProveedor.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>-->
+    
+<!--    <navigation-rule>
+        <navigation-case>
+            <from-outcome>proveedoresList</from-outcome>
+            <to-view-id>/cuentasPorPagar/proveedoresList.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    
+    <navigation-rule>
+        <navigation-case>
+            <from-outcome>proveedoresForm</from-outcome>
+            <to-view-id>/cuentasPorPagar/proveedoresForm.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>-->
+    
+    <navigation-rule>
+        <navigation-case>
+            <from-outcome>parametricasCuentasPorPagar</from-outcome>
+            <to-view-id>/parametrizacionCuentasPorCobrar/parametricasCuentasPorPagar.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    
+    <navigation-rule>
+        <navigation-case>
+            <from-outcome>loginBanco</from-outcome>
+            <to-view-id>/loginBanco.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    
+    <navigation-rule>
+        <navigation-case>
+            <from-outcome>planCuentasMigracionForm</from-outcome>
+            <to-view-id>/entidades/planCuentasMigracionForm.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+
+    <navigation-rule>
+        <navigation-case>
+            <from-outcome>configuracionIP</from-outcome>
+            <to-view-id>/administracion/configuracionIP.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    
+    <navigation-rule>
+        <navigation-case>
+            <from-outcome>modificaPassword</from-outcome>
+            <to-view-id>/administracion/modificaPassword.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    
+    <navigation-rule>
+        <navigation-case>
+            <from-outcome>paginaEnBlanco</from-outcome>
+            <to-view-id>/paginaEnBlanco.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    
+    <navigation-rule>
+        <navigation-case>
+            <from-outcome>planCuentasParametrizado</from-outcome>
+            <to-view-id>/entidades/planCuentasParametrizado.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    
+    <navigation-rule>
+        <navigation-case>
+            <from-outcome>login</from-outcome>
+            <to-view-id>/login.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    
+    <navigation-rule>
+        <navigation-case>
+            <from-outcome>tipoCambioModificacionForm</from-outcome>
+            <to-view-id>/parametrizacion/tipoCambioModificacionForm.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    
+    <navigation-rule>
+        <navigation-case>
+            <from-outcome>reporteBalanceGeneral</from-outcome>
+            <to-view-id>/vistaReporteContabilidad/reporteBalanceGeneral.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    
+    <navigation-rule>
+        <navigation-case>
+            <from-outcome>reporteEERR</from-outcome>
+            <to-view-id>/vistaReporteContabilidad/reporteEERR.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    
+    <navigation-rule>
+        <navigation-case>
+            <from-outcome>reporteLibroVentas</from-outcome>
+            <to-view-id>/vistaReporteLibros/reporteLibroVentas.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    
+    <navigation-rule>
+        <navigation-case>
+            <from-outcome>reporteLibroCompras</from-outcome>
+            <to-view-id>/vistaReporteLibros/reporteLibroCompras.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    
+    <navigation-rule>
+        <navigation-case>
+            <from-outcome>detalleComprobante</from-outcome>
+            <to-view-id>/comprobantes/detalleComprobante.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+
+    <navigation-rule>
+        <navigation-case>
+            <from-outcome>reporte_balanceGeneral</from-outcome>
+            <to-view-id>/vistaReporteContabilidad/reporte_balanceGeneral.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    
+    <navigation-rule>
+        <navigation-case>
+            <from-outcome>parametrosServidor</from-outcome>
+            <to-view-id>/parametrizacion/parametrosServidor.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    
+    <navigation-rule>
+        <navigation-case>
+            <from-outcome>reporte_EERR</from-outcome>
+            <to-view-id>/vistaReporteContabilidad/reporte_EERR.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+   
+    <navigation-rule>
+        <navigation-case>
+            <from-outcome>libro_Mayor</from-outcome>
+            <to-view-id>/libroMayor/libro_Mayor.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    
+    <navigation-rule>
+        <navigation-case>
+            <from-outcome>detalleComprobanteAnulacion</from-outcome>
+            <to-view-id>/comprobantes/detalleComprobanteAnulacion.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    
+    <navigation-rule>
+        <navigation-case>
+            <from-outcome>detalleComprobanteAnulacion</from-outcome>
+            <to-view-id>/comprobantes/detalleComprobanteAnulacion.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    
+    <navigation-rule>
+        <navigation-case>
+            <from-outcome>registroUsuarios</from-outcome>
+            <to-view-id>/administracion/registroUsuarios.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    
+    <navigation-rule>
+        <navigation-case>
+            <from-outcome>listaUsuarios</from-outcome>
+            <to-view-id>/administracion/listaUsuarios.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    
+    <navigation-rule>
+        <navigation-case>
+            <from-outcome>configuracionActiveDirectory</from-outcome>
+            <to-view-id>/administracion/configuracionActiveDirectory.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    
+    <navigation-rule>
+        <navigation-case>
+            <from-outcome>facturaAnulada</from-outcome>
+            <to-view-id>/facturacion/facturaAnulada.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    
+    <navigation-rule>
+        <navigation-case>
+            <from-outcome>comprobantesDetallesMigracionForm</from-outcome>
+            <to-view-id>/entidades/comprobantesDetallesMigracionForm.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    <navigation-rule>
+        <navigation-case>
+            <from-outcome>facturaComprasVentasMigracionForm</from-outcome>
+            <to-view-id>/entidades/facturaComprasVentasMigracionForm.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+   
+</faces-config>

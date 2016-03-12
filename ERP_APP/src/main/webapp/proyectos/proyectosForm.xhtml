@@ -1,0 +1,86 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition  xmlns="http://www.w3.org/1999/xhtml"
+                 xmlns:h="http://java.sun.com/jsf/html"
+                 xmlns:p="http://primefaces.org/ui"
+                 xmlns:ui="http://java.sun.com/jsf/facelets"
+                 xmlns:f="http://java.sun.com/jsf/core"
+                 template="#{sessionState.pathTemplate}">
+    <ui:define name="content">       
+        <h:form id="Campo">
+            <p:panel header="ADICI&Oacute;N DE PROYECTOS" style="border-style: hidden;text-align: center">
+                <div align="center" style="padding:1em 2.2em;">
+                    <h:panelGrid columns="3" rendered="#{cntProyectosAdicionBacking.desactivaProyectoInicio}">
+                        <h:outputText style="font-weight: bold" value="Proyecto Elegido:" />  
+                        <h:inputText value="#{cntProyectosAdicionBacking.cntProyectoElegido.mascara}" style="font-weight: bold;" size="8"  disabled="true"/>
+                        <h:inputText value="#{cntProyectosAdicionBacking.cntProyectoElegido.nombre}" style="font-weight: bold;" size="36" disabled="true"/>
+                    </h:panelGrid>
+                    <p:selectOneRadio id="customRadioNiveles" value="#{cntProyectosAdicionBacking.mascaraNuevoOpcion}" layout="custom">  
+                        <f:selectItem itemLabel="Nivel" itemValue="N" />  
+                        <f:selectItem itemLabel="Sub Nivel" itemValue="S" />
+                        <p:ajax event="change" update="estado" listener="#{cntProyectosAdicionBacking.activaCombillo(e)}" />                                        
+                    </p:selectOneRadio> 
+                    <h:panelGrid columns="8">  
+                        <p:radioButton id="nivelRadio" for="customRadioNiveles" itemIndex="0"/>
+                        <h:outputLabel for="nivelRadio" value="Nivel" />
+                        <p:panel>
+                            #{cntProyectosAdicionBacking.mascaraNivelPosicionUno}
+                            <p:inputText value="#{cntProyectosAdicionBacking.nivelIn}" size="#{cntProyectosAdicionBacking.longitudNivel}" maxlength="#{cntProyectosAdicionBacking.longitudNivel}" autocomplete="off">
+                                <p:ajax event="keyup" update="" listener="#{cntProyectosAdicionBacking.generaPruebaNivel(e)}"/>  
+                            </p:inputText>
+                            #{cntProyectosAdicionBacking.mascaraNivelPosicionDos}
+                        </p:panel>
+                        <h:outputText id="verifica1" value="#{cntProyectosAdicionBacking.mensajeVerifica1}" style="color: #{cntProyectosAdicionBacking.mensajeVerifica1== 'Codigo Existente'?'red':'#045491'}"/>  
+                        <p:radioButton id="subNivelRadio" for="customRadioNiveles" itemIndex="1" rendered="#{cntProyectosAdicionBacking.desactivaRadioButtonSubNivel}"/>  
+                        <h:outputLabel for="subNivelRadio" value="Sub Nivel" rendered="#{cntProyectosAdicionBacking.desactivaRadioButtonSubNivel}"/>  
+                        <p:panel rendered="#{cntProyectosAdicionBacking.desactivaRadioButtonSubNivel}">
+                            #{cntProyectosAdicionBacking.mascaraSubNivelPosicionUno}
+                            <p:inputText value="#{cntProyectosAdicionBacking.subNivelIn}" size="#{cntProyectosAdicionBacking.longitudSubNivel}" maxlength="#{cntProyectosAdicionBacking.longitudSubNivel}">
+                                <p:ajax event="keyup" update="" listener="#{cntProyectosAdicionBacking.generaPruebaSubNivel(e)}"/>  
+                            </p:inputText>
+                            #{cntProyectosAdicionBacking.mascaraSubNivelPosicionDos}
+                        </p:panel>
+                        <h:outputText id="verifica2" value="#{cntProyectosAdicionBacking.mensajeVerifica2}" style="color: #{cntProyectosAdicionBacking.mensajeVerifica2== 'Codigo Existente'?'red':'#045491'}"/>
+                    </h:panelGrid>
+
+
+                    <h:panelGrid id="panelGridDatos" columns="2">                                             
+                        <h:outputText value="Nombre:" style="font-weight: bold;"/>
+                        <p:inputText value="#{cntProyectosAdicionBacking.cntProyecto.nombre}" onkeyup="this.value=this.value.toUpperCase()" id="Nombre" size="50" autocomplete="off">
+                            <f:validator validatorId="validaEsVacio"/>
+                        </p:inputText>                            
+                        <h:outputText value="Descripci&oacute;n:"  style="font-weight: bold;"/>  
+                        <p:inputTextarea rows="2" cols="50" value="#{cntProyectosAdicionBacking.cntProyecto.descripcion}" onkeyup="this.value=this.value.toUpperCase()" id="Descripción">
+                            <f:validator validatorId="validaEsVacio"/>
+                        </p:inputTextarea>
+                        <h:outputText value="Glosa:"  style="font-weight: bold;"/>  
+                        <p:inputTextarea rows="6" cols="50" value="#{cntProyectosAdicionBacking.cntProyecto.glosa}" onkeyup="this.value=this.value.toUpperCase()" id="Glosa">
+                            <f:validator validatorId="validaEsVacio"/>
+                        </p:inputTextarea>            
+                        <h:outputText value="Estado:"  style="font-weight: bold;"/>                          
+                                     <p:selectOneMenu id="estado" value="#{cntProyectosAdicionBacking.cntProyecto.estado}" disabled="#{cntProyectosAdicionBacking.habilitaEstado}">
+                                         <f:selectItems  value="#{cntProyectosAdicionBacking.listaDeEstadosDeProyecto}" var="a" itemLabel="#{a.descripcion}" itemValue="#{a.codigo}"/>                                
+                                     </p:selectOneMenu>                                                    
+
+                        </h:panelGrid>  
+                        <div align="center" style="padding:1em 2.2em;">
+                            <h:panelGrid columns="2">
+                                <p:commandButton value="GUARDAR"
+                                                 icon="ui-icon-disk" 
+                                                 title="Adiciona un nuevo Proyecto"
+                                                 action="#{cntProyectosAdicionBacking.guardaProyecto()}" 
+                                                 ajax="false" />
+                                <p:commandButton value="CANCELAR"
+                                                 title="Volver al listado de Proyectos"
+                                                 icon="ui-icon-arrowthick-1-w" 
+                                                 action="#{cntProyectosAdicionBacking.cancelaGuardaProyecto()}" 
+                                                 ajax="false"                                             
+                                                 immediate="true"/>
+                            </h:panelGrid>
+                        </div>
+                    </div>    
+                </p:panel>
+            </h:form>            
+        </ui:define>
+    </ui:composition>
+

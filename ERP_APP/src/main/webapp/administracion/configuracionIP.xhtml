@@ -1,0 +1,67 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition  xmlns="http://www.w3.org/1999/xhtml"
+                 xmlns:h="http://java.sun.com/jsf/html"
+                 xmlns:p="http://primefaces.org/ui"
+                 xmlns:ui="http://java.sun.com/jsf/facelets"
+                 xmlns:f="http://java.sun.com/jsf/core"
+                 template="#{sessionState.pathTemplate}">
+    <ui:define name="content">       
+        <h:form id="Campo">
+            <div align="center" >
+                <p:panel header="CONFIGURACI&Oacute;N N&Uacute;MERO IP" style="border-style: hidden">
+                    <div align="center" style="padding:1em 2.2em;">
+                        <h:panelGrid id="display" columns="8">
+                            <p:focus context="display"/>
+                            <h:outputText value="N&uacute;mero de IP:" style="font-weight: bold;" />
+                            <div align="left" style="padding:1em 2.2em;">
+                                <p:inputText value="#{cnfNumeroIpBacking.numeroUno}" size="3" maxlength="3"   id="numero1" style="text-align:right" /> 
+                                <p:inputText value="#{cnfNumeroIpBacking.numeroDos}" size="3" maxlength="3"   id="numero2" style="text-align:right"/> 
+                                <p:inputText value="#{cnfNumeroIpBacking.numeroTres}" size="3" maxlength="3"  id="numero3" style="text-align:right"/>   
+                                <p:inputText value="#{cnfNumeroIpBacking.numeroCuatro}" size="3" maxlength="3"  id="numero4" style="text-align:right"/>    
+                            </div>
+                        </h:panelGrid>  
+                        <p:commandButton value="VERIFICA CONEXION"
+                                         icon="ui-icon ui-icon-disk" 
+                                         title="Verifica la conecci&oacute;n con WAMSA"
+                                         action="#{cnfNumeroIpBacking.verificaConexionWS()}" 
+                                         onclick="PF('dialogoAuxiliares').show()" update=":Campo:panel" />
+
+                    </div>
+                </p:panel>
+            </div> 
+            <p:dialog header="GUARDAR IP DE CONEXION" widgetVar="dialogoAuxiliares" resizable="false" closable="false"  
+                      width="400" height="150" style="text-align: center">
+                <div align="center" style="padding:1em 2.2em;">
+                    <p:panel id="panel">
+                        <p:outputLabel value="#{cnfNumeroIpBacking.verificaConexionWS()}"/>
+                        <div align="center" style="padding:1em 2.2em;">
+                        <h:panelGrid id="display2" columns="2">
+                        <p:commandButton 
+                            onclick="PF('dialogoAuxiliares').hide();"
+                            icon="ui-icon-disk"
+                            title="Guarda Ip de conexio&oacute;n" value="GUARDAR"
+                            rendered="#{!cnfNumeroIpBacking.valorHabilita}"
+                            action="#{cnfNumeroIpBacking.guardaDireccionIP()}"/>
+
+                        <p:commandButton
+                            value="#{cnfNumeroIpBacking.nombreBoton}"
+                            onclick="PF('dialogoAuxiliares').hide();"
+                            action="#{cnfNumeroIpBacking.limpiaIP()}"
+                            ajax="false"
+                            icon="ui-icon-arrowthick-1-w"
+                            title="Vuelve a la pantalla de configuracion" />
+                        </h:panelGrid>
+                            </div>
+                    </p:panel>
+                </div>
+            </p:dialog>  
+
+
+
+
+
+        </h:form>            
+    </ui:define>
+</ui:composition>
+

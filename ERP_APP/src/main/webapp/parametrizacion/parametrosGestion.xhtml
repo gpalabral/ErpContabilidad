@@ -1,0 +1,276 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition  xmlns="http://www.w3.org/1999/xhtml"
+                 xmlns:h="http://java.sun.com/jsf/html"
+                 xmlns:p="http://primefaces.org/ui"
+                 xmlns:ui="http://java.sun.com/jsf/facelets"
+                 xmlns:f="http://java.sun.com/jsf/core"
+                 xmlns:bap="http://java.sun.com/jsf/composite/bap.comp"
+                 template="#{sessionState.pathTemplate}"
+                 xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+    <ui:define name="content">
+        <div align="center">
+            <p:panel header="PARAMETRIZACI&Oacute;N PARA CONTABILIZACI&Oacute;N AUTOM&Aacute;TICA" style="border-style: hidden;font-weight: bold">
+                <h:form id="formPar">
+                    <p:dialog id="dialogoPlanCuentasParametrizacion" header="BAP SRL" widgetVar="dialogoPlanCuentasParametrizacion"  width="95%" height="50%">  
+                        <p:growl id="msgs" showDetail="true" />
+                        <p:dataTable id="eventsDT" var="item" value="#{cntParametrosDeGestionBacking.cntObjetosPorGrupoNivelList()}" 
+                                     selectionMode="single" 
+                                     filteredValue="#{cntParametrosDeGestionBacking.filteredcntEntidad}"
+                                     widgetVar="eventsDT"  
+                                     selection="#{cntParametrosDeGestionBacking.selected}" rowKey="#{item.idEntidad}" scrollable="true" scrollHeight="230"
+                                     rowStyleClass="#{fn:contains(item.descripcion, cntParametrosDeGestionBacking.valor)?cntParametrosDeGestionBacking.color : null}">
+                            <f:facet name="header">
+                                PLAN DE CUENTAS
+                                <p:outputPanel>  
+                                    <h:outputText value="Buscar: "/>
+                                    <p:inputText id="globalFilter" disabled="#{cntParametrosDeGestionBacking.eleccionTodos == true?true:false}" onkeyup="this.value = this.value.toUpperCase();
+                                            eventsDT.filter()" style="width:150px" value="#{cntParametrosDeGestionBacking.valor}" autocomplete="off">                                               
+                                    </p:inputText>     
+                                    <h:outputText id="resMarcados" value=" Resultados Marcados: "/>  
+                                    <p:selectBooleanCheckbox id="resMarcadosCheckBox" value="#{cntParametrosDeGestionBacking.eleccionTodos}" >  
+                                        <p:ajax update="eventsDT" listener="#{cntParametrosDeGestionBacking.listaTodo()}"/>  
+                                    </p:selectBooleanCheckbox>   
+                                </p:outputPanel> 
+                            </f:facet>
+                            <p:ajax event="rowSelect" listener="#{cntParametrosDeGestionBacking.obtieneObjetoPlanCuentas(e)}" update="SeleccionarCC"/>
+                            <!--<p:ajax event="rowUnselect" listener="# {cntParametrosDeGestionBacking.onRowUnselect}"/>-->
+                            <p:column headerText="CUENTA" filterBy="mascaraGenerada" filterStyle="display:none">
+                                <h:outputText value="#{item.mascaraGenerada}" />
+                            </p:column>
+                            <p:column headerText="DESCRIPCI&Oacute;N" filterBy="descripcion" filterStyle="display:none">
+                                <h:outputText value="#{cntParametrosDeGestionBacking.insertaPuntosAutomatio(item)}" />
+                            </p:column>
+                            <f:facet name="footer">
+                                <p:commandButton id="SeleccionarCC" value="Seleccionar" 
+                                                 disabled="#{cntParametrosDeGestionBacking.activaBotonSeleccion}"
+                                                 update="tabView"
+                                                 icon="ui-icon ui-icon-search" 
+                                                 action="#{cntParametrosDeGestionBacking.seleccionar()}" ajax="false"/>  
+                                <p:commandButton onclick="PF('dialogoPlanCuentasParametrizacion').hide();"
+                                                 value="Cancelar"
+                                                 icon="#{cntPlanCuentasBacking.iconoAtras()}"/>
+                            </f:facet> 
+                        </p:dataTable>
+                    </p:dialog>
+                    <p:tabView id="tabView">
+                        <p:tab title="Compras y Ventas">
+                            <div align="center">
+                                <h:panelGrid columns="8" cellpadding="3">
+                                    <h:outputLabel value="Porcentaje I.V.A.:" style="font-weight: bold" />  
+                                    <p:inputText id="iva" value="#{cntParametrosDeGestionBacking.comprasYVentasWrapper.porcentajeIVA}" onkeyup="return ValNumero(this);" size="8" maxlength="8" style="text-align: right">
+                                        <f:validateLongRange minimum="0" maximum="100" />
+                                    </p:inputText> %
+                                    <h:outputLabel value="Porcentaje I.T.:" style="font-weight: bold; width: 2%" />  
+                                    <p:inputText id="subtitulo" value="#{cntParametrosDeGestionBacking.comprasYVentasWrapper.porcentajeIT}" onkeyup="return ValNumero(this);" size="8" maxlength="8" style="text-align: right">
+                                        <f:validateLongRange minimum="0" maximum="100" />
+                                    </p:inputText> %
+                                    <h:outputLabel value="Obligaci&oacute;n de Pago I.T.:" style="font-weight: bold"/>  
+                                    <p:selectOneRadio id="options" value="#{cntParametrosDeGestionBacking.comprasYVentasWrapper.obligacionPagoIT}">  
+                                        <f:selectItem itemLabel="S&iacute;" itemValue="true" />  
+                                        <f:selectItem itemLabel="No" itemValue="false" />
+                                    </p:selectOneRadio>                                           
+                                </h:panelGrid>
+                                <h:panelGrid columns="4" cellpadding="4" id="ctas">
+                                    <p:commandButton onclick="PF('dialogoPlanCuentasParametrizacion').show();"
+                                                     actionListener="#{cntParametrosDeGestionBacking.cargaValorCuentaDebitoFiscal(e)}"
+                                                     icon="ui-icon-disk"
+                                                     title="Icon Only" 
+                                                     value="+"/> 
+
+                                    <p:outputLabel value="Cuenta de D&eacute;bito Fiscal"></p:outputLabel>
+                                    <h:inputText id="debitoFiscalCodigo" value="#{cntParametrosDeGestionBacking.cuentaDebitoFiscalValor.mascaraGenerada}" disabled="true"/>
+                                    <h:inputText id="debitoFiscalDesc" value="#{cntParametrosDeGestionBacking.cuentaDebitoFiscalValor.descripcion}" size="50" disabled="true"/>
+                                    <p:commandButton onclick="PF('dialogoPlanCuentasParametrizacion').show();"
+                                                     actionListener="#{cntParametrosDeGestionBacking.cargaValorCuentaCreditoFiscal(e)}"
+                                                     icon="ui-icon-disk"
+                                                     title="Icon Only" 
+                                                     value="+"/> 
+                                    <p:outputLabel value="Cuenta de Cr&eacute;dito Fiscal"></p:outputLabel>
+                                    <h:inputText value="#{cntParametrosDeGestionBacking.cuentaCreditoFiscalValor.mascaraGenerada}" disabled="true"/>
+                                    <h:inputText value="#{cntParametrosDeGestionBacking.cuentaCreditoFiscalValor.descripcion}" size="50" disabled="true"/>
+
+                                    <p:commandButton onclick="PF('dialogoPlanCuentasParametrizacion').show();"
+                                                     actionListener="#{cntParametrosDeGestionBacking.cargaValorCuentaCreditoFiscalNoDeducible(e)}"
+                                                     icon="ui-icon-disk"
+                                                     title="Icon Only" 
+                                                     value="+"/> 
+                                    <p:outputLabel value="Cuenta de Cr&eacute;dito Fiscal no Deducible"></p:outputLabel>
+                                    <h:inputText value="#{cntParametrosDeGestionBacking.cuentaCreditoFiscalNoDeducibleValor.mascaraGenerada}" disabled="true"/>
+                                    <h:inputText value="#{cntParametrosDeGestionBacking.cuentaCreditoFiscalNoDeducibleValor.descripcion}" size="50" disabled="true"/>
+
+                                    <p:commandButton onclick="PF('dialogoPlanCuentasParametrizacion').show();"
+                                                     actionListener="#{cntParametrosDeGestionBacking.cargaValorCuentaCreditoFiscalTransitorio(e)}"
+                                                     icon="ui-icon-disk"
+                                                     title="Icon Only" 
+                                                     value="+"/> 
+                                    <p:outputLabel value="Cuenta de Cr&eacute;dito Fiscal Transitorio"></p:outputLabel>
+                                    <h:inputText value="#{cntParametrosDeGestionBacking.cuentaCreditoFiscalTransitorioValor.mascaraGenerada}" disabled="true"/>
+                                    <h:inputText value="#{cntParametrosDeGestionBacking.cuentaCreditoFiscalTransitorioValor.descripcion}" size="50" disabled="true"/>
+
+                                    <p:commandButton onclick="PF('dialogoPlanCuentasParametrizacion').show();"
+                                                     actionListener="#{cntParametrosDeGestionBacking.cargaValorCuentaImpuestosTransacciones(e)}"
+                                                     icon="ui-icon-disk"
+                                                     title="Icon Only" 
+                                                     value="+"/> 
+                                    <p:outputLabel value="Cuenta Impuesto a las Transacciones"></p:outputLabel>
+                                    <h:inputText value="#{cntParametrosDeGestionBacking.cuentaImpuestosTransaccionesValor.mascaraGenerada}" disabled="true"/>
+                                    <h:inputText value="#{cntParametrosDeGestionBacking.cuentaImpuestosTransaccionesValor.descripcion}" size="50" disabled="true"/>
+
+                                    <p:commandButton onclick="PF('dialogoPlanCuentasParametrizacion').show();"
+                                                     actionListener="#{cntParametrosDeGestionBacking.cargaValorCuentaGastosImpuestosTransacciones(e)}"
+                                                     icon="ui-icon-disk"
+                                                     title="Icon Only" 
+                                                     value="+"/> 
+                                    <p:outputLabel value="Cuenta Gasto Impuesto a las Transacciones"></p:outputLabel>
+                                    <h:inputText value="#{cntParametrosDeGestionBacking.cuentaGastosImpuestosTransaccionesValor.mascaraGenerada}" disabled="true"/>
+                                    <h:inputText value="#{cntParametrosDeGestionBacking.cuentaGastosImpuestosTransaccionesValor.descripcion}" size="50" disabled="true"/>
+
+                                    <p:commandButton onclick="PF('dialogoPlanCuentasParametrizacion').show();"
+                                                     actionListener="#{cntParametrosDeGestionBacking.cargaValorCuentaDebitoFiscalTransitorio(e)}"
+                                                     icon="ui-icon-disk"
+                                                     title="Icon Only" 
+                                                     value="+"/> 
+                                    <p:outputLabel value="Cuenta de D&eacute;bito Fiscal Transitorio"></p:outputLabel>
+                                    <h:inputText value="#{cntParametrosDeGestionBacking.cuentaDebitoFiscalTransitorioValor.mascaraGenerada}" disabled="true"/>
+                                    <h:inputText value="#{cntParametrosDeGestionBacking.cuentaDebitoFiscalTransitorioValor.descripcion}" size="50" disabled="true"/>
+                                </h:panelGrid>                                                 
+                            </div>
+
+                        </p:tab>
+                        <p:tab title="Cuentas de Ajuste">
+                            <div align="center">
+                                <h:panelGrid columns="4" cellpadding="5">
+                                    <p:commandButton onclick="PF('dialogoPlanCuentasParametrizacion').show();"
+                                                     actionListener="#{cntParametrosDeGestionBacking.cargaValorCuentaInflacionResultadoExposicionInflacion(e)}"
+                                                     icon="ui-icon-disk"
+                                                     title="Icon Only" 
+                                                     value="+"/> 
+                                    <p:outputLabel value="P. Inflaci&oacute;n/Result. p/exposici&oacute;n a la Inflaci&oacute;n"></p:outputLabel>
+                                    <h:inputText value="#{cntParametrosDeGestionBacking.cuentaInflacionResultadoExposicionInflacionValor.mascaraGenerada}" disabled="true"/> 
+                                    <h:inputText value="#{cntParametrosDeGestionBacking.cuentaInflacionResultadoExposicionInflacionValor.descripcion}" size="50" disabled="true"/>
+                                    <p:commandButton onclick="PF('dialogoPlanCuentasParametrizacion').show();"
+                                                     actionListener="#{cntParametrosDeGestionBacking.cargaValorCuentaAjusteCorreccionMonetaria(e)}"
+                                                     icon="ui-icon-disk"
+                                                     title="Icon Only" 
+                                                     value="+"/> 
+                                    <p:outputLabel value="Ajuste por Correcci&oacute;n Monetaria"></p:outputLabel>
+                                    <h:inputText value="#{cntParametrosDeGestionBacking.cuentaAjusteCorreccionMonetariaValor.mascaraGenerada}" disabled="true"/>
+                                    <h:inputText value="#{cntParametrosDeGestionBacking.cuentaAjusteCorreccionMonetariaValor.descripcion}" size="50" disabled="true"/>
+                                    <p:commandButton onclick="PF('dialogoPlanCuentasParametrizacion').show();"
+                                                     actionListener="#{cntParametrosDeGestionBacking.cargaValorCuentaDiferenciaCambio(e)}"
+                                                     icon="ui-icon-disk"
+                                                     title="Icon Only" 
+                                                     value="+"/> 
+                                    <p:outputLabel value="Diferencia de Cambio"></p:outputLabel>
+                                    <h:inputText value="#{cntParametrosDeGestionBacking.cuentaDiferenciaCambioValor.mascaraGenerada}" disabled="true"/>
+                                    <h:inputText value="#{cntParametrosDeGestionBacking.cuentaDiferenciaCambioValor.descripcion}" size="50" disabled="true"/>
+                                    <p:commandButton onclick="PF('dialogoPlanCuentasParametrizacion').show();"
+                                                     actionListener="#{cntParametrosDeGestionBacking.cargaValorCuentaAjusteCapital(e)}"
+                                                     icon="ui-icon-disk"
+                                                     title="Icon Only" 
+                                                     value="+"/> 
+                                    <p:outputLabel value="Ajuste de Capital"></p:outputLabel>
+                                    <h:inputText value="#{cntParametrosDeGestionBacking.cuentaAjusteCapitalValor.mascaraGenerada}" disabled="true"/>
+                                    <h:inputText value="#{cntParametrosDeGestionBacking.cuentaAjusteCapitalValor.descripcion}" size="50" disabled="true"/>
+                                    <p:commandButton onclick="PF('dialogoPlanCuentasParametrizacion').show();"
+                                                     actionListener="#{cntParametrosDeGestionBacking.cargaValorCuentaAjusteReservasPatrimoniales(e)}"
+                                                     icon="ui-icon-disk"
+                                                     title="Icon Only" 
+                                                     value="+"/> 
+                                    <p:outputLabel value="Ajustes de Reservas Patrimoniales"></p:outputLabel>
+                                    <h:inputText value="#{cntParametrosDeGestionBacking.cuentaAjusteReservasPatrimonialesValor.mascaraGenerada}" disabled="true"/>
+                                    <h:inputText value="#{cntParametrosDeGestionBacking.cuentaAjusteReservasPatrimonialesValor.descripcion}" size="50" disabled="true"/>
+                                </h:panelGrid>                                               
+                            </div>
+                        </p:tab>
+                        <p:tab title="Retenciones I.U.">
+                            <div align="center">
+                                <h:panelGrid columns="6" cellpadding="10">
+                                    <h:outputLabel value="Porcentaje de Retenci&oacute;n de Bienes:" style="font-weight: bold; width: 2%" />  
+                                    <p:inputText id="subtitulos" value="#{cntParametrosDeGestionBacking.retencionesIUEWrapper.porcentajeRetencionesBienes}" onkeyup="return ValNumero(this);" size="10" maxlength="10" style="text-align: right">
+                                        <f:validateLongRange minimum="0" maximum="100" />
+                                    </p:inputText> %
+                                    <h:outputLabel value="Porcentaje de Retenci&oacute;n de Servicios:" style="font-weight: bold" />  
+                                    <p:inputText id="ivas" value="#{cntParametrosDeGestionBacking.retencionesIUEWrapper.porcentajeRetencionesServicios}" onkeyup="return ValNumero(this);" size="10" maxlength="10" style="text-align: right">
+                                        <f:validateLongRange minimum="0" maximum="100" />
+                                    </p:inputText> % 
+                                </h:panelGrid> 
+                                <h:panelGrid columns="4" cellpadding="5">
+                                    <p:commandButton onclick="PF('dialogoPlanCuentasParametrizacion').show();"
+                                                     actionListener="#{cntParametrosDeGestionBacking.cargaValorCuentaRetencionServicio(e)}"
+                                                     icon="ui-icon-disk"
+                                                     title="Icon Only" 
+                                                     value="+"/> 
+                                    <p:outputLabel value="Cuenta I.U.E. Retenciones x Servicios"></p:outputLabel>
+                                    <h:inputText value="#{cntParametrosDeGestionBacking.cuentaRetencionServicioValor.mascaraGenerada}" disabled="true"/>
+                                    <h:inputText value="#{cntParametrosDeGestionBacking.cuentaRetencionServicioValor.descripcion}" size="50" disabled="true"/>
+                                    <p:commandButton onclick="PF('dialogoPlanCuentasParametrizacion').show();"
+                                                     actionListener="#{cntParametrosDeGestionBacking.cargaValorCuentaRetencionBienes(e)}"
+                                                     icon="ui-icon-disk"
+                                                     title="Icon Only" 
+                                                     value="+"/> 
+                                    <p:outputLabel value="Cuenta I.U.E. Retenciones x Bienes"></p:outputLabel>
+                                    <h:inputText value="#{cntParametrosDeGestionBacking.cuentaRetencionBienesValor.mascaraGenerada}" disabled="true"/>
+                                    <h:inputText value="#{cntParametrosDeGestionBacking.cuentaRetencionBienesValor.descripcion}" size="50" disabled="true"/>
+                                    <p:commandButton onclick="PF('dialogoPlanCuentasParametrizacion').show();"
+                                                     actionListener="#{cntParametrosDeGestionBacking.cargaValorCuentaRetencion(e)}"
+                                                     icon="ui-icon-disk"
+                                                     title="Icon Only" 
+                                                     value="+"/> 
+                                    <p:outputLabel value="Cuenta I.T. Retenciones "></p:outputLabel>
+                                    <h:inputText value="#{cntParametrosDeGestionBacking.cuentaRetencionValor.mascaraGenerada}" disabled="true"/>
+                                    <h:inputText value="#{cntParametrosDeGestionBacking.cuentaRetencionValor.descripcion}" size="50" disabled="true"/>
+                                    <p:commandButton onclick="PF('dialogoPlanCuentasParametrizacion').show();"
+                                                     actionListener="#{cntParametrosDeGestionBacking.cargaValorCuentaRetencionRC_IVA(e)}"
+                                                     icon="ui-icon-disk"
+                                                     title="Icon Only" 
+                                                     value="+"/> 
+                                    <p:outputLabel value="Cuenta Retenci&oacute;n RC-IVA "></p:outputLabel>
+                                    <h:inputText value="#{cntParametrosDeGestionBacking.cuentaRetencionRC_IVAValor.mascaraGenerada}" disabled="true"/>
+                                    <h:inputText value="#{cntParametrosDeGestionBacking.cuentaRetencionRC_IVAValor.descripcion}" size="50" disabled="true"/>
+                                    <p:commandButton onclick="PF('dialogoPlanCuentasParametrizacion').show();"
+                                                     actionListener="#{cntParametrosDeGestionBacking.cargaValorCuentaRetencionExterior(e)}"
+                                                     icon="ui-icon-disk"
+                                                     title="Icon Only" 
+                                                     value="+"/> 
+                                    <p:outputLabel value="Cuenta Remesa al Exterior "></p:outputLabel>
+                                    <h:inputText value="#{cntParametrosDeGestionBacking.cuentaRetencionExteriorValor.mascaraGenerada}" disabled="true"/>
+                                    <h:inputText value="#{cntParametrosDeGestionBacking.cuentaRetencionExteriorValor.descripcion}" size="50" disabled="true"/>
+
+                                </h:panelGrid> 
+                                <h:panelGrid columns="3" cellpadding="10">
+                                    <h:outputLabel value="Retenci&oacute;n IUE - IT Sector Industrial Exporta :" style="font-weight: bold; width: 2%" />  
+                                    <p:inputText id="retencion" value="#{cntParametrosDeGestionBacking.retencionesIUEWrapper.retencionIUEITSectorIndustrialExporta}" onkeyup="return ValNumero(this);" size="10" maxlength="10" style="text-align: right">
+                                        <f:validateLongRange minimum="0" maximum="100" />
+                                    </p:inputText> %
+                                </h:panelGrid> 
+                                <h:panelGrid columns="4" cellpadding="5">
+                                    <p:commandButton onclick="PF('dialogoPlanCuentasParametrizacion').show();"
+                                                     actionListener="#{cntParametrosDeGestionBacking.cargaValorCuentaRetencionSectorIndustrial(e)}"
+                                                     icon="ui-icon-disk"
+                                                     title="Icon Only" 
+                                                     value="+"/> 
+                                    <p:outputLabel value="Cuenta Retenci&oacute;n I.U.E.- I.T. Sector Industrial  "></p:outputLabel>
+                                    <h:inputText value="#{cntParametrosDeGestionBacking.cuentaRetencionSectorIndustrialValor.mascaraGenerada}" disabled="true"/>
+                                    <h:inputText value="#{cntParametrosDeGestionBacking.cuentaRetencionSectorIndustrialValor.descripcion}" size="50" disabled="true"/>
+                                </h:panelGrid>
+                            </div>
+                        </p:tab>
+                    </p:tabView>                                 
+                    <div align="center" style="padding:1em 2.2em;">
+                        <p:commandButton value="GUARDAR"
+                                         title="Modifica los datos de Compras y Ventas, Cuentas de Ajuste y Retenciones I.U."
+                                         icon="ui-icon ui-icon-disk" 
+                                         action="#{cntParametrosDeGestionBacking.modificaParametrosDeGestion()}" 
+                                         ajax="false"/>         
+                        <p:commandButton id="Cancelar" value="CANCELAR"
+                                         immediate="true"
+                                         title="Cancelar"
+                                         ajax="false" action="#{cntParametrosDeGestionBacking.cancelar()}"/>
+                    </div>                 
+                </h:form>
+            </p:panel>
+        </div>
+    </ui:define>
+</ui:composition>

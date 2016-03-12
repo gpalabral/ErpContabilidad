@@ -1,0 +1,209 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition  xmlns="http://www.w3.org/1999/xhtml"
+                 xmlns:h="http://java.sun.com/jsf/html"
+                 xmlns:p="http://primefaces.org/ui"
+                 xmlns:ui="http://java.sun.com/jsf/facelets"
+                 xmlns:f="http://java.sun.com/jsf/core"
+                 xmlns:bap="http://java.sun.com/jsf/composite/bap.comp"
+                 template="#{sessionState.pathTemplate}">
+    <ui:define name="content">
+        <div align="center">
+            <p:panel header="PARAMETRIZACI&Oacute;N PARA CONTABILIZACI&Oacute;N AUTOM&Aacute;TICA" style="border-style: hidden;font-weight: bold">
+                <h:form id="formPar">
+                    <p:growl id="growl" sticky="true" showDetail="true"/>
+                    <p:wizard id="pestana" flowListener="#{cntParametrosDeGestionBacking.onFlowProcess}" style="width: 800px" nextLabel="Siguiente" backLabel="Anterior" >  
+                        <p:tab id="comprasYVentasTab" title="Compras y Ventas">  
+                            <p:panel style="text-align: left;height: 330px;" >
+                                <h:panelGrid columns="8" cellpadding="10">
+                                    <h:outputLabel value="Porcentaje I.T.:" style="font-weight: bold; width: 2%" />  
+                                    <p:inputText id="subtitulo" value="#{cntParametrosDeGestionBacking.comprasYVentasWrapper.porcentajeIT}"  size="8" maxlength="8" style="text-align: right"/> %
+                                    <h:outputLabel value="Obligaci&oacute;n de Pago I.T.:" style="font-weight: bold"/>  
+                                    <p:selectOneRadio id="options" value="#{cntParametrosDeGestionBacking.comprasYVentasWrapper.obligacionPagoIT}">  
+                                        <f:selectItem itemLabel="S&iacute;" itemValue="true" />  
+                                        <f:selectItem itemLabel="No" itemValue="false" />
+                                    </p:selectOneRadio>  
+                                    <h:outputLabel value="Porcentaje I.V.A.:" style="font-weight: bold" />  
+                                    <p:inputText id="iva" value="#{cntParametrosDeGestionBacking.comprasYVentasWrapper.porcentajeIVA}" size="8" maxlength="8" style="text-align: right"/> % 
+                                </h:panelGrid>
+                                <h:panelGrid columns="4" cellpadding="5" id="ctas">
+                                    <p:commandButton onclick="PF('debitoFiscalDialogo').show();"
+                                                     icon="ui-icon-disk"
+                                                     title="Icon Only" 
+                                                     value="+"/> 
+
+                                    <p:outputLabel value="Cuenta de D&eacute;bito Fiscal"></p:outputLabel>
+                                    <p:inputText id="debitoFiscalCodigo" value="#{cntGeneralesBacking.comprasYVentasWrapper.debitoFiscal.mascaraGenerada}"></p:inputText> 
+                                    <p:inputText id="debitoFiscalDesc" value="#{cntGeneralesBacking.comprasYVentasWrapper.debitoFiscal.descripcion}" size="50"></p:inputText> 
+                                    <p:commandButton onclick="PF('creditoFiscalDialogo').show();"
+                                                     icon="ui-icon-disk"
+                                                     title="Icon Only" 
+                                                     value="+"/> 
+                                    <p:outputLabel value="Cuenta de Cr&eacute;dito Fiscal"></p:outputLabel>
+                                    <p:inputText value="#{cntParametrosDeGestionBacking.comprasYVentasWrapper.creditoFiscal.mascaraGenerada}"></p:inputText> 
+                                    <p:inputText value="#{cntParametrosDeGestionBacking.comprasYVentasWrapper.creditoFiscal.descripcion}" size="50"></p:inputText> 
+
+                                    <p:commandButton onclick="PF('creditoFiscalNoDeducibleDialogo').show();"
+                                                     icon="ui-icon-disk"
+                                                     title="Icon Only" 
+                                                     value="+"/> 
+                                    <p:outputLabel value="Cuenta de Cr&eacute;dito Fiscal no Deducible"></p:outputLabel>
+                                    <p:inputText value="#{cntParametrosDeGestionBacking.comprasYVentasWrapper.creditoFiscalNoDeducible.mascaraGenerada}"></p:inputText> 
+                                    <p:inputText value="#{cntParametrosDeGestionBacking.comprasYVentasWrapper.creditoFiscalNoDeducible.descripcion}" size="50"></p:inputText> 
+
+                                    <p:commandButton onclick="PF('creditoFiscalTransitorioDialogo').show();"
+                                                     icon="ui-icon-disk"
+                                                     title="Icon Only" 
+                                                     value="+"/> 
+                                    <p:outputLabel value="Cuenta de Cr&eacute;dito Fiscal Transitorio"></p:outputLabel>
+                                    <p:inputText value="#{cntParametrosDeGestionBacking.comprasYVentasWrapper.creditoFiscalTransitorio.mascaraGenerada}"></p:inputText> 
+                                    <p:inputText value="#{cntParametrosDeGestionBacking.comprasYVentasWrapper.creditoFiscalTransitorio.descripcion}" size="50"></p:inputText> 
+
+                                    <p:commandButton onclick="PF('impuestoTransaccionDialogo').show();"
+                                                     icon="ui-icon-disk"
+                                                     title="Icon Only" 
+                                                     value="+"/> 
+                                    <p:outputLabel value="Cuenta Impuesto a las Transacciones"></p:outputLabel>
+                                    <p:inputText value="#{cntParametrosDeGestionBacking.comprasYVentasWrapper.impuestoTransaccion.mascaraGenerada}"></p:inputText> 
+                                    <p:inputText value="#{cntParametrosDeGestionBacking.comprasYVentasWrapper.impuestoTransaccion.descripcion}" size="50"></p:inputText> 
+
+                                    <p:commandButton onclick="PF('gastoImpuestoTransaccionDialogo').show();"
+                                                     icon="ui-icon-disk"
+                                                     title="Icon Only" 
+                                                     value="+"/> 
+                                    <p:outputLabel value="Cuenta Gasto Impuesto a las Transacciones"></p:outputLabel>
+                                    <p:inputText value="#{cntParametrosDeGestionBacking.comprasYVentasWrapper.gastoImpuestoTransaccion.mascaraGenerada}"></p:inputText> 
+                                    <p:inputText value="#{cntParametrosDeGestionBacking.comprasYVentasWrapper.gastoImpuestoTransaccion.descripcion}" size="50"></p:inputText> 
+
+                                    <p:commandButton onclick="PF('debitoFiscalTransitorioDialogo').show();"
+                                                     icon="ui-icon-disk"
+                                                     title="Icon Only" 
+                                                     value="+"/> 
+                                    <p:outputLabel value="Cuenta de D&eacute;bito Fiscal Transitorio"></p:outputLabel>
+                                    <p:inputText value="#{cntParametrosDeGestionBacking.comprasYVentasWrapper.debitoFiscalTransitorio.mascaraGenerada}"></p:inputText> 
+                                    <p:inputText value="#{cntParametrosDeGestionBacking.comprasYVentasWrapper.debitoFiscalTransitorio.descripcion}" size="50"></p:inputText> 
+                                </h:panelGrid>                                                 
+                            </p:panel>
+                            <!--Prueba del componente de PLanes appendTo="@(body)" modal="true"-->
+                            <p:dialog id="debitoFiscalD" header="BAP SRL" widgetVar="debitoFiscalDialogo"  width="95%" height="50%">  
+                                <bap:plan id="ctaDebFPlan1" entidadSeleccionada="#{cntParametrosDeGestionBacking.comprasYVentasWrapper.debitoFiscal}" cerrarWidget="debitoFiscalDialogo" updateComp=":formPar:debitoFiscalCodigo :formPar:debitoFiscalDesc" updateFormId=":formPar" actualizaDatosDetalleComprobante="#{cntParametrosDeGestionBacking.obtieneObjeto()}"/>  
+                            </p:dialog>
+                            <p:dialog id="creditoFiscalD" header="BAP SRL" widgetVar="creditoFiscalDialogo"  width="95%" height="50%">  
+                                <bap:plan id="ctaDebFPlan2" entidadSeleccionada="#{cntParametrosDeGestionBacking.comprasYVentasWrapper.debitoFiscal}" cerrarWidget="creditoFiscalDialogo" updateComp=":formPar:debitoFiscalCodigo :formPar:debitoFiscalDesc" updateFormId=":formPar" actualizaDatosDetalleComprobante="#{cntParametrosDeGestionBacking.obtieneObjeto()}"/>  
+                            </p:dialog>
+                            <p:dialog id="creditoFiscalNoDeducibleD" header="BAP SRL" widgetVar="creditoFiscalNoDeducibleDialogo"  width="95%" height="50%">  
+                                <bap:plan id="ctaDebFPlan3" entidadSeleccionada="#{cntParametrosDeGestionBacking.comprasYVentasWrapper.debitoFiscal}" cerrarWidget="creditoFiscalNoDeducibleDialogo" updateComp=":formPar:debitoFiscalCodigo :formPar:debitoFiscalDesc" updateFormId=":formPar" actualizaDatosDetalleComprobante="#{cntParametrosDeGestionBacking.obtieneObjeto()}"/>  
+                            </p:dialog>
+                            <p:dialog id="creditoFiscalTransitorioD" header="BAP SRL" widgetVar="creditoFiscalTransitorioDialogo"  width="95%" height="50%">  
+                                <bap:plan id="ctaDebFPlan4" entidadSeleccionada="#{cntParametrosDeGestionBacking.comprasYVentasWrapper.debitoFiscal}" cerrarWidget="creditoFiscalTransitorioDialogo" updateComp=":formPar:debitoFiscalCodigo :formPar:debitoFiscalDesc" updateFormId=":formPar" actualizaDatosDetalleComprobante="#{cntParametrosDeGestionBacking.obtieneObjeto()}"/>  
+                            </p:dialog>
+                            <p:dialog id="impuestoTransaccionD" header="BAP SRL" widgetVar="impuestoTransaccionDialogo"  width="95%" height="50%">  
+                                <bap:plan id="ctaDebFPlan5" entidadSeleccionada="#{cntParametrosDeGestionBacking.comprasYVentasWrapper.debitoFiscal}" cerrarWidget="impuestoTransaccionDialogo" updateComp=":formPar:debitoFiscalCodigo :formPar:debitoFiscalDesc" updateFormId=":formPar" actualizaDatosDetalleComprobante="#{cntParametrosDeGestionBacking.obtieneObjeto()}"/>  
+                            </p:dialog>
+                            <p:dialog id="gastoImpuestoTransaccionD" header="BAP SRL" widgetVar="gastoImpuestoTransaccionDialogo"  width="95%" height="50%">  
+                                <bap:plan id="ctaDebFPlan6" entidadSeleccionada="#{cntParametrosDeGestionBacking.comprasYVentasWrapper.debitoFiscal}" cerrarWidget="gastoImpuestoTransaccionDialogo" updateComp=":formPar:debitoFiscalCodigo :formPar:debitoFiscalDesc" updateFormId=":formPar" actualizaDatosDetalleComprobante="#{cntParametrosDeGestionBacking.obtieneObjeto()}"/>  
+                            </p:dialog>
+                            <p:dialog id="debitoFiscalTransitorioD" header="BAP SRL" widgetVar="debitoFiscalTransitorioDialogo"  width="95%" height="50%">  
+                                <bap:plan id="ctaDebFPlan7" entidadSeleccionada="#{cntParametrosDeGestionBacking.comprasYVentasWrapper.debitoFiscal}" cerrarWidget="debitoFiscalTransitorioDialogo" updateComp=":formPar:debitoFiscalCodigo :formPar:debitoFiscalDesc" updateFormId=":formPar" actualizaDatosDetalleComprobante="#{cntParametrosDeGestionBacking.obtieneObjeto()}"/>  
+                            </p:dialog>
+
+                            <!--p:dialog id="ctaCreF" header="Credito Fiscalx" widgetVar="ctaCreF"  width="850" height="550">  
+                                <bap:plan id="ctaCreFPlan" entidadSeleccionada="#{cntGeneralesBacking.ctaCreditoFiscal}" cerrarWidget="ctaCreF"/>  
+                            </p:dialog-->
+
+
+                        </p:tab>                 
+                        <p:tab id="CuentasDeAjusteTab" title="Cuentas de Ajuste">  
+                            <p:panel style="text-align: left;height: 330px;" >
+
+                                <h:panelGrid columns="4" cellpadding="5">
+                                    <p:commandButton actionListener="# {pprBean.savePerson}"    
+                                                     icon="ui-icon-disk" title="Icon Only" value="+"/> 
+                                    <p:outputLabel value="P. Inflaci&oacute;n/Result. p/exposici&oacute;n a la Inflaci&oacute;n"></p:outputLabel>
+                                    <p:inputText value="#{cntParametrosDeGestionBacking.cuentasDeAjusteWrapper.inflacionResulPorExposicionInflacion.mascaraGenerada}"></p:inputText> 
+                                    <p:inputText value="#{cntParametrosDeGestionBacking.cuentasDeAjusteWrapper.inflacionResulPorExposicionInflacion.descripcion}" size="50"></p:inputText> 
+                                    <p:commandButton actionListener="# {pprBean.savePerson}"    
+                                                     icon="ui-icon-disk" title="Icon Only" value="+"/> 
+                                    <p:outputLabel value="Ajuste por Correcci&oacute;n Monetaria"></p:outputLabel>
+                                    <p:inputText value="#{cntParametrosDeGestionBacking.cuentasDeAjusteWrapper.ajusteCorreccionMonetaria.mascaraGenerada}"></p:inputText> 
+                                    <p:inputText value="#{cntParametrosDeGestionBacking.cuentasDeAjusteWrapper.ajusteCorreccionMonetaria.descripcion}" size="50"></p:inputText> 
+                                    <p:commandButton actionListener="# {pprBean.savePerson}"    
+                                                     icon="ui-icon-disk" title="Icon Only" value="+"/> 
+                                    <p:outputLabel value="Diferencia de Cambio"></p:outputLabel>
+                                    <p:inputText value="#{cntParametrosDeGestionBacking.cuentasDeAjusteWrapper.diferenciaCambio.mascaraGenerada}"></p:inputText> 
+                                    <p:inputText value="#{cntParametrosDeGestionBacking.cuentasDeAjusteWrapper.diferenciaCambio.descripcion}" size="50"></p:inputText> 
+                                    <p:commandButton actionListener="# {pprBean.savePerson}"    
+                                                     icon="ui-icon-disk" title="Icon Only" value="+"/> 
+                                    <p:outputLabel value="Ajuste de Capital"></p:outputLabel>
+                                    <p:inputText value="#{cntParametrosDeGestionBacking.cuentasDeAjusteWrapper.ajusteCapital.mascaraGenerada}"></p:inputText> 
+                                    <p:inputText value="#{cntParametrosDeGestionBacking.cuentasDeAjusteWrapper.ajusteCapital.descripcion}" size="50"></p:inputText>
+                                    <p:commandButton actionListener="# {pprBean.savePerson}"    
+                                                     icon="ui-icon-disk" title="Icon Only" value="+"/> 
+                                    <p:outputLabel value="Ajustes de Reservas Patrimoniales"></p:outputLabel>
+                                    <p:inputText value="#{cntParametrosDeGestionBacking.cuentasDeAjusteWrapper.ajusteReservasPatrimoniales.mascaraGenerada}"></p:inputText> 
+                                    <p:inputText value="#{cntParametrosDeGestionBacking.cuentasDeAjusteWrapper.ajusteReservasPatrimoniales.descripcion}" size="50"></p:inputText>
+                                </h:panelGrid>                                               
+                            </p:panel>
+                        </p:tab>  
+                        <p:tab id="RetencionesIUTab" title="Retenciones I.U.">  
+                            <p:panel style="text-align: left;height: 330px;">
+                                <h:panelGrid columns="6" cellpadding="10">
+                                    <h:outputLabel value="Porcentaje de Retenci&oacute;n de Bienes:" style="font-weight: bold; width: 2%" />  
+                                    <p:inputText id="subtitulos" value="#{cntParametrosDeGestionBacking.retencionesIUEWrapper.porcentajeRetencionesBienes}" size="10" maxlength="10" style="text-align: right"/> %
+                                    <h:outputLabel value="Portcentaje de Retenci&oacute;n de Servicios:" style="font-weight: bold" />  
+                                    <p:inputText id="ivas" value="#{cntParametrosDeGestionBacking.retencionesIUEWrapper.porcentajeRetencionesServicios}" size="10" maxlength="10" style="text-align: right" /> % 
+                                </h:panelGrid> 
+                                <h:panelGrid columns="4" cellpadding="5">
+                                    <p:commandButton actionListener="# {pprBean.savePerson}"    
+                                                     icon="ui-icon-disk" title="Icon Only" value="+"/> 
+                                    <p:outputLabel value="Cuenta I.U.E. Retenciones x Servicios"></p:outputLabel>
+                                    <p:inputText value="#{cntParametrosDeGestionBacking.retencionesIUEWrapper.cuentaIUERetencionesServicios.mascaraGenerada}"></p:inputText> 
+                                    <p:inputText value="#{cntParametrosDeGestionBacking.retencionesIUEWrapper.cuentaIUERetencionesServicios.descripcion}" size="50"></p:inputText>
+                                    <p:commandButton actionListener="# {pprBean.savePerson}"    
+                                                     icon="ui-icon-disk" title="Icon Only" value="+"/> 
+                                    <p:outputLabel value="Cuenta I.U.E. Retenciones x Bienes"></p:outputLabel>
+                                    <p:inputText value="#{cntParametrosDeGestionBacking.retencionesIUEWrapper.cuentaIUERetencionesBienes.mascaraGenerada}"></p:inputText> 
+                                    <p:inputText value="#{cntParametrosDeGestionBacking.retencionesIUEWrapper.cuentaIUERetencionesBienes.descripcion}" size="50"></p:inputText>
+                                    <p:commandButton actionListener="# {pprBean.savePerson}"    
+                                                     icon="ui-icon-disk" title="Icon Only" value="+"/> 
+                                    <p:outputLabel value="Cuenta I.T. Retenciones "></p:outputLabel>
+                                    <p:inputText value="#{cntParametrosDeGestionBacking.retencionesIUEWrapper.cuentaITRetenciones.mascaraGenerada}"></p:inputText> 
+                                    <p:inputText value="#{cntParametrosDeGestionBacking.retencionesIUEWrapper.cuentaITRetenciones.descripcion}" size="50"></p:inputText>
+                                    <p:commandButton actionListener="# {pprBean.savePerson}"    
+                                                     icon="ui-icon-disk" title="Icon Only" value="+"/> 
+                                    <p:outputLabel value="Cuenta Retenci&oacute;n RC-IVA "></p:outputLabel>
+                                    <p:inputText value="#{cntParametrosDeGestionBacking.retencionesIUEWrapper.cuentaRetencionesRCIVA.mascaraGenerada}"></p:inputText> 
+                                    <p:inputText value="#{cntParametrosDeGestionBacking.retencionesIUEWrapper.cuentaRetencionesRCIVA.descripcion}" size="50"></p:inputText>
+                                    <p:commandButton actionListener="# {pprBean.savePerson}"    
+                                                     icon="ui-icon-disk" title="Icon Only" value="+"/> 
+                                    <p:outputLabel value="Cuenta Remesas al Exterior "></p:outputLabel>
+                                    <p:inputText value="#{cntParametrosDeGestionBacking.retencionesIUEWrapper.cuentaRetencionesExterior.mascaraGenerada}"></p:inputText> 
+                                    <p:inputText value="#{cntParametrosDeGestionBacking.retencionesIUEWrapper.cuentaRetencionesExterior.descripcion}" size="50"></p:inputText>
+
+                                </h:panelGrid> 
+                                <h:panelGrid columns="3" cellpadding="10">
+                                    <h:outputLabel value="Retenci&oacute;n IUE - IT Sector Industrial Exporta :" style="font-weight: bold; width: 2%" />  
+                                    <p:inputText id="retencion" value="#{cntParametrosDeGestionBacking.retencionesIUEWrapper.retencionIUEITSectorIndustrialExporta}" size="10" maxlength="10" style="text-align: right"/> %
+                                </h:panelGrid> 
+                                <h:panelGrid columns="4" cellpadding="5">
+                                    <p:commandButton actionListener="# {pprBean.savePerson}"    
+                                                     icon="ui-icon-disk" title="Icon Only" value="+"/> 
+                                    <p:outputLabel value="Cuenta Retenci&oacute;n I.U.E.- I.T. Sector Industrial  "></p:outputLabel>
+                                    <p:inputText value="#{cntParametrosDeGestionBacking.retencionesIUEWrapper.cuentaRetencionIUEITSectorIndustrial.mascaraGenerada}"></p:inputText> 
+                                    <p:inputText value="#{cntParametrosDeGestionBacking.retencionesIUEWrapper.cuentaRetencionIUEITSectorIndustrial.descripcion}" size="50"></p:inputText>
+                                </h:panelGrid>
+                            </p:panel>
+                        </p:tab>  
+                    </p:wizard>              
+                    <div align="center" style="padding:1em 2.2em;">
+                        <p:commandButton value="MODIFICAR"
+                                         title="Modifica los datos de Compras y Ventas, Cuentas de Ajuste y Retenciones I.U."
+                                         icon="ui-icon ui-icon-disk" 
+                                         action="#{cntParametrosDeGestionBacking.modificaParametrosDeGestion()}" 
+                                         ajax="false"/>         
+                    </div>                 
+                </h:form>
+            </p:panel>
+        </div>
+    </ui:define>
+</ui:composition>

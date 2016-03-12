@@ -1,0 +1,36 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition  xmlns="http://www.w3.org/1999/xhtml"
+                 xmlns:h="http://java.sun.com/jsf/html"
+                 xmlns:p="http://primefaces.org/ui"
+                 xmlns:ui="http://java.sun.com/jsf/facelets"
+                 xmlns:f="http://java.sun.com/jsf/core"
+                 template="#{sessionState.pathTemplate}">
+    <ui:define name="content">
+        <h:form id="form">
+            <p:panel header="PARAMETROS DEL SERVIDOR" style="border-style: hidden;text-align: center" >
+                <div align="center">
+                    <p:panel style="text-align: left; white:98%" >
+                        <div align="center">
+                            <h:panelGrid columns="2" columnClasses="label, value" styleClass="grid">  
+                                <p:outputLabel value="URL Autenticación: " style="font-weight: bold"/>  
+                                <h:inputText id="razonsocial" value="#{cntParametrosServidorBacking.urlAutenticacion}" size="80"/>                                  
+                            </h:panelGrid>  
+
+                            <div align="center">
+                                <p:commandButton id="Guardar" value="MODIFICAR"
+                                                 title="Guarda los datos del Servidor"
+                                                 ajax="false" icon="ui-icon ui-icon-disk" action="#{cntParametrosServidorBacking.modificaParametrosServidor()}"/>
+                                <p:commandButton id="Cancelar" value="CANCELAR"
+                                                 immediate="true"
+                                                 title="Cancelar"
+                                                 ajax="false" action="#{cntParametrosServidorBacking.cancelar()}"/>
+                            </div> 
+                        </div>
+                    </p:panel>
+                </div>
+            </p:panel>  
+        </h:form>
+    </ui:define>
+</ui:composition>
+

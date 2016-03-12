@@ -1,0 +1,156 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition  xmlns="http://www.w3.org/1999/xhtml"
+                 xmlns:h="http://java.sun.com/jsf/html"
+                 xmlns:p="http://primefaces.org/ui"
+                 xmlns:ui="http://java.sun.com/jsf/facelets"
+                 xmlns:f="http://java.sun.com/jsf/core"
+                 template="#{sessionState.pathTemplate}">
+    <ui:define name="content">  
+        <script>
+            jQuery(document).ready(function () {
+                autoScroll();
+            });
+        </script>
+        <h:form id="form">
+            <h:inputHidden id="scrollPos" value="#{sessionState.scrollPos}" />           
+            <p:panel id="padrePanel" header="LIBRO DE VENTAS" style="border-style: hidden;text-align: center">
+                <div align="center">
+                    <h:panelGrid columns="9" style="margin-bottom:10px"> 
+                        Año:
+                        <p:spinner id="basic" value="#{cntReporteLibroDeVentasBacking.anio}" style="width: 10% "/>
+                        Periodo:
+                        <p:selectOneMenu value="#{cntReporteLibroDeVentasBacking.peridoParaBusqueda}">
+                            <f:selectItems  value="#{cntReporteLibroDeVentasBacking.peridosList}" var="a" itemLabel="#{a}"/>
+                        </p:selectOneMenu>
+                        <p:commandButton
+                            value="Aceptar"
+                            action="#{cntReporteLibroDeVentasBacking.reporteLibroDeVentas()}"
+                            update="planTable"
+                            ajax="false"                       
+                            icon="ui-icon-search"
+                            onclick="PF('itemDialog').hide();"/>
+                        <p:commandButton
+                            value="Ver Facturas Migradas"
+                            action="#{cntReporteLibroDeVentasBacking.reporteLibroDeVentasMigradas()}"
+                            update="planTable"
+                            ajax="false"                       
+                            icon="ui-icon-search"
+                            onclick="PF('itemDialog').hide();"/>
+
+
+                    </h:panelGrid> 
+                </div>
+
+                <div align="center" style="padding:1em 2.2em;">
+
+                    <h:commandLink action="#{cntReporteLibroDeVentasBacking.reporteLibroVentas_action()}" 
+                                   value="Visualizar y/o Imprimir Libro de Ventas"
+                                   target="popupWindow" >
+                        <p:graphicImage value="/resources/images/printer.png" style="border: 0px"/>
+                    </h:commandLink>
+
+
+                    <p:dataTable id="planTable" 
+                                 var="item" 
+                                 value="#{cntReporteLibroDeVentasBacking.listaReporteLibroDeVentas}" 
+                                 rowKey="#{item}" 
+                                 selection="#{cntReporteLibroDeVentasBacking.selectedCntFacturacion}"
+                                 selectionMode="single"
+                                 style="width: 100%;height: 100%"
+                                 emptyMessage="No existen cuentas para estos par&aacute;metros"
+                                 scrollable="true" scrollHeight="300" resizableColumns="true" 
+                                 liveScroll="true"
+                                 scrollRows="1000"
+                                 widgetVar="planTable"
+                                 >  
+                        <p:ajax event="rowSelect" listener="#{cntReporteLibroDeVentasBacking.obtieneObjeto(e)}" update=":form:padrePanel" onsuccess="saveScrollPos()"/>
+                        <f:facet name="header">  
+                            Lista de Transacciones
+                        </f:facet> 
+                        <!--rendered="# {cntReporteEERRBacking.nivel>=item.idEntidad.nivel}"-->
+                        <p:column headerText="Fecha Factura" style="width: 8%">  
+                            <p:outputLabel value="#{item.fechaFactura}" >
+                                <f:convertDateTime pattern="#{sessionState.dateFormat}"/>
+                            </p:outputLabel>
+                        </p:column>                                                          
+                        <p:column headerText="NIT Comprador" style="width: 8%">  
+                            <p:outputLabel value="#{item.nit}" />                                                                
+                        </p:column>                                                          
+                        <p:column headerText="Razon Social Proveedor" style="width: 12%">  
+                            <p:outputLabel value="#{item.razonSocial}" />                                                                
+                        </p:column>                                                          
+                        <p:column headerText="No Factura" style="width: 8%">  
+                            <p:outputLabel value="#{item.nroInicial}" />                                                                
+                        </p:column>                                                          
+                        <p:column headerText="No Autorizacion" style="width: 8%">  
+                            <p:outputLabel value="#{item.nroAutorizacion}" />                                                                
+                        </p:column>                                                          
+                        <p:column headerText="Cod Ctrol" style="width: 8%">  
+                            <p:outputLabel value="#{item.codigoControl}" />                                                                
+                        </p:column>                                                          
+                        <p:column headerText="Total Factura(A)" style="text-align: right; width: 8%">  
+                            <p:outputLabel value="#{item.monto}">
+                                <f:convertNumber pattern="###,###,###,##0.00" />
+                            </p:outputLabel>
+                        </p:column>                                                          
+                        <p:column headerText="Total I.C.E (B)" style="text-align: right; width: 8%">  
+                            <p:outputLabel value="#{item.ice}">    
+                                <f:convertNumber pattern="###,###,###,##0.00" />
+                            </p:outputLabel>
+                        </p:column>                                                          
+                        <p:column headerText="Total Exentos (C)" style="text-align: right; width: 8%">  
+                            <p:outputLabel value="#{item.excento}">                                
+                                <f:convertNumber pattern="###,###,###,##0.00" />
+                            </p:outputLabel>
+                        </p:column>  
+                        <p:column headerText="Descuento (D)" style="text-align: right; width: 8%">  
+                            <p:outputLabel value="#{cntReporteLibroDeVentasBacking.descuento}">                                
+                                <f:convertNumber pattern="###,###,###,##0.00" />
+                            </p:outputLabel>
+                        </p:column>  
+                        <p:column headerText="Importe Neto (A-B-C)" style="text-align: right; width: 8%">  
+                            <p:outputLabel value="#{cntReporteLibroDeVentasBacking.obtieneImporteNeto(item.monto,item.ice,item.excento,cntReporteLibroDeVentasBacking.descuento)}">
+                                <f:convertNumber pattern="###,###,###,##0.00" />
+                            </p:outputLabel>
+                        </p:column>  
+                        <p:column headerText="Debito Fiscal" style="text-align: right; width: 8%">  
+                            <p:outputLabel value="#{item.iva}">
+                                <f:convertNumber pattern="###,###,###,##0.00" />
+                            </p:outputLabel>
+                        </p:column>
+                        <p:column headerText="Estado" style="text-align: right; width: 8%">  
+                            <p:outputLabel value="#{item.estado == 'ANUL'? 'ANULADO': item.estado == 'CONF'?'CONFIRMADO':' '}" style="color: #{item.estado == 'ANUL'? 'red':'#045491'}">
+                            </p:outputLabel>
+                        </p:column>
+<!--                        <p:column headerText="Comprobante" style="text-align: right; width: 8%">  
+                            <p:outputLabel value="# {cntReporteLibroDeVentasBacking.obtieneComprobante(item)}">
+                            </p:outputLabel>
+                        </p:column>  -->
+                        <p:column headerText="Mov" style="text-align: right; width: 8%">  
+                            <p:outputLabel value="#{item.movimiento}">
+                            </p:outputLabel>
+                        </p:column>  
+
+                        <f:facet name="footer">
+                            <h:commandLink value="EXPORTAR A XLS...." >                              
+                                <p:dataExporter type="xls"
+                                                postProcessor="#{cntReporteLibroDeVentasBacking.postProcessXLS}"
+
+                                                target="planTable" fileName="myexcel" pageOnly="true"/>
+
+                            </h:commandLink>
+                        </f:facet>  
+                    </p:dataTable>
+                    <p:commandButton id="verFactura" value="VER FACTURA"                                                  
+                                     action="#{cntReporteLibroDeVentasBacking.verFacturacion_action()}"                                                   
+                                     ajax="false"/>
+                    <p:commandButton id="anulaFactura" value="ANULAR ..."                                                  
+                                     action="#{cntReporteLibroDeVentasBacking.anularFactura_action()}"                                                   
+                                     ajax="false"/>
+                </div>                                   
+            </p:panel>
+        </h:form>  
+    </ui:define>
+</ui:composition>
+

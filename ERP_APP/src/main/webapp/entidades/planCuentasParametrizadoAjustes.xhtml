@@ -1,0 +1,60 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition  xmlns="http://www.w3.org/1999/xhtml"
+                 xmlns:h="http://java.sun.com/jsf/html"
+                 xmlns:p="http://primefaces.org/ui"
+                 xmlns:ui="http://java.sun.com/jsf/facelets"
+                 xmlns:f="http://java.sun.com/jsf/core"
+                 template="#{sessionState.pathTemplate}"
+                 xmlns:c="http://java.sun.com/jsp/jstl/core"
+                 xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+    <ui:define name="content">
+        <div align="center" >
+            <h:form id="form">  
+                <p:panel id="titulo" header="PLAN DE CUENTAS PARAMETRIZADO" style="overflow-y:auto; overflow-x: auto;text-transform: uppercase;border-style: hidden">
+
+                    <p:panel style="height:  360px">
+                        <p:dataTable id="dataTablePlanDeCuentas" 
+                                     var="item" 
+                                     value="#{cntPlanCuentasParametrizadoAjustesBacking.listaCuentasAjuste}" 
+                                     rowKey="#{item}"                                                                                    
+                                     emptyMessage="No existen cuentas"
+                                     liveScroll="true"
+                                     scrollRows="50"
+                                     scrollable="true" scrollHeight="300"
+                                     widgetVar="planTable" style="width: 100%;height: 100%" >                                                                    
+                            <p:column id="mascaraGenerada" filterBy="mascaraGenerada" 
+                                      headerText="Cuenta" width="20%" filterStyle="display:none">  
+                                #{item.cntEntidad.mascaraGenerada}  
+                            </p:column>  
+                            <p:column id="descripcion" filterBy="descripcion" 
+                                      headerText="Descripci&oacute;n" width="50%" filterStyle="display:none">    
+                                #{cntPlanCuentasParametrizadoAjustesBacking.insertaPuntosAutomatio(item)}  
+                            </p:column>  
+                            <!--                            <p:column filterBy="descripcion" 
+                                                                  headerText="Descripci&oacute;n" width="130" filterStyle="display:none">  
+                                                            <p:selectOneRadio id="console" value="# {item.parAjustes}">
+                                                                <f:selectItem itemLabel="" itemValue="SAJU" />
+                                                                <f:selectItem itemLabel="" itemValue="AREI" />
+                                                                <f:selectItem itemLabel="" itemValue="AITB" />
+                                                                <f:selectItem itemLabel="" itemValue="DCAM" />
+                                                                <f:selectItem itemLabel="" itemValue="ADCA" />
+                                                                <f:selectItem itemLabel="" itemValue="ACAP" />
+                                                                <f:selectItem itemLabel="" itemValue="AGPA" />
+                                                                <f:selectItem itemLabel="" itemValue="ARPA" />
+                                                            </p:selectOneRadio>
+                                                        </p:column>  -->
+                            <p:column id="tipoAjuste" filterBy="descripcion" 
+                                      headerText="Tipo de Ajuste" width="30%" filterStyle="display:none">  
+                                <p:selectOneMenu value="#{item.parAjustes}" rendered="#{item.cntEntidad.nivel==1?true:false}">
+                                    <f:selectItems value="#{cntPlanCuentasParametrizadoAjustesBacking.listaTiposDeAjusteParametrizacion}" var="h" itemLabel="#{h.descripcion}" itemValue="#{h.codigo}"/>
+                                </p:selectOneMenu>
+                            </p:column>  
+
+                        </p:dataTable>
+                    </p:panel>
+                </p:panel>
+            </h:form>  
+        </div>
+    </ui:define>
+</ui:composition>

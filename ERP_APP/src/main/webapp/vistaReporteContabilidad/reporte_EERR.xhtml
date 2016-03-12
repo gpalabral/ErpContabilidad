@@ -1,0 +1,184 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition  xmlns="http://www.w3.org/1999/xhtml"
+                 xmlns:h="http://java.sun.com/jsf/html"
+                 xmlns:p="http://primefaces.org/ui"
+                 xmlns:ui="http://java.sun.com/jsf/facelets"
+                 xmlns:f="http://java.sun.com/jsf/core"
+                 template="#{sessionState.pathTemplate}">
+    <ui:define name="content">
+        <script>
+            jQuery(document).ready(function () {
+                autoScroll();
+            });
+        </script>
+        <h:form id="form">
+            <h:inputHidden id="scrollPos" value="#{sessionState.scrollPos}" />
+            <p:panel id="padrePanel" header="ESTADO DE RESULTADOS" style="border-style: hidden;text-align: center">
+                <div align="left">
+                    <h:panelGrid columns="9" style="margin-bottom:10px">  
+                        <h:panelGroup>
+                            <p:outputLabel value="Desde:"/>
+                            <p:spacer width="15" height="2" />
+                            <p:calendar value="#{cntReporte_EERRBacking.fechaDesde}" pattern="dd/MM/yyyy" size="12" style="text-align:center" id="Fecha_Inicial" locale="es">
+                            </p:calendar>
+                        </h:panelGroup>
+
+                        <h:panelGroup>
+                            <p:outputLabel value="Hasta:"/>
+                            <p:spacer width="15" height="2" />
+                            <p:calendar value="#{cntReporte_EERRBacking.fechaHasta}" pattern="dd/MM/yyyy" size="12" style="text-align:center" id="fechaFiltro" locale="es">
+                            </p:calendar>
+                        </h:panelGroup>
+                        <p:outputLabel value="Practicado al :"/>
+                        <p:outputLabel id="actualizaFecha" value="#{cntReporte_EERRBacking.fechaPracticadoA}"/>
+                        <p:commandButton
+                            value="Aceptar"
+                            action="#{cntReporte_EERRBacking.generaLista()}"
+                            update="planTable"
+                            ajax="false"                       
+                            icon="ui-icon-search"
+                            onclick="PF('itemDialog').hide();"/>
+
+
+                    </h:panelGrid> 
+                </div>
+
+                <div align="center" style="padding:1em 2.2em;">
+                    <h:panelGrid style="center" id="panelGridListado" columns="1">  
+                        <p:dataTable id="planTable" 
+                                     var="item" 
+                                     value="#{cntReporte_EERRBacking.listaEERR}" 
+                                     rowKey="#{item}" 
+                                     selection="#{cntReporte_EERRBacking.selectedPojoCntEntidadBGyEERR}"                                          
+                                     selectionMode="single"
+                                     style="width: 100%;height: 100%"
+                                     emptyMessage="No existen cuentas para estos par&aacute;metros"
+                                     resizableColumns="true" 
+                                     scrollRows="1000"
+                                     scrollable="true"
+                                     liveScroll="true"
+                                     scrollHeight="300"
+                                     >                                
+                            <p:ajax event="rowSelect" listener="#{cntReporte_EERRBacking.obtieneObjeto(e)}" update=":form:panelGridListado" onsuccess="saveScrollPos()"/>
+                            <p:column  headerText="Descripción" width="36%">  
+                                <p:outputLabel value="#{item.idEntidad.mascaraGenerada}   #{item.descripcion}"/>
+                            </p:column>
+                            <p:column headerText="Montos Bs" width="9%" style="text-align: right" rendered="#{cntReporte_EERRBacking.moneda == 'AMB'  ? true : false}">  
+                                <p:outputLabel value="#{item.montoMonedaUno}">
+                                    <f:convertNumber pattern="###,###,###,##0.00" />
+                                </p:outputLabel>
+                            </p:column>
+                            <p:column headerText="Montos $us" width="9%" style="text-align: right" rendered="#{cntReporte_EERRBacking.moneda == 'AMB'  ? true : false}">  
+                                <p:outputLabel value="#{item.montoMonedaDos}">
+                                    <f:convertNumber pattern="###,###,###,##0.00" />
+                                </p:outputLabel>
+                            </p:column>
+                            <p:column headerText="Montos Bs" width="9%" style="text-align: right" rendered="#{cntReporte_EERRBacking.moneda == 'BOL'  ? true : false}">  
+                                <p:outputLabel value="#{item.nivel1bs}">
+                                    <f:convertNumber pattern="###,###,###,##0.00" />
+                                </p:outputLabel>
+                            </p:column>
+                            <p:column headerText="Montos Bs" width="9%" style="text-align: right" rendered="#{cntReporte_EERRBacking.moneda == 'BOL'  ? true : false}">  
+                                <p:outputLabel value="#{item.nivel2bs}">
+                                    <f:convertNumber pattern="###,###,###,##0.00" />
+                                </p:outputLabel>
+                            </p:column>
+                            <p:column headerText="Montos Bs" width="9%" style="text-align: right" rendered="#{cntReporte_EERRBacking.moneda == 'BOL'  ? true : false}">  
+                                <p:outputLabel value="#{item.nivel3bs}">
+                                    <f:convertNumber pattern="###,###,###,##0.00" />
+                                </p:outputLabel>
+                            </p:column>
+                            <p:column headerText="Montos Bs" width="9%" style="text-align: right" rendered="#{cntReporte_EERRBacking.moneda == 'BOL'  ? true : false}">  
+                                <p:outputLabel value="#{item.nivel4bs}">
+                                    <f:convertNumber pattern="###,###,###,##0.00" />
+                                </p:outputLabel>
+                            </p:column>
+                            <p:column headerText="Montos Bs" width="9%" style="text-align: right" rendered="#{cntReporte_EERRBacking.moneda == 'BOL'  ? true : false}">  
+                                <p:outputLabel value="#{item.nivel5bs}">
+                                    <f:convertNumber pattern="###,###,###,##0.00" />
+                                </p:outputLabel>
+                            </p:column>
+                            <p:column headerText="Montos Bs" width="9%" style="text-align: right" rendered="#{cntReporte_EERRBacking.moneda == 'BOL'  ? true : false}">  
+                                <p:outputLabel value="#{item.nivel6bs}">
+                                    <f:convertNumber pattern="###,###,###,##0.00" />
+                                </p:outputLabel>
+                            </p:column>
+                            <p:column headerText="Montos $us" width="9%" style="text-align: right" rendered="#{cntReporte_EERRBacking.moneda == 'SUS'  ? true : false}">  
+                                <p:outputLabel value="#{item.nivel1sus}">
+                                    <f:convertNumber pattern="###,###,###,##0.00" />
+                                </p:outputLabel>    
+                            </p:column>
+                            <p:column headerText="Montos $us" width="9%" style="text-align: right" rendered="#{cntReporte_EERRBacking.moneda == 'SUS'  ? true : false}">  
+                                <p:outputLabel value="#{item.nivel2sus}">
+                                    <f:convertNumber pattern="###,###,###,##0.00" />
+                                </p:outputLabel>
+                            </p:column>
+                            <p:column headerText="Montos $us" width="9%" style="text-align: right" rendered="#{cntReporte_EERRBacking.moneda == 'SUS'  ? true : false}">  
+                                <p:outputLabel value="#{item.nivel3sus}">
+                                    <f:convertNumber pattern="###,###,###,##0.00" />
+                                </p:outputLabel>
+                            </p:column>
+                            <p:column headerText="Montos $us" width="9%" style="text-align: right" rendered="#{cntReporte_EERRBacking.moneda == 'SUS'  ? true : false}">  
+                                <p:outputLabel value="#{item.nivel4sus}"/>
+                            </p:column>
+                            <p:column headerText="Montos $us" width="9%" style="text-align: right" rendered="#{cntReporte_EERRBacking.moneda == 'SUS'  ? true : false}">  
+                                <p:outputLabel value="#{item.nivel5sus}">
+                                    <f:convertNumber pattern="###,###,###,##0.00" />
+                                </p:outputLabel>
+                            </p:column>
+                            <p:column headerText="Montos $us" width="9%" style="text-align: right" rendered="#{cntReporte_EERRBacking.moneda == 'SUS'  ? true : false}">  
+                                <p:outputLabel value="#{item.nivel6sus}">
+                                    <f:convertNumber pattern="###,###,###,##0.00" />
+                                </p:outputLabel>
+                            </p:column>
+                            <p:columnGroup type="footer">  
+                            </p:columnGroup>  
+                            <f:facet name="footer">
+                                <h:commandLink value="EXPORTAR A XLS" >                              
+                                    <p:dataExporter type="xls"
+                                                    postProcessor="#{cntReporte_EERRBacking.postProcessXLS}"
+
+                                                    target="planTable" fileName="myexcel" pageOnly="true"/>
+
+                                </h:commandLink>
+                            </f:facet> 
+                        </p:dataTable>
+                        <h:panelGrid columns="10">
+                            <p:spacer width="40" ></p:spacer>
+                            <h:outputLabel value="Moneda:" style="font-weight: bold" />  
+                            <p:selectOneRadio id="moneda" value="#{cntReporte_EERRBacking.moneda}">  
+                                <f:selectItem itemLabel="Bolivianos" itemValue="BOL" />  
+                                <f:selectItem itemLabel="Dolares" itemValue="SUS" /> 
+                                <f:selectItem itemLabel="Ambos" itemValue="AMB" /> 
+                                <p:ajax update="planTable"/>                                    
+                            </p:selectOneRadio>
+                            <p:spacer width="50" ></p:spacer>
+                            <h:outputText value="Incluye Ceros: " style="font-weight: bold"/>  
+                            <p:selectOneRadio id="opciones2" value="#{cntReporte_EERRBacking.incluyeCeros}">  
+                                <f:selectItem itemLabel="Si" itemValue="false" />  
+                                <f:selectItem itemLabel="No" itemValue="true" />  
+                                <p:ajax event="change" update="planTable" listener="#{cntReporte_EERRBacking.activaCeros_c(e)}"/>                                    
+                            </p:selectOneRadio> 
+                            <h:outputLabel  value="Nivel:" style="font-weight: bold" />  
+                            <p:selectOneMenu value="#{cntReporte_EERRBacking.nivel_aux}">
+                                <f:selectItems value="#{cntReporte_EERRBacking.listaNivelesComprobantes()}" var="a" itemLabel="#{a.descripcion}" itemValue="#{a.nivel}"/>                                    
+                                <p:ajax update="planTable,fechaFiltro" listener="#{cntReporte_EERRBacking.activaNivel_c()}"/>                                    
+                            </p:selectOneMenu>
+                            <p:commandButton id="verMayor" value="VER MAYOR..."                                                  
+                                             action="#{cntReporte_EERRBacking.verMayorCntaElegida()}"                                                  
+                                             ajax="false"/>
+                            <h:commandLink action="#{cntReporte_EERRBacking.reporteEERR_action()}" 
+                                           value="Visualizar y/o Imprimir EERR"
+                                           target="popupWindow" >
+                                <p:graphicImage value="/resources/images/printer.png" style="border: 0px"/>
+                            </h:commandLink>
+
+                        </h:panelGrid>
+                    </h:panelGrid>
+                </div>                                   
+            </p:panel>
+        </h:form>  
+    </ui:define>
+</ui:composition>
+

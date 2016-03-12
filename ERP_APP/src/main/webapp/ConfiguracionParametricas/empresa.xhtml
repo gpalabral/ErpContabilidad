@@ -1,0 +1,284 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition  xmlns="http://www.w3.org/1999/xhtml"
+                 xmlns:h="http://java.sun.com/jsf/html"
+                 xmlns:p="http://primefaces.org/ui"
+                 xmlns:ui="http://java.sun.com/jsf/facelets"
+                 xmlns:f="http://java.sun.com/jsf/core"
+                 template="#{sessionState.pathTemplate}">
+    <ui:define name="content">
+        <div align="center">
+            <h:form id="form">
+                <p:panel header="Empresas" style="border-style: hidden" align="left">
+                    <p:growl id="growl" showDetail="true" />  
+                    <p:tabView id="tabView">  
+                        <p:tab id="tab1" title="Datos Empresa">  
+                            <h:panelGrid columns="2" cellpadding="10">
+                                <h:outputLabel value="Razón Social:" style="font-weight: bold" />  
+                                <p:inputText id="razonsocial" value="" size="30" />  
+                                <h:outputLabel value="Subtítulo:" style="font-weight: bold" />  
+                                <p:inputText id="subtitulo" value="" /> 
+                                <h:outputLabel value="N.I.T.:" style="font-weight: bold"/>  
+                                <p:inputText id="nit" value="" />  
+                                <h:outputLabel value="Autorización:" style="font-weight: bold"/>  
+                                <p:inputText id="autorizacion" value="" />  
+                                <h:outputLabel value="Dirección:" style="font-weight: bold; width: 100px"/>  
+                                <p:inputText id="direccion" value="" size="50"/>  
+                            </h:panelGrid>
+                        </p:tab>  
+                        <p:tab id="tab2" title="Gestión Contable ">  
+                            <p:panelGrid style="margin-top:20px">  
+                                <f:facet name="header">  
+                                    <p:row>  
+                                    </p:row>  
+                                </f:facet>  
+                                <p:row>  
+                                    <p:column style="font-weight: bold; border-style: hidden">Ciudad:</p:column>  
+                                    <p:column style="font-weight: bold; border-style: hidden">
+                                        <p:inputText/>  
+                                    </p:column>  
+                                    <p:column  style="font-weight: bold; border-style: hidden">Inicio Gestión Fiscal:</p:column>  
+                                    <p:column  style="font-weight: bold; border-style: hidden">
+                                        <h:outputText value=" " />  
+                                        <p:selectOneMenu value="#{buttonBean.number}">  
+                                            <f:selectItem itemLabel="Elegir" itemValue="" />  
+                                            <f:selectItem itemLabel="1 - Enero" itemValue="1" />  
+                                            <f:selectItem itemLabel="2 - Febrero" itemValue="2" />  
+                                            <f:selectItem itemLabel="3 - Marzo" itemValue="3" />  
+                                            <f:selectItem itemLabel="4 - Abril" itemValue="4" />  
+                                            <f:selectItem itemLabel="5 - Mayo" itemValue="5" />  
+                                            <f:selectItem itemLabel="6 - Junio" itemValue="6" />  
+                                            <f:selectItem itemLabel="7 - Julio" itemValue="7" />  
+                                            <f:selectItem itemLabel="8 - Agosto" itemValue="8" />  
+                                            <f:selectItem itemLabel="9 - Septiembre" itemValue="9" />  
+                                            <f:selectItem itemLabel="10 - Octubre" itemValue="10" />  
+                                            <f:selectItem itemLabel="11 - Noviembre" itemValue="11" />  
+                                            <f:selectItem itemLabel="12 - Diciembre" itemValue="12" />  
+                                        </p:selectOneMenu>    
+                                    </p:column>  
+                                </p:row>  
+                                <p:row>  
+                                    <p:column style="font-weight: bold; border-style: hidden">Periodo Actual:</p:column>  
+                                    <p:column style="font-weight: bold; border-style: hidden">
+                                        <h:outputText value=" " />  
+                                        <p:selectOneMenu value="#{buttonBean.number}">  
+                                            <f:selectItem itemLabel="Elegir" itemValue="" />  
+                                            <f:selectItem itemLabel="1 - Enero" itemValue="1" />  
+                                            <f:selectItem itemLabel="2 - Febrero" itemValue="2" />  
+                                            <f:selectItem itemLabel="3 - Marzo" itemValue="3" />  
+                                            <f:selectItem itemLabel="4 - Abril" itemValue="4" />  
+                                            <f:selectItem itemLabel="5 - Mayo" itemValue="5" />  
+                                            <f:selectItem itemLabel="6 - Junio" itemValue="6" />  
+                                            <f:selectItem itemLabel="7 - Julio" itemValue="7" />  
+                                            <f:selectItem itemLabel="8 - Agosto" itemValue="8" />  
+                                            <f:selectItem itemLabel="9 - Septiembre" itemValue="9" />  
+                                            <f:selectItem itemLabel="10 - Octubre" itemValue="10" />  
+                                            <f:selectItem itemLabel="11 - Noviembre" itemValue="11" />  
+                                            <f:selectItem itemLabel="12 - Diciembre" itemValue="12" />  
+                                        </p:selectOneMenu>    
+                                    </p:column>  
+                                    <p:column  style="font-weight: bold; alignment-adjust: alphabetic;" >   Año:</p:column>
+                                    <p:column  style="font-weight: bold; border-style: hidden">   <h:outputText value=" " />  
+                                        <p:selectOneMenu value="#{buttonBean.number}">  
+                                            <f:selectItem itemLabel="Elegir" itemValue="" />  
+                                            <f:selectItem itemLabel="2010" itemValue="1" />  
+                                            <f:selectItem itemLabel="2011" itemValue="2" />  
+                                            <f:selectItem itemLabel="2012" itemValue="3" />  
+                                            <f:selectItem itemLabel="2014" itemValue="4" />  
+                                            <f:selectItem itemLabel="2015" itemValue="5" />  
+                                            <f:selectItem itemLabel="2016" itemValue="6" />  
+                                            <f:selectItem itemLabel="2017" itemValue="7" />  
+                                            <f:selectItem itemLabel="2018" itemValue="8" />  
+                                            <f:selectItem itemLabel="2019" itemValue="9" />  
+                                            <f:selectItem itemLabel="2020" itemValue="10" />  
+                                            <f:selectItem itemLabel="2021" itemValue="11" />  
+                                            <f:selectItem itemLabel="2022" itemValue="12" />  
+                                            <f:selectItem itemLabel="2023" itemValue="13" />  
+                                            <f:selectItem itemLabel="2024" itemValue="14" />  
+                                            <f:selectItem itemLabel="2025" itemValue="15" />  
+                                            <f:selectItem itemLabel="2026" itemValue="16" />  
+                                            <f:selectItem itemLabel="2027" itemValue="17" />
+                                            <f:selectItem itemLabel="2028" itemValue="18" />
+                                            <f:selectItem itemLabel="2029" itemValue="19" />
+                                            <f:selectItem itemLabel="2030" itemValue="20" />
+                                        </p:selectOneMenu>    </p:column>  
+                                </p:row>  
+                                <p:row>  
+                                    <p:column style="font-weight: bold; border-style: hidden">Tipo de Cambio:</p:column>  
+                                    <p:column >
+                                        <p:inputText size="8" maxlength="8"/>
+                                    </p:column>  
+                                    <p:column style="font-weight: bold; border-style: hidden" >Definición de Cuentas:</p:column>  
+                                    <p:column style=" border-style: hidden" >
+                                        <p:commandButton actionListener="# {pprBean.savePerson}"    
+                                                         icon="ui-icon-disk" title="Icon Only" style="size: 25p "/> 
+                                    </p:column>  
+                                </p:row>  
+                                <p:row>  
+                                    <p:column style="font-weight: bold; border-style: hidden">Norma Contable:</p:column>  
+                                    <p:column colspan="3" style=" border-style: hidden" > 
+                                        <p:selectOneRadio id="options" value="# {formBean.number}" style="border-color: #ffffff">  
+                                            <f:selectItem itemLabel="Anterior" itemValue="1" />  
+                                            <f:selectItem itemLabel="Actual" itemValue="2" />
+                                        </p:selectOneRadio>  </p:column>  
+                                </p:row>  
+                                <p:row>  
+                                    <p:column style="font-weight: bold; border-style: hidden">Ajustes REI sobre Cuenta:</p:column>  
+                                    <p:column  colspan="3" style="border-style: hidden"> 
+                                        <p:selectOneRadio id="options2" value="# {formBean.number}" style="border-color: #ffffff">  
+                                            <f:selectItem itemLabel="Si" itemValue="1" />  
+                                            <f:selectItem itemLabel="No" itemValue="2" />
+                                        </p:selectOneRadio>  </p:column> 
+                                </p:row>  
+                                <p:row>  
+                                    <p:column style="font-weight: bold; border-style: hidden">Modo de Procesos de Ajustes:</p:column>  
+                                    <p:column colspan="3" style=" border-style: hidden">
+                                        <p:selectOneRadio id="options3" value="# {formBean.number}" style="border-color: #ffffff">  
+                                            <f:selectItem itemLabel="Un comprobante por día" itemValue="1" />  
+                                            <f:selectItem itemLabel="Un comprobante mensual" itemValue="2" />
+                                        </p:selectOneRadio> 
+                                    </p:column> 
+                                </p:row>
+                                <p:row>  
+                                    <p:column style="font-weight: bold; border-style: hidden">Tipo de Moneda:</p:column>  
+                                    <p:column colspan="3" style=" border-style: hidden">
+                                        <p:selectOneRadio id="options4" value="# {formBean.number}" style="border-color: #ffffff">  
+                                            <f:selectItem itemLabel="Dolar" itemValue="1" />  
+                                            <f:selectItem itemLabel="Euro" itemValue="2" />
+                                        </p:selectOneRadio>         
+                                    </p:column> 
+                                </p:row>  
+                            </p:panelGrid>  
+                        </p:tab>  
+                        <p:tab id="tab3" title="Varios">  
+                            <p:panelGrid style="margin-top:20px">  
+                                <p:row>  
+                                    <p:column style="font-weight: bold; border-style: hidden">Ejecuta Presupuesto Fiscal:</p:column>  
+                                    <p:column colspan="3" style=" border-style: hidden" > 
+                                        <p:selectOneRadio id="options11" value="# {formBean.number}" style="border-color: #ffffff">  
+                                            <f:selectItem itemLabel="Si" itemValue="1" />  
+                                            <f:selectItem itemLabel="No" itemValue="2" />
+                                        </p:selectOneRadio>  </p:column>  
+                                </p:row>  
+                                <p:row>  
+                                    <p:column style="font-weight: bold; border-style: hidden">Centros de Costos:</p:column>  
+                                    <p:column  colspan="2" style="border-style: hidden"> 
+                                        <p:selectOneRadio id="options21" value="# {formBean.number}" style="border-color: #ffffff">  
+                                            <f:selectItem itemLabel="Si" itemValue="1" />  
+                                            <f:selectItem itemLabel="No" itemValue="2" />
+                                        </p:selectOneRadio>  </p:column> 
+                                    <p:column  style="font-weight: bold; border-style: hidden">
+                                        <p:commandButton actionListener="# {pprBean.savePerson}"    
+                                                         icon="ui-icon-disk" value="Niveles" disabled="true" title="Icon Only" style="size: 25p "/> 
+                                    </p:column>
+                                </p:row>  
+                                <p:row>  
+                                    <p:column style="font-weight: bold; border-style: hidden">Cuentas Corporativas:</p:column>  
+                                    <p:column colspan="2" style=" border-style: hidden">
+                                        <p:selectOneRadio id="options31" value="# {formBean.number}" style="border-color: #ffffff">  
+                                            <f:selectItem itemLabel="Si" itemValue="1" />  
+                                            <f:selectItem itemLabel="No" itemValue="2" />
+                                        </p:selectOneRadio> 
+                                    </p:column> 
+                                    <p:column style="border-style: hidden" >
+                                        <h:outputText value=" " />  
+                                        <p:selectOneMenu value="#{buttonBean.number}" disabled="true">  
+                                            <f:selectItem itemLabel="Elegir Longitud" itemValue="" />  
+                                            <f:selectItem itemLabel="1" itemValue="1" />  
+                                            <f:selectItem itemLabel="2" itemValue="2" />  
+                                            <f:selectItem itemLabel="3" itemValue="3" />  
+                                            <f:selectItem itemLabel="4" itemValue="4" />  
+                                            <f:selectItem itemLabel="5" itemValue="5" />  
+                                            <f:selectItem itemLabel="6" itemValue="6" />  
+                                            <f:selectItem itemLabel="7" itemValue="7" />  
+                                            <f:selectItem itemLabel="8" itemValue="8" />  
+                                            <f:selectItem itemLabel="9" itemValue="9" />  
+                                            <f:selectItem itemLabel="10" itemValue="10" />  
+                                            <f:selectItem itemLabel="11" itemValue="11" />  
+                                            <f:selectItem itemLabel="12" itemValue="12" />  
+                                            <f:selectItem itemLabel="13" itemValue="13" />  
+                                            <f:selectItem itemLabel="14" itemValue="14" />  
+                                            <f:selectItem itemLabel="15" itemValue="15" />  
+                                            <f:selectItem itemLabel="16" itemValue="16" />  
+                                            <f:selectItem itemLabel="17" itemValue="17" />
+                                            <f:selectItem itemLabel="18" itemValue="18" />
+                                            <f:selectItem itemLabel="19" itemValue="19" />
+                                            <f:selectItem itemLabel="20" itemValue="20" />
+                                        </p:selectOneMenu> 
+                                    </p:column> 
+                                </p:row>
+                                <p:row>  
+                                    <p:column style="font-weight: bold; border-style: hidden">Nuevo Sistema de Facturación:</p:column>  
+                                    <p:column colspan="3" style=" border-style: hidden">
+                                        <p:selectOneRadio id="options41" value="# {formBean.number}" style="border-color: #ffffff">  
+                                            <f:selectItem itemLabel="Si" itemValue="1" />  
+                                            <f:selectItem itemLabel="No" itemValue="2" />
+                                        </p:selectOneRadio>         
+                                    </p:column> 
+                                </p:row>  
+                                <p:row>  
+                                    <p:column style="font-weight: bold; border-style: hidden">Facturación Computarizada:</p:column>  
+                                    <p:column colspan="3" style=" border-style: hidden">
+                                        <p:selectOneRadio id="options411" value="# {formBean.number}" style="border-color: #ffffff">  
+                                            <f:selectItem itemLabel="Si" itemValue="1" />  
+                                            <f:selectItem itemLabel="No" itemValue="2" />
+                                            <f:selectItem itemLabel="Antigua" itemValue="3" />
+                                        </p:selectOneRadio>         
+                                    </p:column> 
+                                </p:row>  
+                                <p:row>  
+                                    <p:column style="font-weight: bold; border-style: hidden"> </p:column>  
+                                    <p:column colspan="3" style=" border-style: hidden">
+                                        <p:selectOneRadio id="options4a" value="# {formBean.number}" style="border-color: #ffffff">  
+                                            <f:selectItem itemLabel="S/Cod.Ctrl." itemValue="1" />  
+                                            <f:selectItem itemLabel="C/Cod.Ctrl." itemValue="2" />
+                                        </p:selectOneRadio>         
+                                    </p:column> 
+                                </p:row>  
+                                <p:row>  
+                                    <p:column style="font-weight: bold; border-style: hidden"> </p:column>  
+                                    <p:column colspan="3" style=" border-style: hidden">
+                                        <p:selectOneRadio id="options4b" value="# {formBean.number}" style="border-color: #ffffff">  
+                                            <f:selectItem itemLabel="Proyectos" itemValue="1" />  
+                                            <f:selectItem itemLabel="Auxiliares" itemValue="2" />
+                                            <f:selectItem itemLabel="Ninguna" itemValue="3" />
+                                        </p:selectOneRadio>         
+                                    </p:column> 
+                                </p:row> 
+                                <p:row>  
+                                    <p:column style="font-weight: bold; border-style: hidden">Migrar Datos Clientes:</p:column>  
+                                    <p:column  colspan="2" style="border-style: hidden"> 
+                                        <p:selectOneRadio id="conexion" value="# {formBean.number}" style="border-color: #ffffff">  
+                                            <f:selectItem itemLabel="Si" itemValue="1" />  
+                                            <f:selectItem itemLabel="No" itemValue="2" />
+                                        </p:selectOneRadio>  </p:column> 
+                                    <p:column  style="font-weight: bold; border-style: hidden">
+                                        <p:commandButton actionListener="# {pprBean.savePerson}"    
+                                                         icon="ui-icon-disk" value="Def. Conexión" disabled="true" title="Icon Only" style="size: 25p "/> 
+                                    </p:column>
+                                </p:row>
+                            </p:panelGrid>  
+                        </p:tab>  
+                    </p:tabView>  
+                </p:panel>
+                 <div align="center" style="padding:1em 2.2em;">
+<!--                    <p:commandButton value="Guardar "
+                                     icon="ui-icon ui-icon-search" 
+                                     action="# {cntAuxiliaresBacking.editCntAuxiliares()}" 
+                                     ajax="false"
+                                     rendered="# {cntAuxiliaresBacking.editable}"/>-->
+                
+                    <p:commandButton value="Guardar"
+                                     icon="ui-icon ui-icon-disk" 
+                                     action="# {cntAuxiliaresBacking.actionReturnAuxiliares()}" 
+                                     ajax="false"
+                                     immediate="true"/>
+                </div> 
+                
+                
+                
+            </h:form>
+        </div>
+    </ui:define>
+</ui:composition>
+

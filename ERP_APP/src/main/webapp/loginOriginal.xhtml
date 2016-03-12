@@ -1,0 +1,94 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html  xmlns="http://www.w3.org/1999/xhtml"
+       xmlns:h="http://java.sun.com/jsf/html"
+       xmlns:p="http://primefaces.org/ui"
+       xmlns:f="http://java.sun.com/jsf/core"
+       template="#{sessionState.pathTemplate}"
+       xmlns:ui="http://java.sun.com/jsf/facelets">
+    <h:head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Login</title>
+
+        <h:outputStylesheet library="bap.css" name="cssLayout.css"/>
+
+    </h:head>
+
+    <h:body>
+        <p:layout fullPage="true" > 
+
+            <p:layoutUnit position="north" style="height:100%">
+                <div id="top">
+                    <p:toolbar style="width: 99%;height:10%">  
+                        <p:toolbarGroup align="left">  
+                            <p:graphicImage value="/resources/images/logoBAP5.png" />  
+                        </p:toolbarGroup>  
+                        <p:toolbarGroup align="right">  
+                        </p:toolbarGroup>  
+                    </p:toolbar>  
+                </div>
+            </p:layoutUnit>
+
+            <p:layoutUnit position="center">  
+                <p:dialog header="Mensajes del Sistema" visible="#{sessionState.anyError}" showEffect="fade" hideEffect="explode" widgetVar="dlg" modal="true" appendTo="@(body)" width="500" height="150">  
+                    <h:form id="formMessages">
+                        <div align="left" style="padding:1em 2.2em;">
+                            <p:messages id="messages" showDetail="false" showSummary="true"/>
+                        </div>
+                        <div align="center" style="padding:1em 2.2em;">
+                            <p:commandButton id="submitButton" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" value="Aceptar" onclick="PF('dlg').hide();"/>  
+                        </div>
+                    </h:form>
+                </p:dialog>
+                <div align="center" style="padding:1em 2.2em;">
+                    <h:form>
+                        <!--<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" />--> 
+                        <p:panel header="LOGIN" style="width: 100%;height: 100%;margin-bottom:10px;">
+                            <h:panelGrid columns="2"  id="centro">  
+                                <h:outputLabel value="Usuario: *" />  
+                                <p:inputText value="#{admLoginBacking.login}" required="true" requiredMessage="El Campo Usuario es necesario que tenga un valor."/>
+                                <h:outputLabel value="Contraseña: *" />  
+                                <p:password value="#{admLoginBacking.password}" required="true" feedback="false" requiredMessage="El Campo Contraseña es necesario que tenga un valor."/>
+                            </h:panelGrid>  
+                            <!--<p:captcha id="captcha" theme="white" language="es" requiredMessage="Error al momento de logearse, verifique los datos introducidos."></p:captcha>-->
+                            <br/>
+                            <p:commandButton
+                                value="Login"
+                                action="#{admLoginBacking.validarLogin()}"
+                                actionListener="#{admLoginBacking.check(e)}"
+                                ajax="false"
+                                image="ui-icon ui-icon-key"/>
+                        </p:panel>
+
+
+                    </h:form>
+                </div>
+            </p:layoutUnit>  
+            <p:layoutUnit position="south" style="height:100%">
+                <div id="top">
+                    <p:toolbar style="width: 99%;height: 90%" id="top">  
+                        <p:toolbarGroup align="left">  
+                            <div align="center" style="padding:1em 25.2em;">
+                                <h:panelGrid columns="1">
+                                    <h:outputLabel for="name" value="Bienvenido al Sistema ERP" />  
+                                    <p:separator id="separator" style="width: 600px "/>
+                                    <h:outputText  value="M&oacute;dulo Contable." 
+                                                   style="font-style: italic"/>  
+                                    <h:panelGrid columns="4">
+                                        <h:outputLabel value="Versión:" style="text-align: left; color: #045491;"/>
+                                        <h:outputText value="#{sessionState.version}"/>
+                                        <h:outputLabel value="Release:" style="text-align: left; color: #045491;"/>
+                                        <h:outputText value="#{sessionState.release}"/>                                        
+                                    </h:panelGrid>
+                                </h:panelGrid>
+                            </div>
+
+                        </p:toolbarGroup>  
+
+                    </p:toolbar>  
+                </div>
+            </p:layoutUnit>
+
+        </p:layout>  
+    </h:body>
+</html>

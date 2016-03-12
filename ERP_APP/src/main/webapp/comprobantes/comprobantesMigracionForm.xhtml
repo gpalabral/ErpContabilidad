@@ -1,0 +1,95 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition  xmlns="http://www.w3.org/1999/xhtml"
+                 xmlns:h="http://java.sun.com/jsf/html"
+                 xmlns:p="http://primefaces.org/ui"
+                 xmlns:ui="http://java.sun.com/jsf/facelets"
+                 xmlns:f="http://java.sun.com/jsf/core"
+                 template="#{sessionState.pathTemplate}">
+    <ui:define name="content">
+
+        <h:form enctype="multipart/form-data">
+            <p:panel header="MIGRACI&Oacute;N COMPROBANTES" style="border-style: hidden;text-align: center;width: max-content;height:max-content" id="panelImport">
+                <div align="center" style="padding:1em 2.2em;">
+
+                    <fieldset style="width: 400px;height:max-content">
+                        <legend>Importación de Comprobantes</legend>
+
+                        <h:panelGrid columns="2">
+                            <h:outputLabel value="Descargue el formato de Archivo Excel" />
+                            <h:commandButton value="Click Aquí" action="#{cntCargaComprobantesBacking.downloadExcelFile_action()}" image="/resources/images/excel.png" style="border-image: 0"/> 
+                        </h:panelGrid>
+
+                    </fieldset>
+
+                    <fieldset style="width: 400px;height:max-content">
+                        <legend>Elegir Archivo Excel</legend>
+                        <p:fileUpload value="#{cntCargaComprobantesBacking.file}" mode="simple"/>                          
+                        <div align="center" style="padding:1em 2.2em;">                                    
+
+                            <p:commandButton id="submitButton"
+                                             icon="ui-icon-check" 
+                                             value="Guardar" 
+                                             action="#{cntCargaComprobantesBacking.upload_action()}"
+                                             ajax="false"/> 
+                            <p:commandButton                                                                         
+                                value="CONTINUAR"
+                                title="Continuar la migraci&oacute;de Comprobantes"                                
+                                onclick="PF('dlgB').show();"/>
+                            
+                            <p:commandButton id="nivel"
+                                         icon="ui-icon-check" 
+                                         value="GUARDAR" 
+                                         action="#{cntCargaComprobantesBacking.saveCntMascarCntNivelesCntPlancuentasCntParametroAutomatico()}"
+                                         ajax="false"/>  
+                        </div>
+                    </fieldset>
+
+                </div>
+            </p:panel>              
+            <p:dialog header="Migraci&oacute;n de Comprobantes" showEffect="fade"
+                      widgetVar="dlgB"  width="550" height="350" closable="false">  
+                <div align="center" style="padding:1em 2.2em;">
+                    <p:outputLabel value="Asigne a que cuentas pertenece por Definici&oacute;n"/>
+                </div>
+                <div align="center" style="padding:1em 2.2em;" >
+                    <p:dataTable var="item" 
+                                 value="#{cntCargaComprobantesBacking.listaDefinicionCuentasMigracion}"                                 
+                                 id="tabla"                                 
+                                 style="width: 100%;height: 100%"
+                                 editable="true">  
+                        <f:facet name="header">  
+                            Listado de Cuentas
+                        </f:facet>  
+
+                        <p:column  headerText="Descripción" filterBy="descripcion" filterStyle="display:none" width="50%">  
+                            #{cntCargaComprobantesBacking.generaDigitoMascaraGenerada(item.cntEntidad.mascaraGenerada)} #{item.cntEntidad.descripcion}
+                        </p:column>                          
+                        <p:column  headerText="Tipo Cuenta" width="50%" >  
+                            <p:selectOneMenu value="#{item.codigoCuentaGeneral}" effect="fold" id="columna"
+                                             editable="true" required="true">  
+                                <f:selectItems value="#{cntCargaComprobantesBacking.listaCuentasGenerales}"  
+                                               var="cuenta"    
+                                               itemLabel="#{cuenta.descripcion}"  
+                                               itemValue="#{cuenta.codigo}" />       
+                                <p:ajax listener="#{cntCargaComprobantesBacking.controlaCuenta(event)}" update="tabla"/>
+                            </p:selectOneMenu>  
+                        </p:column>                          
+                    </p:dataTable>
+                    <h:panelGrid columns="2">
+                        <p:commandButton 
+                            value="GUARDAR" 
+                            action="#{cntCargaComprobantesBacking.guardarDefinicionCuentas()}"
+                            ajax="false"
+                            />  
+                        <p:commandButton value="CANCELAR"
+                                         immediate="true"
+                                         actionListener="#{cntCargaComprobantesBacking.cierraDialogo(e)}"
+                                         ajax="false"/>
+                    </h:panelGrid>
+                </div>
+            </p:dialog>
+        </h:form>
+
+    </ui:define>
+</ui:composition>

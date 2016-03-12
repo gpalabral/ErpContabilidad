@@ -1,0 +1,173 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition  xmlns="http://www.w3.org/1999/xhtml"
+                 xmlns:h="http://java.sun.com/jsf/html"
+                 xmlns:p="http://primefaces.org/ui"
+                 xmlns:ui="http://java.sun.com/jsf/facelets"
+                 xmlns:f="http://java.sun.com/jsf/core"
+                 template="#{sessionState.pathTemplate}"
+                 xmlns:c="http://java.sun.com/jsp/jstl/core"
+                 xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+    <ui:define name="content">
+        <div align="center" >
+            <h:form id="form">  
+                <p:panel id="titulo" header="CENTROS DE COSTO" style="overflow-y:auto; overflow-x: auto;text-transform: uppercase;border-style: hidden">
+                    <h:panelGrid style="margin-top:20px" id="panelGridPlanCuentas" columns="2">  
+                        <p:panel style="height:  360px">
+                            <p:dataTable id="planTable" 
+                                         var="item" 
+                                         value="#{cntPlanCuentasBacking.cntObjetosPorGrupoNivelList(false)}" 
+                                         rowKey="#{item.mascaraGenerada}"  
+                                         selection="#{cntPlanCuentasBacking.selectedPlanCuentas}" 
+                                         selectionMode="single"
+                                         emptyMessage="No existe cuenta con el valor"
+                                         scrollable="true" resizableColumns="true" 
+                                         scrollHeight="230"
+                                         filteredValue="#{cntPlanCuentasBacking.filteredcntEntidad}"
+                                         widgetVar="planTable"
+                                         rowStyleClass="#{fn:contains(item.descripcion, cntPlanCuentasBacking.valor)?cntPlanCuentasBacking.color : null}">  
+                                <p:ajax event="rowSelect" listener="#{cntPlanCuentasBacking.obtieneObjetoPlanCuentasCC(e)}" update=":form:panelGridPlanCuentas"/>  
+                                <f:facet name="header">  
+                                    <p:outputPanel>  
+                                        <h:outputText value="Buscar: "/>
+                                        <p:inputText disabled="#{cntPlanCuentasBacking.eleccionTodos == true?true:false}" id="globalFilter" onkeyup="this.value=this.value.toUpperCase(); planTable.filter() " style="width:150px" value="#{cntPlanCuentasBacking.valor}" autocomplete="off">                                               
+                                        </p:inputText>                                                                                        
+                                        <h:outputText id="resMarcados" value=" Resultados Marcados: "/>  
+                                        <p:selectBooleanCheckbox id="resMarcadosCheckBox" value="#{cntPlanCuentasBacking.eleccionTodos}" >  
+                                            <p:ajax update=":form:planTable" listener="#{cntPlanCuentasBacking.listaTodo()}"/>  
+                                        </p:selectBooleanCheckbox>                                         
+                                    </p:outputPanel> 
+                                </f:facet> 
+                                <p:column id="mascaraGenerada" filterBy="mascaraGenerada" 
+                                          headerText="Cuenta" width="80" filterStyle="display:none">  
+                                    #{item.mascaraGenerada}  
+                                </p:column>  
+                                <p:column id="descripcion" filterBy="descripcion" 
+                                          headerText="Descripci&oacute;n" width="300" filterStyle="display:none">    
+                                    #{cntPlanCuentasBacking.insertaPuntosAutomatio(item)}  
+                                </p:column>  
+                                <f:facet name="footer">
+<!--                                    <p:commandButton id="adicionar1" value="ADICIONAR" 
+                                                     title="Adiciona nueva Cuenta"
+                                                     ajax="false" icon="ui-icon ui-icon-disk" action="# {cntPlanCuentasBacking.adicionar1()}"
+                                                     rendered="# {!cntPlanCuentasBacking.activaBotonesCentrosDeCosto}"/>
+                                    <p:commandButton id="modificar1" ajax="false" value="MODIFICAR"
+                                                     title="Modifca la Cuenta Seleccionada"
+                                                     icon="ui-icon ui-icon-pencil" action="# {cntPlanCuentasBacking.modificar1()}"
+                                                     rendered="# {!cntPlanCuentasBacking.activaBotonesCentrosDeCosto}"/>                                 
+                                    <p:commandButton 
+                                        id="inicializaDatos" 
+                                        onclick="PF('itemDialog').show();"
+                                        type="button" 
+                                        value="CARGA PAR&Aacute;METRO AUTOM&Aacute;TICO"
+                                        title="Realiza la parametrizaci&oacute;n de cuentas"
+                                        icon="ui-icon ui-icon-pencil"                                         
+                                        rendered="# {!cntPlanCuentasBacking.activaCargaParametrosAutomaticos}"/>                                                 -->
+
+                                  
+                                    <p:commandButton id="adicionarCC" value="ADICIONAR" 
+                                                     title="Cree un nuevo Centro de Costo"
+                                                     ajax="false" icon="ui-icon ui-icon-disk" action="#{cntPlanCuentasBacking.adicionarCentroDeCosto()}"
+                                                     rendered="#{cntPlanCuentasBacking.activaBotonesCentrosDeCosto}"/>
+                                    <p:commandButton id="modificarCC" ajax="false" value="MODIFICAR" 
+                                                     icon="ui-icon ui-icon-pencil" action="#{cntPlanCuentasBacking.modificarCentroDeCosto()}"
+                                                     rendered="#{cntPlanCuentasBacking.activaBotonesCentrosDeCosto}"/> 
+                                    <p:commandButton id="eliminaCC" 
+                                                     value="ELIMINAR"
+                                                     title="Elimine un Centro de Costo"
+                                                     icon="#{cntPlanCuentasBacking.iconoElimina()}" 
+                                                     action="#{cntPlanCuentasBacking.removeCntCentrosCosto_action()}"
+                                                     rendered="#{cntPlanCuentasBacking.activaBotonesCentrosDeCosto}" 
+                                                     ajax="false"
+                                                     update=":form:panelGridPlanCuentas"/> 
+
+                                </f:facet>  
+                            </p:dataTable>
+
+                        </p:panel>
+                        <p:panel style="height:  360px">
+                            <p:panel style="height:  100%">
+                                <p:dataTable id="planTableHermanos" 
+                                             var="item" 
+                                             value="#{cntPlanCuentasBacking.cntEntidadHermanosCCList}" 
+                                             rowKey="#{item.mascaraGenerada}"  
+                                             selection="#{cntPlanCuentasBacking.selectedPlanCuentasHermanos}" 
+                                             selectionMode="single"
+                                             emptyMessage="No existe cuenta con el valor"
+                                             scrollable="true" resizableColumns="true" 
+                                             scrollHeight="120"
+                                             paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                             filteredValue="#{cntPlanCuentasBacking.filteredcntEntidadHermanos}"
+                                             widgetVar="planTableHermanos">  
+                                    <p:ajax event="rowSelect" listener="#{cntPlanCuentasBacking.obtieneObjetoPlanCuentasHermanoCC(e)}" update=":form:panelGridPlanCuentas"/>  
+                                    <p:column headerText="Cuenta" sortBy="#{item.mascaraGenerada}" width="100" 
+                                              filterBy="#{item.mascaraGenerada}" filterMatchMode="contains" filterStyle="display:none">  
+                                        #{item.mascaraGenerada}  
+                                    </p:column>  
+
+                                    <p:column headerText="Descripci&oacute;n" sortBy="#{item.descripcion}" width="300" 
+                                              filterBy="#{item.descripcion}" filterMatchMode="contains" filterStyle="display:none">  
+                                        #{item.descripcion}  
+                                    </p:column>    
+                                    <f:facet name="footer">
+                                        <p:outputLabel value=""/>
+                                    </f:facet>
+                                </p:dataTable>
+                            </p:panel>
+                            <p:panel style="height:  100%">
+                                <p:dataTable id="planTableHijos1" 
+                                             var="item" 
+                                             value="#{cntPlanCuentasBacking.cntEntidadHijosCCList}" 
+                                             rowKey="#{item.mascaraGenerada}"  
+                                             selection="#{cntPlanCuentasBacking.selectedPlanCuentasHijos}" 
+                                             selectionMode="single"
+                                             emptyMessage="No existe cuenta con el valor"
+                                             scrollable="true" resizableColumns="true" 
+                                             scrollHeight="120"
+                                             paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                             filteredValue="#{cntPlanCuentasBacking.filteredcntEntidadHijos}"
+                                             widgetVar="planTableHijos">  
+                                    <p:ajax event="rowSelect" listener="#{cntPlanCuentasBacking.obtieneObjetoPlanCuentasHijo(e)}" update=":form:panelGridPlanCuentas"/>  
+                                    <p:column headerText="Cuenta" sortBy="#{item.mascaraGenerada}" width="100" 
+                                              filterBy="#{item.mascaraGenerada}" filterMatchMode="contains" filterStyle="display:none">  
+                                        #{item.mascaraGenerada}  
+                                    </p:column>  
+                                    <p:column headerText="Descripci&oacute;n" sortBy="#{item.descripcion}" width="300" 
+                                              filterBy="#{item.descripcion}" filterMatchMode="contains" filterStyle="display:none">  
+                                        #{item.descripcion}  
+                                    </p:column>     
+                                    <f:facet name="footer">
+                                        <p:outputLabel value=""/>
+                                    </f:facet>
+                                </p:dataTable>
+                            </p:panel>
+                        </p:panel>                        
+                        <p:dialog header="Parametros Autom&aacute;ticos" widgetVar="itemDialog"  resizable="false" closable="false" width="400">  
+                            <div align="center" style="padding:1em 2.2em;">
+                                <h:outputText value="Este proceso borrar&aacute; todas las configuraciones anteriormente guardadas"/>  
+                                <h:panelGrid columns="2">
+                                    <p:commandButton
+                                        value="Si"
+                                        action="#{cntPlanCuentasBacking.cargaParametorsAutomaticosMigracionBaseNueva()}"
+                                        ajax="false"
+                                        icon="#{cntPlanCuentasBacking.iconoRegistra()}"
+                                        onclick="PF('itemDialog').hide();"/>
+
+                                    <p:commandButton 
+                                        value="No"
+                                        onclick="PF('itemDialog').hide();"
+                                        icon="#{cntPlanCuentasBacking.iconoRegistra()}"
+                                        title="Icon Only" 
+
+                                        />
+                                </h:panelGrid>  
+
+                            </div>
+                        </p:dialog>                          
+
+                    </h:panelGrid>  
+                </p:panel>
+            </h:form>  
+        </div>
+    </ui:define>
+</ui:composition>

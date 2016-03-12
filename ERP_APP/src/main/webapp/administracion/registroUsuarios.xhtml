@@ -1,0 +1,52 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition  xmlns="http://www.w3.org/1999/xhtml"
+                 xmlns:h="http://java.sun.com/jsf/html"
+                 xmlns:p="http://primefaces.org/ui"
+                 xmlns:ui="http://java.sun.com/jsf/facelets"
+                 xmlns:f="http://java.sun.com/jsf/core"
+                 template="#{sessionState.pathTemplate}">
+
+    <ui:define name="content">
+        <h:form>
+            <p:panel header="REGISTRO USUARIO" style="border-style: hidden;text-align: center">
+                <div align="center" style="padding:1em 2.2em;">
+                    <div style="padding:1em 2.2em;" align="center" >
+
+                        <h:panelGrid columns="2">
+                            <p:outputLabel value="Login Active Directory:" style="color: #045491"/>
+                            <p:inputText value="#{admUsuariosBacking.admUsuario.login}" maxlength="50" required="true" style="width: 200px;height: 15px"/>
+                            <p:outputLabel value="Estado Usuario:" style="color: #045491"/>
+                            <p:selectOneMenu value="#{admUsuariosBacking.admUsuario.estadoUsuario}">
+                                <f:selectItem itemLabel="VIGENTE" itemValue="VIG"/>
+                                <f:selectItem itemLabel="NO VIGENTE" itemValue="NVI"/>
+                            </p:selectOneMenu>
+                            <p:outputLabel value="Tipo Usuario:" style="color: #045491"/>
+                            <p:selectOneMenu value="#{admUsuariosBacking.admUsuario.tipoUsuario}">                            
+                                <f:selectItem itemLabel="Administrador" itemValue="ADM" />
+                                <f:selectItem itemLabel="Contador" itemValue="CON"/>
+                                <f:selectItem itemLabel="Auxiliar" itemValue="AUX"/>
+                            </p:selectOneMenu>
+                        </h:panelGrid>
+
+                    </div>
+                    <div style="padding:1em 2.2em;" align="center" >
+                        <h:panelGrid columns="2">
+                            <p:commandButton value="Guardar" 
+                                             action="#{admUsuariosBacking.guardaAdmUsuario()}" 
+                                             rendered="#{admUsuariosBacking.admUsuario.idUsuario==null}"
+                                             ajax="false"/>             
+                            <p:commandButton value="Guardar Cambios" 
+                                             action="#{admUsuariosBacking.modificaAdmUsuario()}" 
+                                             rendered="#{admUsuariosBacking.admUsuario.idUsuario!=null}"
+                                             ajax="false"/>             
+                            <p:commandButton value="Cancelar" 
+                                             action="#{admUsuariosBacking.cancelar()}" 
+                                             immediate="true"
+                                             ajax="false"/>  
+                        </h:panelGrid>
+                    </div>
+                </div>
+            </p:panel>
+        </h:form>
+    </ui:define>
+</ui:composition>

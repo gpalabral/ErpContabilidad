@@ -1,0 +1,274 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition  xmlns="http://www.w3.org/1999/xhtml"
+                 xmlns:h="http://java.sun.com/jsf/html"
+                 xmlns:p="http://primefaces.org/ui"
+                 xmlns:ui="http://java.sun.com/jsf/facelets"
+                 xmlns:f="http://java.sun.com/jsf/core"
+                 template="#{sessionState.pathTemplate}">
+    <ui:define name="content">
+        <p:panel header="Empresas" style="border-style: hidden">
+            <div align="center">
+                <h:form id="form">
+                    <p:growl id="growl" showDetail="true" />
+
+                    <p:tabView id="tabView" dynamic="true">
+
+                        <p:ajax event="tabChange" listener="#{cntGeneralesBacking.onTabChange}" update=":form:growl"/>
+
+                        <p:tab title="Datos Empresa" id="Godfather1">
+                            <h:panelGrid columns="2" cellpadding="10">
+                                <h:outputLabel value="Razón Social:" style="font-weight: bold" />  
+                                <p:inputText id="razonsocial" value="#{cntGeneralesBacking.datosEmpresaWrapper.razonSocial}" size="30" disabled="#{cntGeneralesBacking.bloqueaUsuario}"/>  
+                                <h:outputLabel value="Subtítulo:" style="font-weight: bold" />  
+                                <p:inputText id="subtitulo" value="#{cntGeneralesBacking.datosEmpresaWrapper.subtitulo}" disabled="#{cntGeneralesBacking.bloqueaUsuario}"/> 
+                                <h:outputLabel value="N.I.T.:" style="font-weight: bold"/>  
+                                <p:inputText id="nit" value="#{cntGeneralesBacking.datosEmpresaWrapper.nit}" disabled="#{cntGeneralesBacking.bloqueaUsuario}"/>  
+                                <h:outputLabel value="Gestión Contable:" style="font-weight: bold"/>  
+                                <p:inputText id="gestioncontable" value="#{cntGeneralesBacking.datosEmpresaWrapper.gestion}" disabled="#{cntGeneralesBacking.bloqueaUsuario}"/>  
+                                <h:outputLabel value="Autorización:" style="font-weight: bold"/>  
+                                <p:inputText id="autorizacion" value="#{cntGeneralesBacking.datosEmpresaWrapper.autorizacion}" />  
+                                <h:outputLabel value="Dirección:" style="font-weight: bold; width: 100px" />  
+                                <p:inputText id="direccion" value="#{cntGeneralesBacking.datosEmpresaWrapper.direccion}" size="80"/>  
+                            </h:panelGrid>
+                        </p:tab>
+
+                        <p:tab title="Gestion Contable " id="Godfather2">
+                            <p:panelGrid style="margin-top:20px; border: hidden">  
+                                <f:facet name="header">  
+                                    <p:row>  
+                                    </p:row>  
+                                </f:facet>  
+                                <p:row>  
+                                    <p:column style="font-weight: bold; border-style: hidden">Ciudad:</p:column>  
+                                    <p:column style="font-weight: bold; border-style: hidden">
+                                        <p:inputText size="20" maxlength="20" value="#{cntGeneralesBacking.gestionContableWrapper.ciudad}" onkeyup="this.value=this.value.toUpperCase()"/>
+                                    </p:column>  
+                                    <p:column  style="font-weight: bold; border-style: hidden">Inicio Gestión Fiscal:</p:column>  
+                                    <p:column  style="font-weight: bold; ">
+                                        <h:outputText value=" " />  
+                                        <p:selectOneMenu value="#{cntGeneralesBacking.gestionContableWrapper.inicioGestionFiscal}" style=" border-bottom-color:  #79b7e7 ">  
+                                            <f:selectItem itemLabel="Elegir" itemValue="#{cntGeneralesBacking.gestionContableWrapper.inicioGestionFiscal}" />  
+                                            <f:selectItem itemLabel="1 - Enero" itemValue="1" />  
+                                            <f:selectItem itemLabel="2 - Febrero" itemValue="2" />  
+                                            <f:selectItem itemLabel="3 - Marzo" itemValue="3" />  
+                                            <f:selectItem itemLabel="4 - Abril" itemValue="4" />  
+                                            <f:selectItem itemLabel="5 - Mayo" itemValue="5" />  
+                                            <f:selectItem itemLabel="6 - Junio" itemValue="6" />  
+                                            <f:selectItem itemLabel="7 - Julio" itemValue="7" />  
+                                            <f:selectItem itemLabel="8 - Agosto" itemValue="8" />  
+                                            <f:selectItem itemLabel="9 - Septiembre" itemValue="9" />  
+                                            <f:selectItem itemLabel="10 - Octubre" itemValue="10" />  
+                                            <f:selectItem itemLabel="11 - Noviembre" itemValue="11" />  
+                                            <f:selectItem itemLabel="12 - Diciembre" itemValue="12" />  
+                                        </p:selectOneMenu>    
+                                    </p:column>  
+                                </p:row>  
+                                <p:row>  
+                                    <p:column style="font-weight: bold; border-style: hidden">Periodo Actual:</p:column>  
+                                    <p:column style="font-weight: bold; border-style: hidden">
+                                        <h:outputText value=" " />  
+                                        <p:selectOneMenu value="#{cntGeneralesBacking.gestionContableWrapper.periodoActual.month}" disabled="true">  
+                                            <f:selectItem itemLabel="Elegir" itemValue="#{cntGeneralesBacking.gestionContableWrapper.periodoActual.month}" />  
+                                            <f:selectItem itemLabel="1 - Enero" itemValue="0" />  
+                                            <f:selectItem itemLabel="2 - Febrero" itemValue="1" />  
+                                            <f:selectItem itemLabel="3 - Marzo" itemValue="2" />  
+                                            <f:selectItem itemLabel="4 - Abril" itemValue="3" />  
+                                            <f:selectItem itemLabel="5 - Mayo" itemValue="4" />  
+                                            <f:selectItem itemLabel="6 - Junio" itemValue="5" />  
+                                            <f:selectItem itemLabel="7 - Julio" itemValue="6" />  
+                                            <f:selectItem itemLabel="8 - Agosto" itemValue="7" />  
+                                            <f:selectItem itemLabel="9 - Septiembre" itemValue="8" />  
+                                            <f:selectItem itemLabel="10 - Octubre" itemValue="9" />  
+                                            <f:selectItem itemLabel="11 - Noviembre" itemValue="10" />  
+                                            <f:selectItem itemLabel="12 - Diciembre" itemValue="11" />  
+                                        </p:selectOneMenu>   
+
+                                    </p:column>  
+                                    <p:column  style="font-weight: bold; alignment-adjust: alphabetic;" >   Año:</p:column>
+                                    <p:column  style="font-weight: bold; border-style: hidden">   <h:outputText value="#{cntGeneralesBacking.convierteFechaSoloAnio(cntGeneralesBacking.gestionContableWrapper)}" />  
+                                    </p:column>  
+                                </p:row>  
+                                <p:row>  
+                                    <p:column style="font-weight: bold; border-style: hidden">Tipo de Cambio:</p:column>  
+                                    <p:column >
+                                        <p:inputText size="8" maxlength="8" value="#{cntGeneralesBacking.gestionContableWrapper.tipoCambioInicial}"/>
+                                    </p:column>  
+                                    <p:column style="font-weight: bold; border-style: hidden" ></p:column>  
+                                    <p:column style=" border-style: hidden" >
+
+                                    </p:column>  
+                                </p:row>  
+                                <p:row>  
+                                    <p:column style="font-weight: bold; border-style: hidden">Norma Contable:</p:column>  
+                                    <p:column colspan="3" style=" border-style: hidden" > 
+                                        <p:selectOneRadio id="options" value="#{cntGeneralesBacking.gestionContableWrapper.normaContable3}" style="border-color: #ffffff">  
+                                            <f:selectItem itemLabel="Anterior" itemValue="ANTERIOR" />  
+                                            <f:selectItem itemLabel="Actual" itemValue="ACTUAL" />
+                                            <p:ajax event="change" update="tabView" listener="#{cntGeneralesBacking.activaAjusteREI(e)}"/>  
+                                        </p:selectOneRadio>  
+                                    </p:column>  
+                                </p:row>  
+                                <p:row id="verifica1" rendered="#{cntGeneralesBacking.activaAjustesREI}">  
+                                    <p:column style="font-weight: bold; border-style: hidden" >Ajustes REI sobre Cuenta:</p:column>  
+                                    <p:column  colspan="3" style="border-style: hidden"> 
+                                        <p:selectOneRadio id="options2" value="#{cntGeneralesBacking.gestionContableWrapper.ajustesREI}" style="border-color: #ffffff">  
+                                            <f:selectItem itemLabel="Si" itemValue="true" />  
+                                            <f:selectItem itemLabel="No" itemValue="false" />
+                                        </p:selectOneRadio> 
+
+                                    </p:column> 
+                                </p:row>  
+                                <p:row>  
+                                    <p:column style="font-weight: bold; border-style: hidden">Modo de Procesos de Ajustes:</p:column>  
+                                    <p:column colspan="3" style=" border-style: hidden">
+                                        <p:selectOneRadio id="options3" value="#{cntGeneralesBacking.gestionContableWrapper.modoProcesosAjustes}" style="border-color: #ffffff">  
+                                            <f:selectItem itemLabel="Un comprobante por día" itemValue="UN COMPROBANTE POR DIA" />  
+                                            <f:selectItem itemLabel="Un comprobante mensual" itemValue="UN COMPROBANTE MENSUAL" />
+                                        </p:selectOneRadio> 
+                                    </p:column> 
+                                </p:row>
+                                <p:row>  
+                                    <p:column style="font-weight: bold; border-style: hidden">Tipo de Moneda:</p:column>  
+                                    <p:column colspan="3" style=" border-style: hidden">
+                                        <p:selectOneRadio id="options4" value="#{cntGeneralesBacking.gestionContableWrapper.tipoMoneda}" style="border-color: #ffffff">  
+                                            <f:selectItem itemLabel="Dolar" itemValue="DOLAR" />  
+                                            <f:selectItem itemLabel="Euro" itemValue="EURO" />
+                                        </p:selectOneRadio>         
+                                    </p:column> 
+                                </p:row>  
+                            </p:panelGrid>  
+
+                        </p:tab>
+
+                        <p:tab title="Varios" id="Godfather3" >
+
+                            <p:panelGrid style="margin-top:20px; border: hidden">  
+                                <p:row>  
+                                    <p:column style="font-weight: bold; border: hidden">Ejecuta Presupuesto Fiscal:</p:column>  
+                                    <p:column colspan="3" style=" border-bottom: hidden" > 
+                                        <p:selectOneRadio id="options11"  style="border: hidden " value="#{cntGeneralesBacking.variosWrapper.ejecutaPresupuestoFiscal}">  
+                                            <f:selectItem itemLabel="Si" itemValue="true" />  
+                                            <f:selectItem itemLabel="No" itemValue="false" />
+                                        </p:selectOneRadio>  </p:column>  
+                                </p:row>  
+                                <p:row>  
+                                    <p:column style="font-weight: bold; border: hidden">Centros de Costos:</p:column>  
+                                    <p:column  colspan="2" style="border-style: hidden"> 
+                                        <p:selectOneRadio id="options21" value="#{cntGeneralesBacking.variosWrapper.centroDeCostos}" style="border: hidden">  
+                                            <f:selectItem itemLabel="Si" itemValue="true"/>  
+                                            <f:selectItem itemLabel="No" itemValue="false" />
+                                        </p:selectOneRadio>  </p:column> 
+                                    <p:column  style="font-weight: bold; border-style: hidden">
+                                        <p:commandButton actionListener="# {pprBean.savePerson}"    
+                                                         icon="ui-icon-disk" value="Niveles" disabled="true" title="Icon Only" style="size: 25 "/> 
+                                    </p:column>
+                                </p:row>  
+                                <p:row>  
+
+                                    <p:column style="font-weight: bold; border-style: hidden">Cuentas Corporativas:</p:column>  
+                                    <p:column colspan="2" style=" border-style: hidden">
+                                        <p:selectOneRadio id="cuentas" value="#{cntGeneralesBacking.variosWrapper.cuentasCoorporativas}" style="border-bottom-style:  #79b7e7; margin-bottom: auto">  
+                                            <f:selectItem itemLabel="Si" itemValue="true" />  
+                                            <f:selectItem itemLabel="No" itemValue="false" />
+                                            <p:ajax event="change" update="tabView" listener="#{cntGeneralesBacking.activaLongitud(e)}"/>  
+                                        </p:selectOneRadio> 
+                                    </p:column> 
+
+                                    <p:column style="border-style: hidden" >
+                                        <h:outputText value=" " />  
+                                        <p:selectOneMenu value="#{cntGeneralesBacking.variosWrapper.longitud}" id="comboLongitud" rendered="#{cntGeneralesBacking.activaLongitud}">  
+                                            <f:selectItem itemLabel="#{cntGeneralesBacking.variosWrapper.longitud}" itemValue="#{cntGeneralesBacking.variosWrapper.longitud}" />  
+                                            <f:selectItem itemLabel="1" itemValue="1" />  
+                                            <f:selectItem itemLabel="2" itemValue="2" />  
+                                            <f:selectItem itemLabel="3" itemValue="3" />  
+                                            <f:selectItem itemLabel="4" itemValue="4" />  
+                                            <f:selectItem itemLabel="5" itemValue="5" />  
+                                            <f:selectItem itemLabel="6" itemValue="6" />  
+                                            <f:selectItem itemLabel="7" itemValue="7" />  
+                                            <f:selectItem itemLabel="8" itemValue="8" />  
+                                            <f:selectItem itemLabel="9" itemValue="9" />  
+                                            <f:selectItem itemLabel="10" itemValue="10" />  
+                                            <f:selectItem itemLabel="11" itemValue="11" />  
+                                            <f:selectItem itemLabel="12" itemValue="12" />  
+                                            <f:selectItem itemLabel="13" itemValue="13" />  
+                                            <f:selectItem itemLabel="14" itemValue="14" />  
+                                            <f:selectItem itemLabel="15" itemValue="15" />  
+                                            <f:selectItem itemLabel="16" itemValue="16" />  
+                                            <f:selectItem itemLabel="17" itemValue="17" />
+                                            <f:selectItem itemLabel="18" itemValue="18" />
+                                            <f:selectItem itemLabel="19" itemValue="19" />
+                                            <f:selectItem itemLabel="20" itemValue="20" />
+                                        </p:selectOneMenu> 
+                                    </p:column> 
+                                </p:row>
+                                <p:row>  
+                                    <p:column style="font-weight: bold; border-style: hidden">Nuevo Sistema de Facturación:</p:column>  
+                                    <p:column colspan="3" style=" border-style: hidden">
+                                        <p:selectOneRadio id="nuevoSistemaFacturacion" value="#{cntGeneralesBacking.variosWrapper.nuevoSistemaFacturacion}"  style="border-color: #ffffff">  
+                                            <f:selectItem itemLabel="Si" itemValue="true" />  
+                                            <f:selectItem itemLabel="No" itemValue="false" />
+                                        </p:selectOneRadio>         
+                                    </p:column> 
+                                </p:row>  
+                                <p:row>  
+                                    <p:column style="font-weight: bold; border-style: hidden">Proyectos:</p:column>  
+                                    <p:column colspan="3" style=" border-style: hidden">
+                                        <p:selectOneRadio id="proyectos" value="#{cntGeneralesBacking.variosWrapper.proyectos}"  style="border-color: #ffffff">  
+                                            <f:selectItem itemLabel="Si" itemValue="true" />  
+                                            <f:selectItem itemLabel="No" itemValue="false" />
+                                        </p:selectOneRadio>         
+                                    </p:column> 
+                                </p:row>  
+                                <p:row>  
+                                    <p:column style="font-weight: bold; border-style: hidden">Auxiliares:</p:column>  
+                                    <p:column colspan="3" style=" border-style: hidden">
+                                        <p:selectOneRadio id="auxiliares" value="#{cntGeneralesBacking.variosWrapper.auxiliares}"  style="border-color: #ffffff">  
+                                            <f:selectItem itemLabel="Si" itemValue="true" />  
+                                            <f:selectItem itemLabel="No" itemValue="false" />
+                                        </p:selectOneRadio>         
+                                    </p:column> 
+                                </p:row>  
+                                <p:row>  
+                                    <p:column style="font-weight: bold; border-style: hidden">Facturación Computarizada:</p:column>  
+                                    <p:column colspan="2" style=" border-style: hidden">
+                                        <p:selectOneRadio id="facturacion" value="#{cntGeneralesBacking.variosWrapper.facturacionComputarizada}" style="border-color: #ffffff">  
+                                            <f:selectItem itemLabel="Si" itemValue="true" />  
+                                            <f:selectItem itemLabel="No" itemValue="false" />
+                                            <!--                                            <f:selectItem itemLabel="Antigua" itemValue="A" />-->
+                                            <p:ajax event="change" update="facturaComputarizada" listener="#{cntGeneralesBacking.activaFacturacionComputarizada(e)}"/>  
+                                        </p:selectOneRadio>  
+                                    </p:column> 
+                                    <p:column style=" border-style: hidden">
+                                        <p:outputLabel id="facturaComputarizada" value="#{cntGeneralesBacking.facturaComputarizada}" style="font-weight: bold"/>
+                                    </p:column>
+                                </p:row>  
+                                <!--                                <p:row>  
+                                                                    <p:column style="font-weight: bold; border-style: hidden"></p:column>  
+                                                                    <p:column colspan="3" style=" border-style: hidden">
+                                                                        <p:selectOneRadio id="CodigoControl" value="# {cntGeneralesBacking.variosWrapper.codigoControl}" style="border-color: #ffffff">  
+                                                                            <f:selectItem itemLabel="S/Cod.Ctrl." itemValue="true" />  
+                                                                            <f:selectItem itemLabel="C/Cod.Ctrl." itemValue="false" />
+                                                                        </p:selectOneRadio>         
+                                                                    </p:column> 
+                                                                </p:row>  -->
+
+
+                            </p:panelGrid>
+
+                        </p:tab>  
+                    </p:tabView>
+
+                    <div align="center" style="padding:1em 2.2em;">
+                        <p:commandButton id="Guardar" value="Modificar" 
+                                         ajax="false" icon="ui-icon ui-icon-disk" action="#{cntGeneralesBacking.modificaDatosEmpresa()}"/>
+                    </div> 
+
+
+                </h:form>
+            </div>
+        </p:panel>
+
+    </ui:define>
+</ui:composition>
+

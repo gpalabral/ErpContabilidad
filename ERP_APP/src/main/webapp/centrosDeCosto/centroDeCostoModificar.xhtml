@@ -1,0 +1,48 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition  xmlns="http://www.w3.org/1999/xhtml"
+                 xmlns:h="http://java.sun.com/jsf/html"
+                 xmlns:p="http://primefaces.org/ui"
+                 xmlns:ui="http://java.sun.com/jsf/facelets"
+                 xmlns:f="http://java.sun.com/jsf/core"
+                 template="#{sessionState.pathTemplate}"
+                 xmlns:c="http://java.sun.com/jsp/jstl/core"
+                 xmlns:bap="http://java.sun.com/jsf/composite/bap.comp">
+    <ui:define name="content">
+        <p:panel header="Modificar Centro de Costo" style="border-style: hidden">
+            <h:form id="form">  
+                <div align="center" style="padding:1em 2.2em;">
+                    <h:panelGrid id="formularios" columns="3">                       
+                        <h:panelGrid id="display" columns="2">  
+                            <p:panel style="border-style: hidden">
+                                <h:panelGrid columns="2">
+                                    <h:outputText value="Cuenta:" />  
+                                    <h:outputText value="#{cntCentrosDeCostoModificarBacking.centrosCostoNuevo.mascaraGenerada}" id="cuen"/>  
+                                    <h:outputText value="Descripcion:" />  
+                                    <p:inputTextarea value="#{cntCentrosDeCostoModificarBacking.centrosCostoNuevo.descripcion}" 
+                                                     id="des" rows="3" cols="40"  onkeyup="this.value=this.value.toUpperCase()">
+                                        <f:validator validatorId="validaEsVacio"/>
+                                    </p:inputTextarea>
+                                </h:panelGrid>
+                            </p:panel>
+                        </h:panelGrid>                      
+                    </h:panelGrid>
+                    <h:panelGrid columns="3">
+                        <p:commandButton
+                            value="Modificar"
+                            action="#{cntCentrosDeCostoModificarBacking.mergeCntCentrosCosto_action()}"
+                            ajax="false"
+                            icon="#{cntCentrosDeCostoModificarBacking.iconoEdita()}"/>                                     
+
+                        <p:commandButton
+                            value="Cancelar"
+                            action="#{cntCentrosDeCostoModificarBacking.cancelarCntCentrosCosto_action()}"
+                            ajax="false"
+                            immediate="true"
+                            icon="#{cntCentrosDeCostoModificarBacking.iconoAtras()}"/>                                     
+                    </h:panelGrid>  
+                </div> 
+            </h:form>  
+        </p:panel>
+    </ui:define>
+</ui:composition>

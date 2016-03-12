@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans 
+                        http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+          http://www.springframework.org/schema/aop 
+          http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+          http://www.springframework.org/schema/context 
+          http://www.springframework.org/schema/context/spring-context-3.0.xsd
+          http://www.springframework.org/schema/tx 
+          http://www.springframework.org/schema/tx/spring-tx-3.0.xsd">
+    
+    <context:annotation-config/>	
+    <context:component-scan base-package="com.bap.erp.contabilidad.ws" />
+    
+    <tx:annotation-driven transaction-manager="transactionManager"/>
+
+    <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName" value="com.microsoft.sqlserver.jdbc.SQLServerDriver"/>        
+        <property name="url" value="jdbc:sqlserver://192.168.1.235\SQLEXPRESS:1433;databaseName=ERP_FACT"/>        
+        <!--<property name="url" value="jdbc:sqlserver://10.0.0.235\SQLEXPRESS:1433;databaseName=ERP_FACT"/>-->        
+        <!--<property name="url" value="jdbc:sqlserver://192.168.97.128\SQLEXPRESS:1433;databaseName=ERP_BANCO_ROTA"/>-->        
+        <property name="username" value="sa"/>
+        <property name="password" value="Sa_123456"/>
+    </bean>
+    
+<!--    <bean id="dataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
+        <property name="jndiName" value="jdbc/erp" />
+        <property name="resourceRef" value="true" />
+    </bean>-->
+    
+    
+    <!--    Añadido para manejar las transacciones con Spring-->
+    <bean id="transactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+    <!--    hasta aqui añadido para Spring-->
+    
+    <bean id="sessionFactory" class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean">
+        <property name="dataSource" ref="dataSource" />
+        <property name="annotatedClasses">
+            <list>            
+                <!--Entidades de Contabilidad-->      
+                <value>com.bap.erp.modelo.entidades.cnt.CntMascara</value>
+                <value>com.bap.erp.modelo.entidades.cnt.CntNivel</value>
+                <value>com.bap.erp.modelo.entidades.cnt.CntGestion</value>               
+                <value>com.bap.erp.modelo.entidades.cnt.CntEntidad</value>   
+                <value>com.bap.erp.modelo.entidades.cnt.CntAuxiliar</value>                   
+                <value>com.bap.erp.modelo.entidades.cnt.CntTipoCambio</value>  
+                <value>com.bap.erp.modelo.entidades.cnt.CntParametroAutomatico</value>  
+                <value>com.bap.erp.modelo.entidades.cnt.CntComprobante</value>  
+                <value>com.bap.erp.modelo.entidades.cnt.CntDetalleComprobante</value>                              
+                <value>com.bap.erp.modelo.entidades.cnt.CntProveedor</value>  
+                <!--<value>com.bap.erp.modelo.entidades.cnt.CntDosificacionFactura</value>-->  
+                <value>com.bap.erp.modelo.entidades.cnt.CntFacturacion</value>                  
+                <!--<value>com.bap.erp.modelo.entidades.cnt.CntDosificacionFactura</value>-->  
+                <value>com.bap.erp.modelo.entidades.cnt.CntLibroMayor</value>  
+                <value>com.bap.erp.modelo.entidades.cnt.CntConfiguracionCentrocosto</value>  
+                <value>com.bap.erp.modelo.entidades.cnt.CntDistribucionCentrocosto</value>                                                                                          
+                <value>com.bap.erp.modelo.entidades.cnt.CntAuxiliarPorCuenta</value>                                         
+                <value>com.bap.erp.modelo.entidades.cnt.CntProyecto</value>                                         
+                <!--Entidades de Cuentas Por Pagar-->
+<!--                <value>com.bap.erp.modelo.entidades.cpp.CppTipoProveedor</value>
+                <value>com.bap.erp.modelo.entidades.cpp.CppBeneficiario</value>
+                <value>com.bap.erp.modelo.entidades.cpp.CppCliente</value>
+                <value>com.bap.erp.modelo.entidades.cpp.CppProveedor</value>                -->
+                <!--Entidades de Parametricas-->
+                <value>com.bap.erp.modelo.entidades.cnf.ParBanco</value>
+                <value>com.bap.erp.modelo.entidades.cnf.ParCiudad</value>
+                <value>com.bap.erp.modelo.entidades.cnf.ParLugarDeEntrega</value>
+                <value>com.bap.erp.modelo.entidades.cnf.ParTipoDocIdentidad</value>
+                <value>com.bap.erp.modelo.entidades.cnf.ParEstadoProyecto</value>        
+                <value>com.bap.erp.modelo.entidades.cnf.ParPlanCuentas</value>   
+                <value>com.bap.erp.modelo.entidades.cnf.ParAjustes</value>
+                <value>com.bap.erp.modelo.entidades.cnf.ParCuentasGenerales</value>
+                <value>com.bap.erp.modelo.entidades.cnf.ParCuentasGeneralesNivel</value>
+                <value>com.bap.erp.modelo.entidades.cnf.ParDatosEmpresa</value>
+                <value>com.bap.erp.modelo.entidades.cnf.ParGestionContable</value>
+                <value>com.bap.erp.modelo.entidades.cnf.ParGruposNivel</value>
+                <value>com.bap.erp.modelo.entidades.cnf.ParParametrosGestion</value>
+                <value>com.bap.erp.modelo.entidades.cnf.ParSegundaMoneda</value>
+                <value>com.bap.erp.modelo.entidades.cnf.ParTiposDatoNivel</value>
+                <value>com.bap.erp.modelo.entidades.cnf.ParTiposMovimiento</value>
+                <value>com.bap.erp.modelo.entidades.cnf.ParValor</value>
+                <value>com.bap.erp.modelo.entidades.cnf.ParVarios</value>
+                <value>com.bap.erp.modelo.entidades.cnf.ParComprasYVentas</value>
+                <value>com.bap.erp.modelo.entidades.cnf.ParCuentasDeAjuste</value>
+                <value>com.bap.erp.modelo.entidades.cnf.ParRetencionIue</value>
+                <value>com.bap.erp.modelo.entidades.cnf.ParTipoComprobante</value>
+                <value>com.bap.erp.modelo.entidades.cnf.ParTipoRetencion</value>
+                <value>com.bap.erp.modelo.entidades.cnf.ParParametrosAutorizacion</value>
+                <value>com.bap.erp.modelo.entidades.cnf.ParTipoFacturacion</value>
+                <value>com.bap.erp.modelo.entidades.cnf.ParSucursal</value>      
+                <value>com.bap.erp.modelo.entidades.cnf.ParRecetasDistribucionCentroCosto</value>
+                <value>com.bap.erp.modelo.entidades.cnf.ParAdministrador</value>
+                <value>com.bap.erp.modelo.entidades.cnf.ParIpWebServiceWamsa</value>                          
+            </list>
+        </property>
+        <property name="hibernateProperties">
+            <props>
+                <prop key="hibernate.dialect">
+                    org.hibernate.dialect.SQLServerDialect
+                </prop>
+                <!--No Borrar, codigo creado para generar el Sql de las consultas Hql-->
+                <!--                <prop key="hibernate.show_sql">
+                    true
+                </prop>-->
+            </props>
+        </property>
+    </bean>
+
+    <bean id="hibernateTemplate" class="org.springframework.orm.hibernate3.HibernateTemplate">
+        <property name="sessionFactory" ref="sessionFactory" />
+    </bean>
+
+    <!-- ********************* HIBERNATE CONTEXT ************************* -->        
+    <!--Servicios area Contabilidad-->  
+    <bean id="cntMascarasService" class="com.bap.erp.modelo.servicios.cnt.impl.CntMascarasServiceImpl"/>
+    <bean id="cntNivelesService" class="com.bap.erp.modelo.servicios.cnt.impl.CntNivelesServiceImpl"/>
+    <bean id="cntGestionesService" class="com.bap.erp.modelo.servicios.cnt.impl.CntGestionesServiceImpl"/>
+    <bean id="cntEntidadesService" class="com.bap.erp.modelo.servicios.cnt.impl.CntEntidadesServiceImpl"/>    
+    <bean id="cntAuxiliaresService" class="com.bap.erp.modelo.servicios.cnt.impl.CntAuxiliaresServiceImpl"/>
+    <bean id="cntTipoCambioService" class="com.bap.erp.modelo.servicios.cnt.impl.CntTipoCambioServiceImpl"/>
+    <bean id="cntParametroAutomaticoService" class="com.bap.erp.modelo.servicios.cnt.impl.CntParametroAutomaticoServiceImpl"/>
+    <bean id="cntComprobantesService" class="com.bap.erp.modelo.servicios.cnt.impl.CntComprobantesServiceImpl"/>
+    <bean id="cntDetalleComprobanteService" class="com.bap.erp.modelo.servicios.cnt.impl.CntDetalleComprobanteServiceImpl"/>
+    <bean id="cntFacturacionService" class="com.bap.erp.modelo.servicios.cnt.impl.CntFacturacionServiceImpl"/>    
+    <bean id="cntProveedorService" class="com.bap.erp.modelo.servicios.cnt.impl.CntProveedorServiceImpl"/>        
+<!--    <bean id="cntDosificacionFacturaService" class="com.bap.erp.modelo.servicios.cnt.impl.CntDosificacionFacturaServiceImpl"/>    -->
+    <bean id="cntCentrosCostoService" class="com.bap.erp.modelo.servicios.cnt.impl.CntCentrosCostoServiceImpl"/>    
+    <bean id="cntConfiguracionCentroCostoService" class="com.bap.erp.modelo.servicios.cnt.impl.CntConfiguracionCentroCostoServiceImpl"/>    
+    <bean id="cntDistribucionCentroCostoService" class="com.bap.erp.modelo.servicios.cnt.impl.CntDistribucionCentroCostoServiceImpl"/>    
+    <bean id="cntAuxiliaresPorCuentaService" class="com.bap.erp.modelo.servicios.cnt.impl.CntAuxiliaresPorCuentaServiceImpl"/>    
+    <bean id="cntProyectoService" class="com.bap.erp.modelo.servicios.cnt.impl.CntProyectoServiceImpl"/>    
+        
+    <!--Servicios para Cuentas Por Cobrar-->
+    <!--<bean id="cppTipoProveedorService" class="com.bap.erp.modelo.servicios.cpp.impl.CppTipoProveedorServiceImpl"/>-->        
+    <!--<bean id="cppProveedorService" class="com.bap.erp.modelo.servicios.cpp.impl.CppProveedorServiceImpl"/>-->            
+    
+    <!--Servicios para datos Parametricos-->
+    <bean id="parCuentasGeneralesService" class="com.bap.erp.modelo.servicios.cnf.impl.ParCuentasGeneralesServiceImpl"/>
+    <bean id="parParametricasService" class="com.bap.erp.modelo.servicios.cnf.impl.ParParametricasServiceImpl"/>
+    <bean id="cnfLoginService" class="com.bap.erp.modelo.servicios.cnf.impl.CnfLoginServiceImpl"/>
+    
+    
+</beans>

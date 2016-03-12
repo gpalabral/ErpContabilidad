@@ -1,0 +1,114 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition  xmlns="http://www.w3.org/1999/xhtml"
+                 xmlns:h="http://java.sun.com/jsf/html"
+                 xmlns:p="http://primefaces.org/ui"
+                 xmlns:ui="http://java.sun.com/jsf/facelets"
+                 xmlns:f="http://java.sun.com/jsf/core"
+                 template="#{sessionState.pathTemplate}">
+    <ui:define name="content">       
+        <h:form>
+
+            <div align="center" style="padding:1em 2.2em;">
+                <p:panel header="FACTURA DE VENTA" style="border-style: hidden;">
+
+                    <p:panel>
+                        <h:panelGrid columns="5" id="datosParaIVA">
+                            <p:outputLabel style="font-weight: bold" value="Monto de la Factura:"/>
+                            <h:inputText value="#{cntFacturaDeVentaBacking.cntFacturacion.monto}" style="text-align: right" size="14" maxlength="10" disabled="true"/>
+                            <p:outputLabel style="font-weight: bold" value="Bs."/>
+                            <h:inputText value="#{cntFacturaDeVentaBacking.cntFacturacion.montoSegMoneda}" disabled="true" style="text-align: right" size="14" maxlength="10" />
+                            <p:outputLabel style="font-weight: bold" value="$us."/>
+                            <p:outputLabel style="font-weight: bold" value="Excento:"/>
+                            <p:inputText value="#{cntFacturaDeVentaBacking.excento}" style="text-align: right" size="14" maxlength="10" onkeyup="return ValNumero(this);" onkeydown="return decimales(this, event)">
+                                <p:ajax event="change" update="datosParaIVA" listener="#{cntFacturaDeVentaBacking.activaIva(e)}" />                                        
+                            </p:inputText>
+                            <p:outputLabel style="font-weight: bold" value="Bs."/>
+                            <h:inputText value="#{cntFacturaDeVentaBacking.cntFacturacion.excentoSegMoneda}" disabled="true" style="text-align: right" size="14" maxlength="10" onkeyup="return ValNumero(this);" onkeydown="return decimales(this, event)">
+                            </h:inputText>
+                            <p:outputLabel style="font-weight: bold" value="$us."/>
+                            <p:outputLabel style="font-weight: bold" value="I.C.E."/>
+                            <p:inputText value="#{cntFacturaDeVentaBacking.ice}" style="text-align: right" size="14" maxlength="10">
+                                <p:ajax event="change" update="datosParaIVA" listener="#{cntFacturaDeVentaBacking.activaIva(e)}" />                                        
+                            </p:inputText>
+                            <p:outputLabel style="font-weight: bold" value="Bs."/>
+                            <h:inputText value="#{cntFacturaDeVentaBacking.cntFacturacion.iceSegMoneda}" disabled="true" style="text-align: right" size="14" maxlength="10"/>
+                            <p:outputLabel style="font-weight: bold" value="$us."/>
+                            <p:outputLabel style="font-weight: bold" value="IVA:"/>
+                            <h:inputText value="#{cntFacturaDeVentaBacking.cntFacturacion.iva}" style="text-align: right" size="14" maxlength="10" disabled="true"/>
+                            <p:outputLabel style="font-weight: bold" value="Bs."/>
+                            <h:inputText value="#{cntFacturaDeVentaBacking.cntFacturacion.ivaSegMoneda}" disabled="true" style="text-align: right" size="14" maxlength="10"/>
+                            <p:outputLabel style="font-weight: bold" value="$us."/>
+                        </h:panelGrid>
+                        <p:focus for="nit"/>  
+                        <h:panelGrid columns="5">
+                            <p:outputLabel id="numeroFacturaInicio" style="font-weight: bold" value="Nº Factura:" />
+                            <p:inputText value="#{cntFacturaDeVentaBacking.cntFacturacion.nroInicial}" autocomplete="off" onkeyup="return ValNumero(this);" >
+                                <p:ajax event="keyup" update="numeroFacturaFin" listener="#{cntFacturaDeVentaBacking.actualizaNumeroFacturaFin(e)}"/>
+                            </p:inputText>
+                            <p:spacer width="20"></p:spacer>
+                            <p:outputLabel id="numeroFactura" style="font-weight: bold" value="al:" />
+                            <p:inputText id="numeroFacturaFin" value="#{cntFacturaDeVentaBacking.cntFacturacion.nroFinal}" autocomplete="off" onkeyup="return ValNumero(this);" >
+                                <p:ajax event="change" update="numeroFacturaFin" listener="#{cntFacturaDeVentaBacking.validaNumeroFacturaFin(e)}"/>  
+                            </p:inputText>
+                            <h:outputText style="font-weight: bold" value="NIT Comprador:"/>  
+                            <p:inputText value="#{cntFacturaDeVentaBacking.nit}" id="nit" autocomplete="off" style="border-color:#{cntFacturaDeVentaBacking.nitEsObligatorio}">
+                                <p:ajax event="keyup" update="razonSocial,autorizacion2"  listener="#{cntFacturaDeVentaBacking.buscarProveedor(e)}"/>  
+                            </p:inputText>                               
+                            <p:spacer width="20"></p:spacer>
+                            <p:outputLabel style="font-weight: bold" value="Raz&oacute;n Social:"/>
+                            <p:inputText id="razonSocial" value="#{cntFacturaDeVentaBacking.razonSocial}"  disabled="#{cntFacturaDeVentaBacking.activaCampoProveedor}" onkeyup="this.value = this.value.toUpperCase()" size="50" maxlength="100" style="border-color: #{cntFacturaDeVentaBacking.razonSocialEsObligatorio}"/>                            
+                        </h:panelGrid>
+                        <h:panelGrid columns="2">
+                            <h:outputText style="font-weight: bold" value="Sucursal:"/>  
+                            <p:selectOneMenu value="#{cntFacturaDeVentaBacking.cntFacturacion.sucursal}">
+                                <f:selectItems value="#{cntFacturaDeVentaBacking.listaTodasLasSucursales()}" var="suc" itemLabel="#{suc.descripcion}" itemValue="#{suc.descripcion}"/>                                
+                                <p:ajax event="change" update="autorizacion2,codigoControl" listener="#{cntFacturaDeVentaBacking.actualizaNumeroAutorizacion(e)}"/>                                        
+                            </p:selectOneMenu>
+                        </h:panelGrid>
+                        <h:panelGrid columns="2">
+                            <p:outputLabel style="font-weight: bold" value="Autorizaci&oacute;n:"/>
+                            <p:inputText id="autorizacion2" value="#{cntFacturaDeVentaBacking.numeroAutorizacion}" autocomplete="off" style="border-color: #{cntFacturaDeVentaBacking.autorizacionEsObligatorio}">
+                                <p:ajax event="keyup" update="codigoControl" listener="#{cntFacturaDeVentaBacking.activaCodigoControlVenta(e)}"/>                                        
+                            </p:inputText>
+                            <h:outputText style="font-weight: bold" value="C&oacute;digo de Control:" />  
+                            <p:inputText id="codigoControl" value="#{cntFacturaDeVentaBacking.cntFacturacion.codigoControl}" disabled="#{cntFacturaDeVentaBacking.activaCodigoControl}" autocomplete="off" onkeyup="this.value = this.value.toUpperCase()"/>                        
+                        </h:panelGrid>
+                        <div align="center">
+                            <h:panelGrid columns="2">
+                                <p:commandButton
+                                    value="#{cntFacturaDeVentaBacking.tipoAccion}"
+                                    action="#{cntFacturaDeVentaBacking.guardarFacturaVenta_Accion()}"
+                                    ajax="false"
+                                    icon="#{cntFacturaDeVentaBacking.iconoRegistra()}"
+                                    rendered="#{!cntFacturaDeVentaBacking.activaModificarFactura}"/>                                    
+                                <p:commandButton
+                                    value="CANCELAR"
+                                    action="#{cntFacturaDeVentaBacking.cancelaFacturaDeVenta()}"
+                                    ajax="false"
+                                    immediate="true"
+                                    icon="#{cntFacturaDeVentaBacking.iconoAtras()}"
+                                    rendered="#{!cntFacturaDeVentaBacking.activaModificarFactura}"/>                               
+                                <p:commandButton
+                                    value="MODIFICAR"
+                                    action="#{cntFacturaDeVentaBacking.modificaFactura_Action()}"
+                                    ajax="false"
+                                    icon="#{cntFacturaDeVentaBacking.iconoRegistra()}"
+                                    rendered="#{cntFacturaDeVentaBacking.activaModificarFactura}" disabled="#{!cntFacturaDeVentaBacking.habilitaVerFactura}"/>
+                                <p:commandButton
+                                    value="CANCELAR"
+                                    action="#{cntFacturaDeVentaBacking.vuelveLibrodeVenta_Action()}"
+                                    ajax="false"
+                                    immediate="true"
+                                    icon="#{cntFacturaDeVentaBacking.iconoAtras()}"
+                                    rendered="#{cntFacturaDeVentaBacking.activaModificarFactura}"/>                               
+                            </h:panelGrid>  
+                        </div> 
+                    </p:panel>
+
+                </p:panel>
+            </div>    
+        </h:form>            
+    </ui:define>
+</ui:composition>
+

@@ -1,0 +1,159 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition  xmlns="http://www.w3.org/1999/xhtml"
+                 xmlns:h="http://java.sun.com/jsf/html"
+                 xmlns:p="http://primefaces.org/ui"
+                 xmlns:ui="http://java.sun.com/jsf/facelets"
+                 xmlns:f="http://java.sun.com/jsf/core"
+                 template="#{sessionState.pathTemplate}">
+    <ui:define name="content">
+        <div align="center">
+            <h:form id="form">
+                <p:panel header="Parametrización para Contabilización Automática" style="border-style: hidden"> 
+                    <p:growl id="growl" showDetail="true" />
+                    <p:tabView id="tabViewa">  
+                        <p:tab id="tab1" title="Compras y Ventas">  
+                            <h:panelGrid columns="8" cellpadding="10">
+                                <h:outputLabel value="Porcentaje I.T.:" style="font-weight: bold; width: 2%" />  
+                                <p:inputText id="subtitulo" value="" /> %
+                                <h:outputLabel value="Obligación de Pago I.T.:" style="font-weight: bold"/>  
+                                <p:selectOneRadio id="options" value="# {formBean.number}">  
+                                    <f:selectItem itemLabel="Si" itemValue="1" />  
+                                    <f:selectItem itemLabel="No" itemValue="2" />
+                                </p:selectOneRadio>  
+                                <h:outputLabel value="Portcentaje I.V.A.:" style="font-weight: bold" />  
+                                <p:inputText id="iva" value="" /> % 
+                            </h:panelGrid>
+                            <h:panelGrid columns="4" cellpadding="5">
+                                <p:commandButton actionListener="# {pprBean.savePerson}"    
+                                                 icon="ui-icon-disk" title="Icon Only"/> 
+                                <p:inputText></p:inputText> 
+                                <p:inputText></p:inputText> 
+                                <p:inputText></p:inputText> 
+                                <p:commandButton actionListener="# {pprBean.savePerson}"    
+                                                 icon="ui-icon-disk" title="Icon Only"/> 
+                                <p:inputText></p:inputText> 
+                                <p:inputText></p:inputText> 
+                                <p:inputText></p:inputText> 
+                                <p:commandButton actionListener="# {pprBean.savePerson}"    
+                                                 icon="ui-icon-disk" title="Icon Only"/> 
+                                <p:inputText></p:inputText> 
+                                <p:inputText></p:inputText> 
+                                <p:inputText></p:inputText> 
+                                <p:commandButton actionListener="# {pprBean.savePerson}"    
+                                                 icon="ui-icon-disk" title="Icon Only"/> 
+                                <p:inputText></p:inputText> 
+                                <p:inputText></p:inputText> 
+                                <p:inputText></p:inputText> 
+                                <p:commandButton actionListener="# {pprBean.savePerson}"    
+                                                 icon="ui-icon-disk" title="Icon Only"/> 
+                                <p:inputText></p:inputText> 
+                                <p:inputText></p:inputText> 
+                                <p:inputText></p:inputText> 
+                                <p:commandButton actionListener="# {pprBean.savePerson}"    
+                                                 icon="ui-icon-disk" title="Icon Only"/> 
+                                <p:inputText></p:inputText> 
+                                <p:inputText></p:inputText> 
+                                <p:inputText></p:inputText> 
+                                <p:commandButton actionListener="# {pprBean.savePerson}"    
+                                                 icon="ui-icon-disk" title="Icon Only"/> 
+                                <p:inputText></p:inputText> 
+                                <p:inputText></p:inputText> 
+                                <p:inputText></p:inputText> 
+                            </h:panelGrid>  
+                        </p:tab>  
+                        <p:tab id="tab2" title="Cuentas de Ajuste ">  
+                            <h:panelGrid columns="4" cellpadding="5">
+                                <p:commandButton actionListener="# {pprBean.savePerson}"    
+                                                 icon="ui-icon-disk" title="Icon Only"/> 
+                                <p:inputText></p:inputText> 
+                                <p:inputText></p:inputText> 
+                                <p:inputText></p:inputText> 
+                                <p:commandButton actionListener="# {pprBean.savePerson}"    
+                                                 icon="ui-icon-disk" title="Icon Only"/> 
+                                <p:inputText></p:inputText> 
+                                <p:inputText></p:inputText> 
+                                <p:inputText></p:inputText> 
+                                <p:commandButton actionListener="# {pprBean.savePerson}"    
+                                                 icon="ui-icon-disk" title="Icon Only"/> 
+                                <p:inputText></p:inputText> 
+                                <p:inputText></p:inputText> 
+                                <p:inputText></p:inputText> 
+                                <p:commandButton actionListener="# {pprBean.savePerson}"    
+                                                 icon="ui-icon-disk" title="Icon Only"/> 
+                                <p:inputText></p:inputText> 
+                                <p:inputText></p:inputText> 
+                                <p:inputText></p:inputText> 
+                            </h:panelGrid>
+                        </p:tab>  
+                        <p:tab id="tab3" title="Retenciones I.U.">  
+                       <h:panelGrid columns="3" cellpadding="10">
+                                <h:outputLabel value="Porcentaje de Retenciones de Bienes:" style="font-weight: bold; width: 2%" />  
+                                <p:inputText id="subtitulos" value="" size="10" maxlength="10" /> %
+                                <h:outputLabel value="Portcentaje de Retencion de Servicos:" style="font-weight: bold" />  
+                                <p:inputText id="ivas" value="" size="10" maxlength="10" /> % 
+                            </h:panelGrid> 
+                              <h:panelGrid columns="4" cellpadding="5">
+                                <p:commandButton actionListener="# {pprBean.savePerson}"    
+                                                 icon="ui-icon-disk" title="Icon Only"/> 
+                                <p:inputText></p:inputText> 
+                                <p:inputText></p:inputText> 
+                                <p:inputText></p:inputText> 
+                                <p:commandButton actionListener="# {pprBean.savePerson}"    
+                                                 icon="ui-icon-disk" title="Icon Only"/> 
+                                <p:inputText></p:inputText> 
+                                <p:inputText></p:inputText> 
+                                <p:inputText></p:inputText> 
+                                <p:commandButton actionListener="# {pprBean.savePerson}"    
+                                                 icon="ui-icon-disk" title="Icon Only"/> 
+                                <p:inputText></p:inputText> 
+                                <p:inputText></p:inputText> 
+                                <p:inputText></p:inputText> 
+                                <p:commandButton actionListener="# {pprBean.savePerson}"    
+                                                 icon="ui-icon-disk" title="Icon Only"/> 
+                                <p:inputText></p:inputText> 
+                                <p:inputText></p:inputText> 
+                                <p:inputText></p:inputText> 
+                                <p:commandButton actionListener="# {pprBean.savePerson}"    
+                                                 icon="ui-icon-disk" title="Icon Only"/> 
+                                <p:inputText></p:inputText> 
+                                <p:inputText></p:inputText> 
+                                <p:inputText></p:inputText> 
+                                <p:commandButton actionListener="# {pprBean.savePerson}"    
+                                                 icon="ui-icon-disk" title="Icon Only"/> 
+                                <p:inputText></p:inputText> 
+                                <p:inputText></p:inputText> 
+                                <p:inputText></p:inputText> 
+                                <p:commandButton actionListener="# {pprBean.savePerson}"    
+                                                 icon="ui-icon-disk" title="Icon Only"/> 
+                                <p:inputText></p:inputText> 
+                                <p:inputText></p:inputText> 
+                                <p:inputText></p:inputText> 
+                            </h:panelGrid> 
+                             <h:panelGrid columns="3" cellpadding="10">
+                                <h:outputLabel value="Retención IUE - IT Sector Industrial Exporta :" style="font-weight: bold; width: 2%" />  
+                                <p:inputText id="retencion" value="" size="10" maxlength="10" /> %
+                             </h:panelGrid> 
+                             <h:panelGrid columns="4" cellpadding="5">
+                                <p:commandButton actionListener="# {pprBean.savePerson}"    
+                                                 icon="ui-icon-disk" title="Icon Only"/> 
+                                <p:inputText></p:inputText> 
+                                <p:inputText></p:inputText> 
+                                <p:inputText></p:inputText> 
+                               </h:panelGrid>
+                            </p:tab>  
+                    </p:tabView> 
+                </p:panel>
+                      <div align="center" style="padding:1em 2.2em;">
+                
+                    <p:commandButton value="Guardar"
+                                     icon="ui-icon ui-icon-disk" 
+                                     action="# {cntAuxiliaresBacking.actionReturnAuxiliares()}" 
+                                     ajax="false"
+                                     immediate="true"/>
+                </div> 
+            </h:form>
+        </div>
+    </ui:define>
+</ui:composition>
+

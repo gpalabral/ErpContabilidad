@@ -1,0 +1,308 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition  xmlns="http://www.w3.org/1999/xhtml"
+                 xmlns:h="http://java.sun.com/jsf/html"
+                 xmlns:p="http://primefaces.org/ui"
+                 xmlns:ui="http://java.sun.com/jsf/facelets"
+                 xmlns:f="http://java.sun.com/jsf/core"
+                 template="#{sessionState.pathTemplate}"
+                 xmlns:bap="http://java.sun.com/jsf/composite/bap.comp"
+                 xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+    <ui:define name="content">
+        <p:panel header="LIBRO MAYOR" style="border-style: hidden;text-align: center">
+            <div align="center" style="padding:1em 2.2em;">
+                <h:form id="Campo">
+                    <p:dialog id="dialogoPlanCuentasParametrizacion" header="BAP SRL" widgetVar="dialogoPlanCuentasParametrizacion"  width="95%" height="50%">  
+                        <p:growl id="msgs" showDetail="true" />
+                        <p:dataTable id="eventsDT" var="item" value="#{cntLibroMayorBacking.cntObjetosPorGrupoNivelList()}" 
+                                     selectionMode="single" 
+                                     filteredValue="#{cntLibroMayorBacking.filteredcntEntidad}"
+                                     widgetVar="eventsDT"  
+                                     selection="#{cntLibroMayorBacking.selected}" rowKey="#{item.idEntidad}" scrollable="true" scrollHeight="230"
+                                     rowStyleClass="#{fn:contains(item.descripcion, cntLibroMayorBacking.valorEntidad)?cntLibroMayorBacking.color : null}">
+                            <f:facet name="header">
+                                PLAN DE CUENTAS
+                                <p:outputPanel>  
+                                    <h:outputText value="Buscar: "/>
+                                    <p:inputText id="globalFilter" disabled="#{cntLibroMayorBacking.eleccionTodos == true?true:false}" onkeyup="this.value = this.value.toUpperCase();
+                                            eventsDT.filter()" style="width:150px" value="#{cntLibroMayorBacking.valorEntidad}" autocomplete="off">                                               
+                                    </p:inputText>     
+                                    <h:outputText id="resMarcados" value=" Resultados Marcados: "/>  
+                                    <p:selectBooleanCheckbox id="resMarcadosCheckBox" value="#{cntLibroMayorBacking.eleccionTodos}" >  
+                                        <p:ajax update="eventsDT" listener="#{cntLibroMayorBacking.listaTodo()}"/>  
+                                    </p:selectBooleanCheckbox>   
+                                </p:outputPanel> 
+                            </f:facet>
+                            <p:ajax event="rowSelect" listener="#{cntLibroMayorBacking.obtieneObjetoPlanCuentas(e)}" update="SeleccionarCC"/>
+                            <!--<p:ajax event="rowUnselect" listener="# {cntParametrosDeGestionBacking.onRowUnselect}"/>-->
+                            <p:column headerText="CUENTA" filterBy="mascaraGenerada" filterStyle="display:none">
+                                <h:outputText value="#{item.mascaraGenerada}" />
+                            </p:column>
+                            <p:column headerText="DESCRIPCI&Oacute;N" filterBy="descripcion" filterStyle="display:none">
+                                <h:outputText value="#{cntLibroMayorBacking.insertaPuntosAutomatio(item)}" />
+                            </p:column>
+                            <f:facet name="footer">
+                                <p:commandButton id="SeleccionarCC" value="Seleccionar" 
+                                                 disabled="#{cntLibroMayorBacking.activaBotonSeleccion}"
+                                                 update="tabView"
+                                                 icon="ui-icon ui-icon-search" 
+                                                 action="#{cntLibroMayorBacking.seleccionar()}" ajax="false"/>  
+                                <p:commandButton onclick="PF('dialogoPlanCuentasParametrizacion').hide();"
+                                                 value="Cancelar"
+                                                 icon="#{cntLibroMayorBacking.iconoAtras()}"/>
+                            </f:facet> 
+                        </p:dataTable>
+                    </p:dialog>
+                    <p:panel>
+
+                        <p:panel id="panelCreaDetalleComprobante" style="border-style: hidden;width: 98%;">
+                            <p:panel style="width: 50%;border-style: hidden">
+                                <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" />  
+                            </p:panel>
+                            <p:outputLabel value="Cuenta Inicial:  "/>
+                            <p:commandButton onclick="PF('dialogoPlanCuentasParametrizacion').show();"
+                                             actionListener="#{cntLibroMayorBacking.cargaPrimeraCuenta(e)}"
+                                             icon="ui-icon-disk"
+                                             title="Icon Only" 
+                                             value="+"/> 
+
+                            <h:inputText id="codigo" value="#{cntLibroMayorBacking.cntEntidadSelecion.mascaraGenerada}" size="18" disabled="true"/>
+                            <p:watermark for="codigo" value="Nº de Cuenta" />
+                            <h:inputText id="descripcion" value="#{cntLibroMayorBacking.cntEntidadSelecion.descripcion}" size="65" disabled="true"/>
+                            <p:watermark for="descripcion" value="Descripcion" />
+                        </p:panel>
+                        <p:panel id="cuenta2" style="border-style: hidden;width: 98%;">
+                            <p:outputLabel value="Cuenta Final:  "/>
+                            <p:commandButton onclick="PF('dialogoPlanCuentasParametrizacion').show();"
+                                             actionListener="#{cntLibroMayorBacking.cargaSegundaCuenta(e)}"
+                                             icon="ui-icon-disk"
+                                             title="Icon Only" 
+                                             value="+"/> 
+                            <h:inputText id="codigoDos" value="#{cntLibroMayorBacking.cntEntidadSelecionDos.mascaraGenerada}" size="18" disabled="true" />
+                            <p:watermark for="codigoDos" value="Nº de Cuenta" />
+                            <h:inputText id="descripcionDos" value="#{cntLibroMayorBacking.cntEntidadSelecionDos.descripcion}" size="65" disabled="true" />
+                            <p:watermark for="descripcionDos" value="Descripcion" />
+                        </p:panel>
+                        <p:commandButton id="activaBotonParaCuentasNinguno"
+                                         value="Limpiar"
+                                         update=":Campo:panelCreaDetalleComprobante"
+                                         action="#{cntLibroMayorBacking.limpiaEntidad()}"
+                                         ajax="false"/>
+                        <p:panel style="border-style: hidden;width: 98%">
+                            <p:outputLabel value="Desde:"/>
+                            <p:spacer width="15" height="2" />
+                            <p:calendar value="#{cntLibroMayorBacking.fechaInicial}" pattern="dd/MM/yyyy" size="12" style="text-align:center" id="Fecha_Inicial">
+                            </p:calendar>
+                            <p:spacer width="20" height="2" />
+                            <p:outputLabel value="Hasta:"/>
+                            <p:spacer width="15" height="2" />
+                            <p:calendar value="#{cntLibroMayorBacking.fechaFinal}" pattern="dd/MM/yyyy" size="12" style="text-align:center" id="Fecha_Final">
+                            </p:calendar>
+                        </p:panel>
+                        <div align="center" id="divDePanelDeBotones">
+                            <h:panelGrid columns="8"  id="panelDeBotones" >
+                                <p:commandButton
+                                    value="Buscar"
+                                    action="#{cntLibroMayorBacking.listaEntidadesPorRango()}"                                
+                                    ajax="false"       
+                                    update="panelDeBotones"
+                                    onclick="PF('itemDialog').hide();"/>
+                                <p:commandButton 
+                                    value="Cancelar"
+                                    action="# {cntLibroMayorBacking.cancelaImpresionDeComprobantes()}"
+                                    title="Cancelar"
+                                    rendered="#{cntLibroMayorBacking.deshabilitaBotonDeCuentas}"/>
+                                <p:commandButton 
+                                    value="Volver"
+                                    action="#{cntLibroMayorBacking.vuelveADetalleComprobante()}"
+                                    title="Volver" 
+                                    rendered="#{cntLibroMayorBacking.habilitaVolverAComprobante}"/>
+                                <p:commandButton 
+                                    value="Volver PCTAS"
+                                    action="#{cntLibroMayorBacking.vuelveAPlanDeCuentas()}"
+                                    title="Volver" 
+                                    rendered="#{cntLibroMayorBacking.habilitaVolverAPlanDeCuentas}"/>
+                                <p:commandButton 
+                                    value="Volver "
+                                    action="#{cntLibroMayorBacking.vuelveABalanceGral()}"
+                                    title="Volver" 
+                                    rendered="#{cntLibroMayorBacking.habilitaVolverBG}"/>
+                                <p:commandButton 
+                                    value="Volver "
+                                    action="#{cntLibroMayorBacking.vuelveAEERR()}"
+                                    title="Volver" 
+                                    rendered="#{cntLibroMayorBacking.habilitaVolverEERR}"/>
+                                <p:commandButton                                
+                                    action="#{cntLibroMayorBacking.botonComprobanteInicial()}"                                
+                                    update="divDePanelDeBotonespanelDeBotones"
+                                    ajax="false"
+                                    icon="ui-icon-arrowthickstop-1-w"
+                                    disabled="#{cntLibroMayorBacking.limiteInicial}">
+                                </p:commandButton>  
+                                <p:commandButton                                    
+                                    action="#{cntLibroMayorBacking.botonComprobanteAnterior()}"                                
+                                    update="panelDeBotones"
+                                    ajax="false"
+                                    icon="ui-icon-arrowthick-1-w"                               
+                                    disabled="#{cntLibroMayorBacking.limiteInicial}">
+                                </p:commandButton> 
+                                <p:selectOneMenu  value="#{cntLibroMayorBacking.comprobanteElegido}" disabled="#{cntLibroMayorBacking.limiteInicial == true ? cntLibroMayorBacking.limiteFinal == true? true : false : false}">
+                                    <f:selectItems value="#{cntLibroMayorBacking.listaDePaginasYEntidades()}" var="a" itemLabel="#{a}"  itemValue="#{cntLibroMayorBacking.extraeNumeroDeCadena(a)}"/>
+                                    <p:ajax listener="#{cntLibroMayorBacking.muestraLibroMayorDeCuentaLista(event)}" update="detalleComprobante, panelDeBotones" />
+                                </p:selectOneMenu>
+                                <p:outputLabel id="restantes"
+                                               value=" de  #{cntLibroMayorBacking.comprobanteFinal} P&aacute;g."
+                                               style="font-weight: bold"
+                                               />
+                                <p:commandButton                                
+                                    action="#{cntLibroMayorBacking.botonComprobanteSiguiente()}"                                                                                   
+                                    update="panelDeBotones"
+                                    ajax="false"
+                                    icon="ui-icon-arrowthick-1-e"
+                                    disabled="#{cntLibroMayorBacking.limiteFinal}">
+                                </p:commandButton>  
+                                <p:commandButton                                
+                                    action="#{cntLibroMayorBacking.botonComprobanteUltimo()}"                                
+                                    update="panelDeBotones"
+                                    ajax="false"
+                                    icon="ui-icon-arrowthickstop-1-e"
+                                    disabled="#{cntLibroMayorBacking.limiteFinal}">
+                                </p:commandButton>  
+                            </h:panelGrid> 
+                            <!--                        <p:commandButton
+                                                        value="REPORTE"
+                                                        action="# {cntLibroMayorBacking.reporteLibroMayor_action()}"                                
+                                                        ajax="false" >
+                                                        <p:graphicImage value="/resources/images/printer.png" style="border: 0px"/>
+                                                    </p:commandButton>-->
+                            <p:selectOneRadio id="moneda" value="#{cntLibroMayorBacking.moneda}">  
+                                <f:selectItem itemLabel="Bolivianos" itemValue="BOL" />  
+                                <f:selectItem itemLabel="Dolares" itemValue="SUS" /> 
+                                <p:ajax update="detalleComprobante" />
+                            </p:selectOneRadio>
+
+                            <h:panelGrid columns="2">
+                                <h:commandLink action="#{cntLibroMayorBacking.reporteLibrosMayores_action()}" 
+                                               value="Imprimir Libro Mayor"
+                                               target="popupWindow"  disabled="#{!cntLibroMayorBacking.habilitaReporte}">
+                                    <p:graphicImage value="/resources/images/printer.png" style="border: 0px"/>
+                                </h:commandLink>
+
+                                <h:commandLink action="#{cntLibroMayorBacking.reporteLibrosMayoresBsSUS_action()}" 
+                                               value="Imprimir Libro Mayor Bs o $us"
+                                               target="popupWindow"  disabled="#{!cntLibroMayorBacking.habilitaReporte}">
+                                    <p:graphicImage value="/resources/images/printer.png" style="border: 0px"/>
+                                </h:commandLink>
+                            </h:panelGrid>
+                        </div>
+                        <p:dialog id="ctaDebF" header="BAP SRL" widgetVar="ctaDebF"  width="95%" height="50%">  
+                            <bap:plan id="ctaDebFPlan" entidadSeleccionada="#{cntLibroMayorBacking.cntEntidad}" cerrarWidget="ctaDebF" updateComp=":Campo:panelCreaDetalleComprobante" updateFormId=":Campo" actualizaDatosDetalleComprobante="#{cntLibroMayorBacking.metodoSelecionaEntidad()}" activaListaRetenciones="false"/>  
+                        </p:dialog>                    
+                        <div align="center" style="padding:1em 2.2em;height:300px;">
+                            <p:dataTable id="detalleComprobante" 
+                                         var="item" 
+                                         value="#{cntLibroMayorBacking.listaDetalleComprobante}" 
+                                         rowKey="#{item}" 
+                                         selection="#{cntLibroMayorBacking.cntDetalleComprobanteSelecion}"         
+                                         style="width: 70%;height: 100%"
+                                         emptyMessage="No existe cuenta con el valor"
+                                         scrollable="true" scrollHeight="150"
+                                         resizableColumns="true"
+                                         liveScroll="true"
+                                         scrollRows="20"
+                                         widgetVar="detalleComprobante">  
+                                <p:ajax event="rowSelect"/>     
+                                <p:columnGroup type="header">  
+                                    <p:row>        
+                                        <p:column colspan="7"/>
+                                        <p:column colspan="1" headerText="Saldo: #{cntLibroMayorBacking.sumaSaldo}" />  
+                                    </p:row>  
+                                    <p:row>  
+                                        <p:column headerText="Fecha"/>   
+                                        <p:column headerText="Nro"/>                                      
+                                        <p:column headerText="Tipo"/>  
+                                        <p:column headerText="Glosa"/>  
+                                        <p:column headerText="Debe" rendered="#{cntLibroMayorBacking.moneda == 'BOL'? true : false}"/>  
+                                        <p:column headerText="Debe $" rendered="#{cntLibroMayorBacking.moneda == 'BOL'? false : true}"/>  
+                                        <p:column headerText="Haber" rendered="#{cntLibroMayorBacking.moneda == 'BOL'? true : false}"/>  
+                                        <p:column headerText="Haber $" rendered="#{cntLibroMayorBacking.moneda == 'BOL'? false : true}"/>  
+                                        <p:column headerText="Saldo"/>  
+                                    </p:row>  
+                                </p:columnGroup> 
+                                <p:column style="text-align: right" width="6%">  
+                                    <h:outputText value="#{item.fecha}">
+                                        <f:convertDateTime pattern="#{sessionState.dateFormat}"/>
+                                    </h:outputText>                                
+                                </p:column>  
+                                <p:column style="text-align: right" width="2%">  
+                                    #{item.numero}
+                                </p:column>  
+                                <p:column style="width: 10%">  
+                                    #{item.tipoComprobante=='EGRE' ? 'E' : item.tipoComprobante == 'TRAS' ? 'T' : 'I' }
+                                </p:column>  
+                                <p:column style="width: 20%">  
+                                    #{item.glosa}
+                                </p:column>                                                      
+                                <p:column style="text-align: right;width: 5%" rendered="#{cntLibroMayorBacking.moneda == 'BOL'? true : false}">  
+                                    #{item.debe}
+                                </p:column>                                                      
+                                <p:column style="text-align: right;width: 5%" rendered="#{cntLibroMayorBacking.moneda == 'BOL'? false : true}">  
+                                    #{item.debeDolar}
+                                </p:column>                                                      
+                                <p:column style="text-align: right;width: 5%" rendered="#{cntLibroMayorBacking.moneda == 'BOL'? true : false}">  
+                                    #{item.haber}
+                                </p:column>                                                      
+                                <p:column style="text-align: right;width: 5%" rendered="#{cntLibroMayorBacking.moneda == 'BOL'? false : true}">  
+                                    #{item.haberDolar}
+                                </p:column>                                                      
+
+                                <p:column style="text-align: right;width: 10%">  
+                                    #{item.saldo}
+                                </p:column>  
+                                <p:columnGroup type="footer">  
+                                    <p:row>  
+                                        <p:column footerText="" />  
+                                        <p:column footerText="" style="text-align:right;font-weight: bold"/>  
+                                        <p:column style="text-align:right" footerText="" />  
+                                        <p:column style="text-align:right" footerText="" />  
+                                        <p:column style="text-align:right" footerText="" />  
+                                        <p:column style="text-align:right" footerText="TOTAL:" />  
+                                        <p:column style="text-align:right" footerText="#{cntLibroMayorBacking.sumaDebe}"/>  
+                                        <p:column style="text-align:right" footerText="#{cntLibroMayorBacking.sumaHaber}"/>  
+                                        <p:column style="text-align:right" footerText="#{cntLibroMayorBacking.sumaSaldoTotal}"/>  
+                                    </p:row>  
+                                    <p:row>  
+                                        <p:column footerText="" />  
+                                        <p:column footerText="" style="text-align:right;font-weight: bold"/>  
+                                        <p:column style="text-align:right" footerText="" />  
+                                        <p:column style="text-align:right" footerText="" />  
+                                        <p:column style="text-align:right" footerText="" />  
+                                        <p:column style="text-align:right" footerText="NETO" />  
+                                        <p:column style="text-align:right" footerText="#{cntLibroMayorBacking.sumaNetoDebe}"/>  
+                                        <p:column style="text-align:right" footerText="#{cntLibroMayorBacking.sumaNetoHaber}"/>  
+                                        <p:column style="text-align:right" footerText=""/>  
+                                    </p:row>  
+                                    <p:row>  
+                                        <p:column footerText="" />  
+                                        <p:column footerText="" style="text-align:right;font-weight: bold"/>  
+                                        <p:column style="text-align:right" footerText="" />  
+                                        <p:column style="text-align:right" footerText="" />  
+                                        <p:column style="text-align:right" footerText="" />  
+                                        <p:column style="text-align:right" footerText="SALDO" />  
+                                        <p:column style="text-align:right" footerText="#{cntLibroMayorBacking.sumaNetoDebe}"/>  
+                                        <p:column style="text-align:right" footerText="#{cntLibroMayorBacking.sumaNetoHaber}"/>  
+                                        <p:column style="text-align:right" footerText=""/>  
+                                    </p:row>  
+                                </p:columnGroup>  
+                                <f:facet name="footer">
+                                </f:facet>  
+                            </p:dataTable>
+                        </div>
+                    </p:panel>
+                </h:form>
+            </div>
+        </p:panel>
+    </ui:define>
+
+</ui:composition>
+

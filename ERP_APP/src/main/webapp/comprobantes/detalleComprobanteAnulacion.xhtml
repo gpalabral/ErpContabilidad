@@ -1,0 +1,150 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition  xmlns="http://www.w3.org/1999/xhtml"
+                 xmlns:h="http://java.sun.com/jsf/html"
+                 xmlns:p="http://primefaces.org/ui"
+                 xmlns:ui="http://java.sun.com/jsf/facelets"
+                 xmlns:f="http://java.sun.com/jsf/core"
+                 template="#{sessionState.pathTemplate}"
+                 xmlns:bap="http://java.sun.com/jsf/composite/bap.comp">
+    <ui:define name="content">
+        <p:panel header="#{cntFormularioComprobanteBacking.nombreVentanaDetalleComprobante} DE COMPROBANTE 5555555" style="border-style: hidden;text-align: center;">
+            <div align="center" style="padding:0em 2.2em;">
+                <h:form id="Campo">
+                    <p:panel id="padre" style="width: 100%;border-style: hidden">
+                        <div align="center" style="padding:0em 2.2em;border: 1px solid #4EA30D;">
+                            <h:panelGrid columns="20">
+                                Tipo: 
+                                <p:spacer width="10" height="2" />
+                                <p:selectOneMenu value="#{cntFormularioComprobanteBacking.cntComprobante.parTipoComprobante.codigo}" disabled="#{cntFormularioComprobanteBacking.activaPanelMotivoAnulacion}">
+                                    <f:selectItems value="#{cntFormularioComprobanteBacking.listaTiposComprobantes()}" var="a" itemLabel="#{a.descripcion}" itemValue="#{a.codigo}"/>                                    
+                                    <p:ajax listener="#{cntFormularioComprobanteBacking.generaNumeroPorComboTipoComprobante(e)}" update="numeroComprobante"/>  
+                                </p:selectOneMenu>
+                                <p:spacer width="20" height="2" />
+                                <p:outputLabel value="N&uacute;mero:"/>
+                                <h:inputText id="numeroComprobante" value="#{cntFormularioComprobanteBacking.cntComprobante.numero}" size="6" style="font-weight: bold;text-align:center" disabled="true"/>
+                                <p:spacer width="20" height="2" />
+                                <p:outputLabel value="Fecha:"/>
+                                <p:calendar value="#{cntFormularioComprobanteBacking.cntComprobante.fecha}" pattern="dd/MM/yyyy" maxdate="#{cntFormularioComprobanteBacking.fechaActual}" size="8" style="text-align:center" disabled="#{cntFormularioComprobanteBacking.activaPanelMotivoAnulacion}" locale="es">
+                                    <p:ajax event="dateSelect" listener="#{cntFormularioComprobanteBacking.devuelveTipoCambioPorFecha(e)}" update="tipoCambio,detalleComprobante" />  
+                                </p:calendar>
+                                <p:spacer width="20" height="2" />
+                                <p:outputLabel value="T/C:"/>
+                                <p:inputText id="tipoCambio" value="#{cntFormularioComprobanteBacking.cntComprobante.tipoCambio}" style="text-align: right" size="4" maxlength="2" disabled="#{cntFormularioComprobanteBacking.activaPanelMotivoAnulacion}"/>
+                                <p:spacer width="20" height="2" />
+                                Monedas: 
+                                <p:spacer width="10" height="2" />
+                                <p:selectOneMenu value="#{cntFormularioComprobanteBacking.cntComprobante.tipoMoneda}" disabled="#{cntFormularioComprobanteBacking.activaPanelMotivoAnulacion}">  
+                                    <f:selectItem itemLabel="BOLIVIANOS" itemValue="BOL" />  
+                                    <f:selectItem itemLabel="DOLAR" itemValue="SUS"/>      
+                                    <p:ajax listener="#{cntFormularioComprobanteBacking.cambiaTipoDeCambio(e)}" update="detalleComprobante"/>  
+                                </p:selectOneMenu> 
+                                Aprobado:<p:panel style="width: 10%;background:#009999"/>
+                                Pendiente:<p:panel style="width: 10%;background:#E1E463"/>
+                            </h:panelGrid>
+                        </div>
+
+                        <div align="center" style="padding:1em 1em">
+
+                            <p:dataTable id="detalleComprobante" 
+                                         var="detalleComprobante" 
+                                         value="#{cntFormularioComprobanteBacking.cntDetalleComprobantesList}" 
+                                         selectionMode="multiple" 
+                                         selection="#{cntFormularioComprobanteBacking.listaCntDetalleComprobanteElegidaParaQuitarse}"                                                                                                             
+                                         rowKey="#{detalleComprobante}"
+                                         emptyMessage="No existen datos para listar"
+                                         scrollable="true" scrollHeight="200"
+                                         style="height: 60%;width: 100%;border: 1px solid #4EA30D;background-color: #F4FDF0;">
+                                <p:ajax event="rowSelect" listener="#{cntFormularioComprobanteBacking.selecDetalleComprobanteParaInsertarEvento(e)}" update="detalleComprobante"/>  
+                                <f:facet name="header">
+                                    Lista de Detalles
+                                </f:facet>
+                                <p:column headerText="E" width="2%">  
+                                    <p:panel style="width: 10%;background:#{cntFormularioComprobanteBacking.cambiaColorEstadoCC(detalleComprobante.estado)}"/>
+                                </p:column> 
+                                <p:column headerText="N°" width="5%" style="text-align: right">
+                                    <h:outputText value="#{detalleComprobante.posicion}" />
+                                </p:column>
+                                <p:column headerText="Codigo" width="10%" style="text-align: right">
+                                    <h:outputText value="#{detalleComprobante.cntEntidad.mascaraGenerada}" />
+                                </p:column>
+                                <p:column headerText="Cuenta" width="20%">
+                                    <h:outputText value="#{detalleComprobante.cntEntidad.descripcion}" />
+                                </p:column>
+                                <p:column headerText="Glosa" width="25%">
+                                    <h:outputText value="#{detalleComprobante.glosa}"/>
+                                </p:column>
+                                <p:column headerText="Debe" rendered="#{cntFormularioComprobanteBacking.cambiaTipoDeMonedaMontos}" style="text-align: right">
+                                    <h:outputText value="#{detalleComprobante.debe}"/>
+                                </p:column>
+                                <p:column headerText="Haber" rendered="#{cntFormularioComprobanteBacking.cambiaTipoDeMonedaMontos}" style="text-align: right">
+                                    <h:outputText value="#{detalleComprobante.haber}"/>
+                                </p:column>
+                                <p:column headerText="Debe" rendered="#{!cntFormularioComprobanteBacking.cambiaTipoDeMonedaMontos}" style="text-align: right">
+                                    <h:outputText value="#{detalleComprobante.debeDolar}"/>
+                                </p:column>
+                                <p:column headerText="Haber" rendered="#{!cntFormularioComprobanteBacking.cambiaTipoDeMonedaMontos}" style="text-align: right">
+                                    <h:outputText value="#{detalleComprobante.haberDolar}"/>
+                                </p:column>
+                                <p:column headerText="Nº Cheque" style="text-align: right">
+                                    <h:outputText value="#{detalleComprobante.numeroCheque}"/>
+                                </p:column>
+                                <p:column headerText="Nº Factura" style="text-align: right">
+                                    <h:outputText value="#{detalleComprobante.cntFacturacion.nroInicial}"/>
+                                </p:column>
+                                <p:column headerText="Proyecto" style="text-align: right">
+                                    <h:outputText value="#{cntFormularioComprobanteBacking.buscaProyecto(detalleComprobante)}"/>
+                                </p:column>
+                                <p:column headerText="Nº Auxiliar" style="text-align: right">
+                                    <h:outputText value="#{detalleComprobante.idAuxiliar}"/>
+                                </p:column>
+                                <p:columnGroup type="footer">  
+                                    <p:row>  
+                                        <p:column footerText="" />  
+                                        <p:column footerText="" />  
+                                        <p:column footerText="" />  
+                                        <p:column footerText="" />  
+                                        <p:column footerText="TOTALES:" style="text-align:right"/>  
+                                        <p:column style="text-align:right" footerText="#{cntFormularioComprobanteBacking.sumaTotalDebeBoliviano}" rendered="#{cntFormularioComprobanteBacking.cambiaTipoDeMonedaMontos}"/>  
+                                        <p:column style="text-align:right" footerText="#{cntFormularioComprobanteBacking.sumaTotalHaberBoliviano}" rendered="#{cntFormularioComprobanteBacking.cambiaTipoDeMonedaMontos}"/>  
+                                        <p:column style="text-align:right" footerText="#{cntFormularioComprobanteBacking.sumaTotalDebeDolar}" rendered="#{!cntFormularioComprobanteBacking.cambiaTipoDeMonedaMontos}"/>  
+                                        <p:column style="text-align:right" footerText="#{cntFormularioComprobanteBacking.sumaTotalHaberDolar}" rendered="#{!cntFormularioComprobanteBacking.cambiaTipoDeMonedaMontos}"/>  
+                                        <p:column footerText="" />  
+                                        <p:column footerText="" />  
+                                        <p:column footerText="" />  
+                                        <p:column footerText="" />  
+                                        <p:column footerText="" />  
+                                    </p:row>  
+                                </p:columnGroup>  
+                            </p:dataTable>
+
+                        </div>
+                        <div align="center" style="padding:1em 1em">
+                            <p:panel id="motivoAnulacion" style="width: 98%">
+                                <p:outputLabel value="Motivo de Anulación:"/>
+                                <h:inputText id="anulacion" value="#{cntFormularioComprobanteBacking.cntComprobante.motivoAnulacion}" style="width: 80%"/>
+                            </p:panel>
+                        </div>
+                        <div align="center" style="padding:2em 2.2em;">
+                            <h:panelGrid columns="2">
+                                <p:commandButton id="anula"
+                                                 value="ANULAR"
+                                                 action="#{cntFormularioComprobanteBacking.modificaEstadoAnuladoComprobanteDetalleFacturacion()}"
+                                                 ajax="false"
+                                                 title="Anula el Comprobante seleccionado"
+                                                 icon="#{cntFormularioComprobanteBacking.iconoRegistra()}"/>      
+                                <p:commandButton value="CANCELAR"
+                                                 action="#{cntFormularioComprobanteBacking.irComprobanteDesdeAnulacion()}"
+                                                 title="Cancela el proceso de Anulacion"
+                                                 ajax="false"
+                                                 icon="#{cntFormularioComprobanteBacking.iconoAtras()}"/>
+                            </h:panelGrid>
+                        </div>
+                    </p:panel>
+                </h:form>
+            </div>
+        </p:panel>
+    </ui:define>
+
+</ui:composition>
+

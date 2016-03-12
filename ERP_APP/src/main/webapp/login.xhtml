@@ -1,0 +1,85 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html  xmlns="http://www.w3.org/1999/xhtml"
+       xmlns:h="http://java.sun.com/jsf/html"
+       xmlns:p="http://primefaces.org/ui"
+       template="#{sessionState.pathTemplate}">
+    <h:head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Login</title>
+
+        <h:outputStylesheet library="bap.css" name="cssLayout.css"/>
+
+    </h:head>
+    <h:body>
+        <p:layout fullPage="true" > 
+
+            <p:layoutUnit position="north" style="height:100%">
+                <div id="top">
+                    <p:toolbar style="width: 99%;height:10%">  
+                        <p:toolbarGroup align="left">  
+                            <p:graphicImage value="/resources/images/logoBAP5.png" />  
+                        </p:toolbarGroup>  
+                        <p:toolbarGroup align="right">  
+                        </p:toolbarGroup>  
+                    </p:toolbar>  
+                </div>
+            </p:layoutUnit>
+
+            <p:layoutUnit position="center">  
+                <p:dialog header="Mensajes del Sistema" visible="#{sessionState.anyError}" showEffect="fade" hideEffect="explode" widgetVar="dlg" modal="true" appendTo="@(body)" width="500" height="150">  
+                    <h:form id="formMessages">
+                        <div align="left" style="padding:1em 2.2em;">
+                            <p:messages id="messages" showDetail="false" showSummary="true"/>
+                        </div>
+                        <div align="center" style="padding:1em 2.2em;">
+                            <p:commandButton id="submitButton" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" value="Aceptar" onclick="PF('dlg').hide();"/>  
+                        </div>
+                    </h:form>
+                </p:dialog>
+                <div align="center" style="padding:5em 2.2em;">
+                    <h:form>
+                        <p:panel header="LOGIN" style="width: 30%;height: 100%;margin-bottom:10px;">
+                            <h:panelGrid columns="1"  id="centro">  
+                                <h:outputLabel value="Usuario: *" />  
+                                <p:inputText value="#{admLoginBancoBacking.admUsuarios.login}" required="true" style="width: 300px;height: 25px" />
+                                <h:outputLabel value="Contraseña: *" />  
+                                <p:password id="password" value="#{admLoginBancoBacking.admUsuarios.password}" required="true" feedback="false" style="width: 300px;height: 25px"/>
+                                <!--<p:password id="password" value="# {admLoginBancoBacking.admUsuarios.password}" required="true" feedback="false" style="width: 300px;height: 25px" validator="validaPassword"/>-->
+                            </h:panelGrid>  
+                            <br/>
+                            <!--<p:captcha label="Captcha" theme="blackglass" language="es" validatorMessage="Error al momento de logearse"/>-->
+                            <br/>
+                            <p:commandButton
+                                value="ENTRAR"
+                                action="#{admLoginBancoBacking.validarLogin()}"
+                                ajax="false"
+                                image="ui-icon ui-icon-key"
+                                style="width: 300px;height: 25px"/>
+                            <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" /> 
+                        </p:panel>
+                    </h:form>
+                </div>
+            </p:layoutUnit>  
+            <p:layoutUnit position="south" style="height:100%">
+                <div id="top">
+                    <p:toolbar style="width: 99%;height: 90%" id="top">  
+                        <p:toolbarGroup align="left">  
+                            <div align="center" style="padding:1em 25.2em;">
+                                <h:panelGrid columns="1">
+                                    <h:outputLabel for="name" value="Bienvenido al Sistema CONTROL PANEL" />  
+                                    <p:separator id="separator" style="width: 600px "/>
+                                    <h:outputText  value="Este sistema controla todo lo relacionado a los permisos por pagina, y acciones." 
+                                                   style="font-style: italic"/>  
+                                </h:panelGrid>
+                            </div>
+
+                        </p:toolbarGroup>  
+
+                    </p:toolbar>  
+                </div>
+            </p:layoutUnit>
+
+        </p:layout>  
+    </h:body>
+</html>

@@ -1,0 +1,49 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition  xmlns="http://www.w3.org/1999/xhtml"
+                 xmlns:h="http://java.sun.com/jsf/html"
+                 xmlns:p="http://primefaces.org/ui"
+                 xmlns:ui="http://java.sun.com/jsf/facelets"
+                 xmlns:f="http://java.sun.com/jsf/core"
+                 template="#{sessionState.pathTemplate}">
+    <ui:define name="content">       
+        <h:form id="Campo">
+            <div align="center">
+                <p:panel header="ADICIONAR TIPO DE CAMBIO" style="border-style: hidden">
+                    <h:panelGrid id="display" columns="3">
+                        <p:focus for="Tipo_Cambio" />
+                        <h:outputText value="Tipo Cambio:" style="font-weight: bold;" />
+                        <p:inputMask value="#{cntTipoCambioBacking.tipoCambioAux}" size="7" maxlength="4" mask="9.99" required="true" id="Tipo_Cambio"/>    
+                        <p:spacer width="1"></p:spacer>
+                        <h:outputText value="Tipo UFV:" style="font-weight: bold;"/>
+                        <p:inputMask value="#{cntTipoCambioBacking.tipoUfvAux}"  size="7" maxlength="7" mask="9.99999" required="true" id="Tipo_UFV"/>    
+                        <p:spacer width="1"></p:spacer>
+                        <h:outputText value="Fecha de Registro:" style="font-weight: bold;"/>
+                        <p:calendar disabled="true" value="#{cntTipoCambioBacking.cntTipoCambio.fecha}" pattern="dd/MM/yyyy" size="12" maxlength="12" required="true" id="Fecha_registro"/> 
+                    </h:panelGrid>  
+                    <div align="center" style="padding:1em 2.2em;">
+                        <p:commandButton value="GUARDAR"
+                                         icon="ui-icon ui-icon-disk" 
+                                         title="Adiciona nuevo Tipo de Cambio"
+                                         action="#{cntTipoCambioBacking.saveCntTipoCambio()}" 
+                                         ajax="false"
+                                         rendered="#{!cntTipoCambioBacking.editable}"/>
+                        <p:commandButton value="GUARDAR"
+                                         action="#{cntTipoCambioBacking.editarSeguirCntTipoCambio()}"
+                                         rendered="#{cntTipoCambioBacking.editable}"
+                                         title="Actualiza el Tipo de Cambio hasta la fecha actual"
+                                         ajax="false"
+                                         icon="ui-icon ui-icon-pencil"/>
+                        <p:commandButton value="CANCELAR"
+                                         icon="ui-icon ui-icon-arrow-1-w"
+                                         title="Retorna a Listado de Tipos de Cambio"
+                                         action="#{cntTipoCambioBacking.actionReturnTipoCambio()}" 
+                                         ajax="false"
+                                         immediate="true"/>
+                    </div>
+                </p:panel>
+            </div>    
+        </h:form>            
+    </ui:define>
+</ui:composition>
+

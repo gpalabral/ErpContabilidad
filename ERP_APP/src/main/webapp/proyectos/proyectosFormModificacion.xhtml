@@ -1,0 +1,53 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition  xmlns="http://www.w3.org/1999/xhtml"
+                 xmlns:h="http://java.sun.com/jsf/html"
+                 xmlns:p="http://primefaces.org/ui"
+                 xmlns:ui="http://java.sun.com/jsf/facelets"
+                 xmlns:f="http://java.sun.com/jsf/core"
+                 template="#{sessionState.pathTemplate}">
+    <ui:define name="content">       
+        <h:form id="Campo">
+            <p:panel header="MODIFICACI&Oacute;N DE PROYECTOS" style="border-style: hidden;text-align: center">
+                <div align="center" style="padding:1em 2.2em;">
+                    <h:panelGrid id="panelGridDatos" columns="2">                        
+                        <h:outputText value="M&aacute;scara:" style="font-weight: bold;" id="Máscara"/>
+                        <h:outputLabel value="#{cntProyectosModificacionBacking.cntProyecto.mascara}" >                            
+                        </h:outputLabel>                            
+                        <h:outputText value="Nombre:" style="font-weight: bold;"/>
+                        <p:inputText value="#{cntProyectosModificacionBacking.cntProyecto.nombre}" onkeyup="this.value=this.value.toUpperCase()" id="Nombre" size="50" autocomplete="off">
+                            <f:validator validatorId="validaEsVacio"/>
+                        </p:inputText>                            
+                        <h:outputText value="Descripci&oacute;n:"  style="font-weight: bold;"/>  
+                        <p:inputTextarea rows="2" cols="50" value="#{cntProyectosModificacionBacking.cntProyecto.descripcion}" onkeyup="this.value=this.value.toUpperCase()" id="Descripción">
+                            <f:validator validatorId="validaEsVacio"/>
+                        </p:inputTextarea>
+                        <h:outputText value="Glosa:"  style="font-weight: bold;"/>  
+                        <p:inputTextarea rows="6" cols="50" value="#{cntProyectosModificacionBacking.cntProyecto.glosa}" onkeyup="this.value=this.value.toUpperCase()" id="Glosa">
+                            <f:validator validatorId="validaEsVacio"/>
+                        </p:inputTextarea>            
+                        <h:outputText value="Estado:"  style="font-weight: bold;"/>                          
+                        <p:selectOneMenu value="#{cntProyectosModificacionBacking.cntProyecto.estado}">
+                            <f:selectItems  value="#{cntProyectosModificacionBacking.listaDeEstadosDeProyecto}" var="a" itemLabel="#{a.descripcion}" itemValue="#{a.codigo}"/>                                
+                        </p:selectOneMenu>                                                    
+
+                    </h:panelGrid>  
+                    <div align="center" style="padding:1em 2.2em;">
+                        <h:panelGrid columns="2">
+                            <p:commandButton value="Modificar"
+                                             icon="ui-icon-disk" 
+                                             action="#{cntProyectosModificacionBacking.guardaProyecto()}" 
+                                             ajax="false" />
+                            <p:commandButton value="Cancelar"
+                                             icon="ui-icon-arrowthick-1-w" 
+                                             action="#{cntProyectosModificacionBacking.cancelaGuardaProyecto()}" 
+                                             ajax="false"                                             
+                                             immediate="true"/>
+                        </h:panelGrid>
+                    </div>
+                </div>    
+            </p:panel>
+        </h:form>            
+    </ui:define>
+</ui:composition>
+

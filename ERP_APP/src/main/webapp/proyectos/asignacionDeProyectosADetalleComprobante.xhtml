@@ -1,0 +1,54 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition  xmlns="http://www.w3.org/1999/xhtml"
+                 xmlns:h="http://java.sun.com/jsf/html"
+                 xmlns:p="http://primefaces.org/ui"
+                 xmlns:ui="http://java.sun.com/jsf/facelets"
+                 xmlns:f="http://java.sun.com/jsf/core"
+                 template="#{sessionState.pathTemplate}"
+                 xmlns:c="http://java.sun.com/jsp/jstl/core"
+                 xmlns:bap="http://java.sun.com/jsf/composite/bap.comp">
+    <ui:define name="content">
+        <p:panel header="ASIGNACIÓN DE PROYECTOS" style="border-style: hidden;text-align: center">
+            <h:form id="form">  
+                <div align="center" style="padding:1em 2.2em;">                    
+                    <p:panel style="border-style: hidden">
+                        <div align="center" >                            
+                            <p:dataTable id="tablaProyectos" 
+                                         var="item" 
+                                         value="#{cntAsignacionProyectosDetalleComprobanteBacking.listaDeProyectos}" 
+                                         rowKey="#{item}" 
+                                         selection="#{cntAsignacionProyectosDetalleComprobanteBacking.cntProyectoElegido}"                                                                                                             
+                                         emptyMessage="No existe cuenta con el valor"
+                                         scrollable="true" scrollHeight="200"
+                                         widgetVar="tablaProyectos" style="width: 80%;height: 90%">                                     
+                                <f:facet name="header">  
+                                    Proyectos
+                                </f:facet> 
+                                <p:column selectionMode="single" style="width:5%" disabledSelection="#{item.nivel == '1'? false : true}" />  
+                                <p:column headerText="M&aacute;scara" width="10%" >  
+                                    #{item.mascara}
+                                </p:column>  
+                                <p:column headerText="Nombre" width="30%" >  
+                                    #{cntAsignacionProyectosDetalleComprobanteBacking.insertaPuntosAutomatio(item)}  
+                                </p:column>                                      
+                                <p:column headerText="Descripci&oacute;n" width="55%">  
+                                    #{item.descripcion}
+                                </p:column>                                 
+
+                                <f:facet name="footer">
+                                    <div align="center" style="padding:1em 2.2em;">                                    
+                                        <p:commandButton id="adicionar" value="GRABAR" 
+                                                         ajax="false" icon="ui-icon-disk" action="#{cntAsignacionProyectosDetalleComprobanteBacking.guardaAsignacionDeProyecto()}"/>                                          
+                                        <p:commandButton id="ninguno" value="LIMPIAR"  
+                                                         ajax="false" action="#{cntAsignacionProyectosDetalleComprobanteBacking.limpiaEleccion()}"/>                                          
+                                    </div>
+                                </f:facet>  
+                            </p:dataTable>                            
+                        </div>
+                    </p:panel>                                         
+                </div>
+            </h:form>  
+        </p:panel>
+    </ui:define>
+</ui:composition>

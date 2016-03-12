@@ -1,0 +1,130 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition  xmlns="http://www.w3.org/1999/xhtml"
+                 xmlns:h="http://java.sun.com/jsf/html"
+                 xmlns:p="http://primefaces.org/ui"
+                 xmlns:ui="http://java.sun.com/jsf/facelets"
+                 xmlns:f="http://java.sun.com/jsf/core"
+                 template="#{sessionState.pathTemplate}"
+                 xmlns:bap="http://java.sun.com/jsf/composite/bap.comp">
+    <ui:define name="content">
+        <p:panel header="ELIMINACIÓN DE COMPROBANTE" style="border-style: hidden">
+            <div align="center" style="padding:0em 2.2em;">
+                <h:form id="Campo">
+                    <p:panel id="padre" style="width: 99%;border-style: hidden">
+                        <div align="center" style="padding:1em 2.2em;">
+                            <p:panel style="width: 90%;text-align: center">
+                                Tipo <p:outputLabel value="#{cntFormularioComprobanteEliminaBacking.tituloTipoComprobante}" style="font-style: italic;font-weight: bold" id="tituloTipoComprobante"/>
+                                <p:spacer width="10" height="2" />
+                                <p:selectOneMenu value="#{cntFormularioComprobanteEliminaBacking.cntComprobante.parTipoComprobante.codigo}" disabled="true">
+                                    <f:selectItems value="#{cntFormularioComprobanteEliminaBacking.listaTiposComprobantes()}" var="a" itemLabel="#{a.descripcion}" itemValue="#{a.codigo}"/>
+                                </p:selectOneMenu>
+                                <p:spacer width="20" height="2" />
+                                <p:outputLabel value="Numero:"/>
+                                <p:inputText id="numeroComprobante" value="#{cntFormularioComprobanteEliminaBacking.cntComprobante.numero}" size="10" style="font-weight: bold;text-align:center" disabled="true"/>
+                                <p:spacer width="20" height="2" />
+                                <p:outputLabel value="Fecha:"/>
+                                <p:calendar value="#{cntFormularioComprobanteEliminaBacking.cntComprobante.fecha}" pattern="dd/MM/yyyy" maxdate="#{cntFormularioComprobanteEliminaBacking.fechaActual}" size="12" style="text-align:center" disabled="true">
+                                </p:calendar>
+                                <p:spacer width="20" height="2" />
+                                <p:outputLabel value="T/C:"/>
+                                <p:inputText id="tipoCambio" value="#{cntFormularioComprobanteEliminaBacking.cntComprobante.tipoCambio}" style="text-align: right" size="8" maxlength="8" disabled="true"/>
+                                <p:spacer width="20" height="2" />
+                                Moneda <p:outputLabel value="#{cntFormularioComprobanteEliminaBacking.tituloTipoMoneda}" style="font-style: italic;font-weight: bold" id="tituloTipoMoneda"/>
+                                <p:spacer width="10" height="2" />
+                                <p:selectOneMenu value="#{cntFormularioComprobanteEliminaBacking.cntComprobante.tipoMoneda}" disabled="true">  
+                                    <f:selectItem itemLabel="BOLIVIANOS" itemValue="BOL" />  
+                                    <f:selectItem itemLabel="DOLLAR" itemValue="SUS"/>  
+                                    <p:ajax event="change" update="tituloTipoMoneda,detalleComprobante" listener="#{cntFormularioComprobanteEliminaBacking.actualizaTituloTipoMoneda(e)}" />                                        
+                                </p:selectOneMenu>  
+                            </p:panel>
+                        </div>
+                        <div align="center" style="padding:1em 2.2em;">
+                            <h:panelGrid columns="6">
+                                Pendiente:<p:panel style="width: 10%;background:#E1E463"/>
+                                Aprobado:<p:panel style="width: 10%;background:#009999"/>
+                                Anulado:<p:panel style="width: 10%;background:#D0332E"/>
+                            </h:panelGrid>
+                            <p:dataTable id="detalleComprobante" 
+                                         var="item" 
+                                         value="#{cntFormularioComprobanteEliminaBacking.listaDeCuentasPorComprobante()}" 
+                                         rowKey="#{item}" 
+                                         emptyMessage="No existe cuenta con el valor"
+                                         scrollable="true" scrollHeight="150"
+                                         widgetVar="detalleComprobante" style="width: 90%;height: 40%">  
+                                <p:column headerText="Posicion" style="#{cntFormularioComprobanteEliminaBacking.cambiaColor(item.estado)?'font-weight: bold;color: #000000;width:10%':'width:5%'}">  
+                                    #{item.posicion}
+                                </p:column>  
+                                <p:column headerText="Cuenta" style="#{cntFormularioComprobanteEliminaBacking.cambiaColor(item.estado)?'font-weight: bold;color: #000000;width:10%':'width:10%'}">  
+                                    #{item.cntEntidad.mascaraGenerada}
+                                </p:column>  
+                                <p:column headerText="Descripcion" style="#{cntFormularioComprobanteEliminaBacking.cambiaColor(item.estado)?'font-weight: bold;color: #000000;width:35%':'width:20%'}">  
+                                    #{item.cntEntidad.descripcion}
+                                </p:column>                          
+                                <p:column headerText="Glosa" style="#{cntFormularioComprobanteEliminaBacking.cambiaColor(item.estado)?'font-weight: bold;color: #000000;width:35%':'width:20%'}">  
+                                    #{item.glosa}
+                                </p:column>                          
+                                <p:column headerText="Debe" style="#{cntFormularioComprobanteEliminaBacking.cambiaColor(item.estado)?'font-weight: bold;text-align:right;color: #000000;width:10%':'text-align:right;width:10%'}">  
+                                    #{cntFormularioComprobanteEliminaBacking.cambiaFormatoMoneda(item.debe!=null?item.debe/cntFormularioComprobanteEliminaBacking.convierte:item.debe)}
+                                </p:column>                          
+                                <p:column headerText="Haber" style="#{cntFormularioComprobanteEliminaBacking.cambiaColor(item.estado)?'font-weight: bold;text-align:right;color: #000000;width:10%':'text-align:right;width:10%'}">  
+                                    #{cntFormularioComprobanteEliminaBacking.cambiaFormatoMoneda(item.haber!=null?item.haber/cntFormularioComprobanteEliminaBacking.convierte:item.haber)}
+                                </p:column>                                                                
+                                <p:column headerText="Estado" width="10%">  
+                                    <p:panel style="width: 50%;background:#{cntFormularioComprobanteEliminaBacking.cambiaColorEstadoCC(item.estado)}"/>
+                                </p:column> 
+                                <p:column headerText="Transaccion" width="15%">  
+                                    #{cntFormularioComprobanteEliminaBacking.tipoDeTransaccion(item)}
+                                </p:column>   
+                                <p:columnGroup type="footer">  
+                                    <p:row>  
+                                        <p:column footerText="" />  
+                                        <p:column footerText="" />  
+                                        <p:column footerText="" />  
+                                        <p:column footerText="" />  
+                                        <p:column footerText="TOTALES:" style="text-align:right"/>  
+                                        <p:column style="text-align:right" footerText="#{cntFormularioComprobanteEliminaBacking.cambiaFormatoMoneda(cntFormularioComprobanteEliminaBacking.sumaTotalDebe/cntFormularioComprobanteEliminaBacking.convierte)}" />  
+                                        <p:column style="text-align:right" footerText="#{cntFormularioComprobanteEliminaBacking.cambiaFormatoMoneda(cntFormularioComprobanteEliminaBacking.sumaTotalHaber/cntFormularioComprobanteEliminaBacking.convierte)}" />  
+                                        <p:column footerText="" />  
+                                        <p:column footerText="" />  
+                                    </p:row>  
+                                </p:columnGroup>  
+                                <f:facet name="footer">  
+                                    <p:spacer width="20" height="20" />
+                                </f:facet>  
+                            </p:dataTable>
+                        </div>
+
+
+                        <h:panelGrid columns="2">
+                            <p:commandButton
+                                value="Eliminar"
+                                icon="#{cntFormularioComprobanteBacking.iconoElimina()}" 
+                                onclick="PF('dialogoEliminacion').show();"/>  
+                            <p:commandButton
+                                value="Cancelar"
+                                action="#{cntFormularioComprobanteEliminaBacking.irComprobante()}"
+                                icon="#{cntFormularioComprobanteEliminaBacking.iconoAtras()}"/>
+
+                        </h:panelGrid>
+                        <p:dialog id="eliminacion" header="Dialogo Confirmación" widgetVar="dialogoEliminacion" 
+                                  modal="true" showEffect="fade" hideEffect="fade" resizable="false" width="40%" height="70%" closable="false">
+                            <div align="center" style="padding:1em 2.2em;">
+                                <bap:informacion mensaje="Esta seguro de eliminar el comprobante." dimension="90%"/>
+                                <h:panelGrid columns="2">
+                                    <p:commandButton 
+                                        value="SI" 
+                                        action="#{cntFormularioComprobanteEliminaBacking.eliminaComprobante()}" 
+                                        ajax="false"/>
+                                    <p:commandButton value="NO" styleClass="ui-confirmdialog-yes" onclick="PF(dialogoEliminacion).hide();" ajax="false"/>
+                                </h:panelGrid>
+                            </div>
+                        </p:dialog>
+                    </p:panel>
+                </h:form>
+            </div>
+        </p:panel>
+    </ui:define>
+
+</ui:composition>
+

@@ -1,0 +1,78 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition  xmlns="http://www.w3.org/1999/xhtml"
+                 xmlns:h="http://java.sun.com/jsf/html"
+                 xmlns:p="http://primefaces.org/ui"
+                 xmlns:ui="http://java.sun.com/jsf/facelets"
+                 xmlns:f="http://java.sun.com/jsf/core"
+                 template="#{sessionState.pathTemplate}"
+                 xmlns:bap="http://java.sun.com/jsf/composite/bap.comp">
+
+    <ui:define name="content">
+        <f:view>
+            <p:panel header="PROYECTOS" style="border-style: hidden;text-align: center">
+                <h:form id="form">
+                    <div align="center" style="padding:1em 2.2em;">
+                        <div align="center" style="padding:1em 2.2em;">
+                        </div> 
+                        <p:dataTable var="item" 
+                                     value="#{cntProyectosBacking.listaProyectosOrdenados()}"
+                                     rowKey="#{item.mascara}" 
+                                     filteredValue="#{cntProyectosBacking.filteredCntProyectos}" 
+                                     selection="#{cntProyectosBacking.seleccionCntProyecto}" 
+                                     selectionMode="single"
+                                     id="itemsTable"
+                                     widgetVar="itemsTable"
+                                     style="width: 80%;height: 50%"
+                                     scrollable="true" scrollHeight="150">  
+                            <f:facet name="header">  
+                                Listado de Proyectos  
+                            </f:facet>  
+
+                            <p:column  headerText="Codigo" filterBy="mascara" filterStyle="display:none"
+                                       width="5%" style="text-align: right">  
+                                #{item.mascara}
+                            </p:column>  
+                            <p:column headerText="Nombre" filterBy="nombre" filterStyle="display:none"
+                                      width="25%">
+                                #{cntProyectosBacking.insertaPuntosAutomatio(item)}  
+                            </p:column>
+                            <p:column  headerText="Descripción" filterBy="descripcion" filterStyle="display:none"
+                                       width="30%">  
+                                #{item.descripcion}
+                            </p:column>  
+                            <p:column  headerText="Glosa" filterBy="glosa" filterStyle="display:none"
+                                       width="40%">  
+                                #{item.glosa}  
+                            </p:column>
+                            <f:facet name="footer">  
+                                <p:commandButton value="ADICIONAR"  
+                                                 ajax="false" 
+                                                 icon="ui-icon-disk"  
+                                                 action="#{cntProyectosBacking.irAdicionProyecto()}"/>    
+                                <p:commandButton value="MODIFICAR" 
+                                                 action="#{cntProyectosBacking.irModificacionProyecto()}"                                                                                                    
+                                                 icon="ui-icon-pencil" 
+                                                 ajax="false">
+                                </p:commandButton>
+                                <p:commandButton
+                                            value="ELIMINAR"
+                                            icon="#{cntFormularioComprobanteBacking.iconoElimina()}" 
+                                            onclick="dialogoEliminacion.show()"/>  
+                            </f:facet>  
+                        </p:dataTable>
+                    </div>
+                     <p:dialog id="eliminacion" header="Dialogo Confirmación" widgetVar="dialogoEliminacion">
+                                <div align="center" style="padding:1em 2.2em;">
+                                    <bap:informacion mensaje="Esta seguro de eliminar el Proyecto." dimension="90%"/>
+                                    <h:panelGrid columns="2">
+                                        <p:commandButton value="SI" action="#{cntProyectosBacking.eliminaProyecto()}" oncomplete="PF(dialogoEliminacion).hide();" ajax="false" update="form"/>
+                                        <p:commandButton value="NO" styleClass="ui-confirmdialog-yes" onclick="PF(dialogoEliminacion).hide();" ajax="false"/>
+                                    </h:panelGrid>
+                                </div>
+                            </p:dialog>
+                </h:form>
+            </p:panel>
+        </f:view>
+    </ui:define>
+</ui:composition>

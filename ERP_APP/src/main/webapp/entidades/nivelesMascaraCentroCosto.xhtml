@@ -1,0 +1,137 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition  xmlns="http://www.w3.org/1999/xhtml"
+                 xmlns:h="http://java.sun.com/jsf/html"
+                 xmlns:p="http://primefaces.org/ui"
+                 xmlns:ui="http://java.sun.com/jsf/facelets"
+                 xmlns:f="http://java.sun.com/jsf/core"
+                 template="#{sessionState.pathTemplate}">
+    <ui:define name="content">
+        <h:form id="form"> 
+
+            <div align="center">
+                <p:panel id="panelMayor" header="CREACI&Oacute;N DE NIVEL PARA CENTRO DE COSTOS" style="overflow-y:auto ; overflow-x: auto; border-style: hidden">
+
+                    <h:panelGrid columns="2" id="mascarasCuentasAndCostos">
+                        <h:outputText value="N&uacute;mero de Niveles a crear : "/>
+                        <p:selectOneMenu value="#{cntNivelesMascarCentrosDeCostoBacking.numeroObjetosNivel}" disabled="#{!cntNivelesMascarCentrosDeCostoBacking.habilitaSeleccionDeCentroCostos}">
+                            <f:selectItems  value="#{cntNivelesMascarCentrosDeCostoBacking.tamanioNumerosList}" var="a" itemLabel="#{a}"/>
+                            <p:ajax event="change" update="itemsTable,mascara,mascaraCostos" listener="#{cntNivelesMascarCentrosDeCostoBacking.agregarNivel(e)}" />        
+                        </p:selectOneMenu>
+                        <h:outputText value="Mascara : "/>
+                        <h:inputText value="#{cntNivelesMascarCentrosDeCostoBacking.generacionMascara}" 
+                                     disabled="true" id="mascara" style="width: 150%"
+                                     rendered="#{!cntNivelesMascarCentrosDeCostoBacking.swActivaOpciones}"/>
+                        <h:inputText disabled="true" value="#{cntNivelesMascarCentrosDeCostoBacking.mascaraC}" 
+                                     style="width: 150%" id="mascaraCostos"
+                                     rendered="#{cntNivelesMascarCentrosDeCostoBacking.swActivaOpciones}"/>
+                    </h:panelGrid>
+                    <div align="center" style="padding:1em 2.2em;">
+                        <p:dataTable var="item" 
+                                     value="#{cntNivelesMascarCentrosDeCostoBacking.auxCntNivelesList}" 
+                                     rowKey="#{item.nivel}" 
+                                     selection="#{cntNivelesMascarCentrosDeCostoBacking.selectedNiveles}" 
+                                     selectionMode="single" 
+                                     filteredValue="#{cntNivelesMascarCentrosDeCostoBacking.filteredCntNiveles}" 
+                                     id="itemsTable"
+                                     style="width: 50%;height: 50%">  
+
+                            <p:ajax event="rowSelect" update=":form:dialogo" oncomplete="PF('itemDialog').show()" listener="#{cntNivelesMascarCentrosDeCostoBacking.seleccionarNivel(event)}" disabled="#{!cntNivelesMascarCentrosDeCostoBacking.habilitaSeleccionDeCentroCostos}"/>  
+
+                            <p:column headerText="Posici&oacute;n" id="model">  
+                                #{item.nivel}  
+                            </p:column>  
+
+                            <p:column headerText="Descripci&oacute;n" id="year">  
+                                #{item.descripcion}  
+                            </p:column>  
+
+                            <p:column headerText="Tamaño" id="manufacturer">  
+                                #{item.tamanio}  
+                            </p:column>  
+
+                            <p:column headerText="Tipo" width="100" >                        
+                                #{item.tipoNivel.descripcion}
+                            </p:column>  
+
+                        </p:dataTable>  
+                    </div>
+
+                    <p:dialog header="Modifica" widgetVar="itemDialog" 
+                              modal="true" showEffect="fade" hideEffect="fade" resizable="false" width="400" closable="false">
+
+                        <h:panelGrid id="dialogo" columns="2" cellpadding="4">  
+
+                            <f:facet name="header">  
+                                <h:outputText value="Modifique los datos del Nivel" />  
+                            </f:facet>  
+
+                            <h:outputText value="Posici&oacute;n:" />  
+                            <h:outputText value="#{cntNivelesMascarCentrosDeCostoBacking.nivelModifica}" id="model"/>  
+
+                            <h:outputText value="Descripci&oacute;n:" />  
+                            <p:inputText value="#{cntNivelesMascarCentrosDeCostoBacking.descripcionModifica}" id="year" onkeyup="this.value = this.value.toUpperCase()" maxlength="30"/>  
+                            <h:outputText value="Tamaño:" />  
+                            <p:selectOneMenu value="#{cntNivelesMascarCentrosDeCostoBacking.tamanioModifica}" 
+                                             effect="fold" id="manufacturer1" style="width: 50%">
+                                <f:selectItem itemLabel="1" itemValue="1"/>
+                                <f:selectItem itemLabel="2" itemValue="2"/>
+                                <f:selectItem itemLabel="3" itemValue="3"/>
+                                <f:selectItem itemLabel="4" itemValue="4"/>
+                                <f:selectItem itemLabel="5" itemValue="5"/>
+                                <f:selectItem itemLabel="6" itemValue="6"/>
+                                <f:selectItem itemLabel="7" itemValue="7"/>
+                                <f:selectItem itemLabel="8" itemValue="8"/>
+                                <f:selectItem itemLabel="9" itemValue="9"/>
+                            </p:selectOneMenu>
+                            <h:outputText value="Tipo:"/>          
+                            <p:selectOneMenu value="#{cntNivelesMascarCentrosDeCostoBacking.tipo}"
+                                             effect="fold" id="tip" style="width: 100%">
+                                <f:selectItems value="#{cntNivelesMascarCentrosDeCostoBacking.parTiposDatoNivelList}" var="item_tipo" 
+                                               itemLabel="#{item_tipo.descripcion}" itemValue="#{item_tipo.codigo}"
+                                               rendered="#{cntNivelesMascarCentrosDeCostoBacking.swActivaOpciones}"/>
+                            </p:selectOneMenu>
+                            <div align="center" style="padding:1em 2.2em;">
+                                <h:panelGrid columns="3">
+                                    <p:commandButton
+                                        value="Guardar"
+                                        action="#{cntNivelesMascarCentrosDeCostoBacking.editaCntNivelList_action()}"
+                                        ajax="false"
+                                        icon="ui-icon ui-icon-pencil"
+                                        rendered="#{!cntNivelesMascarCentrosDeCostoBacking.swActivaOpciones}"/>
+
+                                    <p:commandButton
+                                        value="Guardar"
+                                        action="#{cntNivelesMascarCentrosDeCostoBacking.editaNivelesCentrosCosto()}"
+                                        ajax="false"
+                                        icon="#{cntNivelesMascarCentrosDeCostoBacking.iconoModificar()}"
+                                        rendered="#{cntNivelesMascarCentrosDeCostoBacking.swActivaOpciones}"/>
+                                    <p:commandButton
+                                        value="Cancelar"
+                                        immediate="true"
+                                        actionListener="#{cntNivelesMascarCentrosDeCostoBacking.cierrraDialogo(e)}"
+                                        ajax="false"
+                                        icon="#{cntNivelesMascarCentrosDeCostoBacking.iconoAtras()}" />
+                                </h:panelGrid>
+                            </div>
+                        </h:panelGrid>  
+                    </p:dialog>  
+                    <div align="center" >
+                        <h:panelGrid columns="3">
+                            <p:commandButton
+                                value="Guardar"
+                                action="#{cntNivelesMascarCentrosDeCostoBacking.saveCntNivelesCentroCostos_action()}"
+                                ajax="false"
+                                disabled="#{!cntNivelesMascarCentrosDeCostoBacking.habilitaSeleccionDeCentroCostos}"
+                                icon="#{cntNivelesMascarCentrosDeCostoBacking.iconoGuardar()}"/>
+
+                        </h:panelGrid>
+                        <p:outputLabel value="La creaci&oacute;n de niveles para Centro de Costos ya fue efectuada" rendered="#{!cntNivelesMascarCentrosDeCostoBacking.habilitaSeleccionDeCentroCostos}" style="color: red"/>
+                    </div>
+                </p:panel>
+            </div>
+        </h:form>
+
+    </ui:define>
+
+</ui:composition>

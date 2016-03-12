@@ -1,0 +1,549 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="reporte_libroMayorSUS" language="groovy" pageWidth="612" pageHeight="792" columnWidth="579" leftMargin="27" rightMargin="6" topMargin="6" bottomMargin="6" uuid="5cf3d4b1-c285-4fcd-a2a4-34584edfae31">
+	<property name="ireport.zoom" value="1.4641000000000093"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="REPORT_PATH" class="java.lang.String">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+		<defaultValueExpression><![CDATA["E:\\ERP-2014\\ERP_APP\\src\\main\\webapp\\WEB-INF\\reportes \\"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="sumaSaldo" class="java.math.BigDecimal"/>
+	<parameter name="sumaDebe" class="java.math.BigDecimal"/>
+	<parameter name="sumaHaber" class="java.math.BigDecimal"/>
+	<parameter name="sumaSaldoTotal" class="java.math.BigDecimal"/>
+	<parameter name="sumaNetoDebe" class="java.math.BigDecimal"/>
+	<parameter name="sumaNetoHaber" class="java.math.BigDecimal"/>
+	<parameter name="fechaInicial" class="java.util.Date"/>
+	<parameter name="fechaFinal" class="java.util.Date"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="debe" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[debe]]></fieldDescription>
+	</field>
+	<field name="descripcion" class="java.lang.String">
+		<fieldDescription><![CDATA[descripcion]]></fieldDescription>
+	</field>
+	<field name="fecha" class="java.util.Date">
+		<fieldDescription><![CDATA[fecha]]></fieldDescription>
+	</field>
+	<field name="glosa" class="java.lang.String">
+		<fieldDescription><![CDATA[glosa]]></fieldDescription>
+	</field>
+	<field name="haber" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[haber]]></fieldDescription>
+	</field>
+	<field name="idDetalleComprobante" class="java.lang.Long">
+		<fieldDescription><![CDATA[idDetalleComprobante]]></fieldDescription>
+	</field>
+	<field name="identidad" class="java.lang.Long">
+		<fieldDescription><![CDATA[identidad]]></fieldDescription>
+	</field>
+	<field name="mascaraGenerada" class="java.lang.String">
+		<fieldDescription><![CDATA[mascaraGenerada]]></fieldDescription>
+	</field>
+	<field name="numero" class="java.lang.String">
+		<fieldDescription><![CDATA[numero]]></fieldDescription>
+	</field>
+	<field name="saldo" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[saldo]]></fieldDescription>
+	</field>
+	<field name="tipoComprobante" class="java.lang.String">
+		<fieldDescription><![CDATA[tipoComprobante]]></fieldDescription>
+	</field>
+	<field name="debeDolar" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[debeDolar]]></fieldDescription>
+	</field>
+	<field name="haberDolar" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[haberDolar]]></fieldDescription>
+	</field>
+	<field name="numeroCheque" class="java.lang.String">
+		<fieldDescription><![CDATA[numeroCheque]]></fieldDescription>
+	</field>
+	<field name="tipoCambio" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[tipoCambio]]></fieldDescription>
+	</field>
+	<variable name="saldoDolar" class="java.math.BigDecimal">
+		<variableExpression><![CDATA[$F{debeDolar} - $F{haberDolar}]]></variableExpression>
+	</variable>
+	<variable name="sumaDebeDolar" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{debeDolar}]]></variableExpression>
+	</variable>
+	<variable name="sumaHaberDolar" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{haberDolar}]]></variableExpression>
+	</variable>
+	<variable name="sumaNetoDebe" class="java.math.BigDecimal">
+		<variableExpression><![CDATA[$V{sumaDebeDolar} - $V{sumaHaberDolar}]]></variableExpression>
+	</variable>
+	<variable name="sumaNetoHaber" class="java.math.BigDecimal">
+		<variableExpression><![CDATA[$V{sumaHaberDolar} -$V{sumaDebeDolar}]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="65" splitType="Stretch">
+			<image scaleImage="FillFrame" hAlign="Center" vAlign="Middle">
+				<reportElement x="0" y="0" width="562" height="65" uuid="dc2c496f-43bb-4fe9-818f-646928f09d8c"/>
+				<imageExpression><![CDATA[$P{REPORT_PATH} +"erp-banner1.jpg"]]></imageExpression>
+			</image>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="39" splitType="Stretch">
+			<staticText>
+				<reportElement x="216" y="14" width="165" height="11" uuid="519e13c4-0315-4ccb-b447-fd2f74d6e499"/>
+				<box>
+					<pen lineWidth="0.0"/>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Verdana" size="6" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Expresado en : $US]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="27" width="51" height="12" forecolor="#3B603F" uuid="50b5def8-e917-474c-85fd-9f4297b899bf"/>
+				<box>
+					<pen lineWidth="0.0"/>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Verdana" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[FECHA DE:]]></text>
+			</staticText>
+			<textField pattern="dd-MMM-yyyy" isBlankWhenNull="true">
+				<reportElement x="51" y="27" width="100" height="12" uuid="60182335-4dad-4e15-9650-393782760cf7"/>
+				<box leftPadding="2"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Verdana" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{fechaInicial}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="150" y="27" width="51" height="12" forecolor="#3B603F" uuid="c18ee1ab-5dd3-4b5f-9dc5-32eb0ecf6790"/>
+				<box>
+					<pen lineWidth="0.0"/>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Verdana" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[HASTA]]></text>
+			</staticText>
+			<textField pattern="dd-MMM-yyyy" isBlankWhenNull="true">
+				<reportElement x="201" y="27" width="100" height="12" uuid="8f7bb978-94ce-4835-aba2-33bb6099af32"/>
+				<box leftPadding="2"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Verdana" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{fechaFinal}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="216" y="0" width="165" height="15" forecolor="#3B603F" uuid="293e75ef-dc17-401b-82d8-039f2fd201a4"/>
+				<textElement textAlignment="Center">
+					<font fontName="Verdana" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[MAYOR GENERAL]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="26" splitType="Stretch">
+			<rectangle>
+				<reportElement x="0" y="0" width="338" height="12" uuid="8e7d71b2-ce53-4afd-9248-9c87cdbcc5ff"/>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="0" y="12" width="59" height="14" forecolor="#3B603F" uuid="07a50b9b-c99e-4e39-ab28-b762c2307cb8"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Verdana" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[FECHA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="59" y="12" width="23" height="14" forecolor="#3B603F" uuid="8733f12e-10f3-42b2-b7fe-e221e8a883ee"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Verdana" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Nro.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="82" y="12" width="19" height="14" forecolor="#3B603F" uuid="dc86a545-9f5c-49c4-ab1d-e5537cef620c"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Verdana" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[T]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="101" y="12" width="237" height="14" forecolor="#3B603F" uuid="3112bb03-302a-41f9-9a7e-fb82951c7143"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Verdana" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[GLOSA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="338" y="12" width="48" height="14" forecolor="#3B603F" uuid="e1e19d40-bb56-49e1-8afa-843c9a5d7817"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Verdana" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[DEBE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="386" y="12" width="53" height="14" forecolor="#3B603F" uuid="a2ee976b-0884-4cf4-85b4-c91be424c8b0"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Verdana" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[HABER]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="439" y="12" width="53" height="14" forecolor="#3B603F" uuid="7a6b35c1-a01f-4f2f-908c-fbf711ebff69"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Verdana" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[SALDO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="492" y="12" width="33" height="14" forecolor="#3B603F" uuid="0e4eac19-0930-4a27-bfd7-c8ddc6ae9e96"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[T.C]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="525" y="12" width="54" height="14" forecolor="#3B603F" uuid="414d3ea4-5976-463a-8c5c-3a595d760460"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[CHEQUE]]></text>
+			</staticText>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement x="439" y="0" width="53" height="12" uuid="078afc2f-1622-4d8f-9991-04d2acbcda66"/>
+				<box rightPadding="3">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Verdana" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{sumaSaldo}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="338" y="0" width="101" height="12" forecolor="#3B603F" uuid="0f056c02-5091-4641-98e7-0e88f0aa3635"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Verdana" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[SALDO :]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="0" width="58" height="12" forecolor="#3B603F" uuid="40ead017-b513-4c93-9bab-a1913e27b1a2"/>
+				<box>
+					<pen lineWidth="0.0"/>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Verdana" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[CUENTA : ]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="59" y="0" width="279" height="12" uuid="9633ec13-5e08-4d09-b0ce-445d7eb8d4f0"/>
+				<box leftPadding="2">
+					<pen lineWidth="0.0"/>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Verdana" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{mascaraGenerada} + ' ' + $F{descripcion}]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="14" splitType="Stretch">
+			<textField pattern="dd-MMM-yyyy" isBlankWhenNull="true">
+				<reportElement x="0" y="0" width="59" height="14" uuid="25a6a209-fc0a-4ed9-a25a-6e75c19d8cfa"/>
+				<box leftPadding="1">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Verdana" size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{fecha}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="59" y="0" width="23" height="14" uuid="b575c345-5a15-4fcd-a25f-e12171978662"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Verdana" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{numero}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="82" y="0" width="19" height="14" uuid="da11cbc3-29a7-4beb-879c-4c0da7726873"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Verdana" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{tipoComprobante} == 'EGRE' ? 'E' : $F{tipoComprobante} == 'TRAS' ? 'T' : 'I']]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="101" y="0" width="237" height="14" uuid="10693fe1-08b3-4629-b8ef-227458a7c474"/>
+				<box leftPadding="2">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Verdana" size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{glosa}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement x="338" y="0" width="48" height="14" uuid="7efc5d18-4eb2-4fd5-9886-ce048744cd14"/>
+				<box rightPadding="3">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Verdana" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{debeDolar}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement x="386" y="0" width="53" height="14" uuid="6b5a596c-0674-4e13-9c0c-264f626362d9"/>
+				<box rightPadding="3">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Verdana" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{haberDolar}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement x="439" y="0" width="53" height="14" uuid="841a40b2-70ff-438f-bc5c-b3b3669f82ec"/>
+				<box rightPadding="3">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Verdana" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{saldoDolar}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement x="492" y="0" width="33" height="14" uuid="a08c64e1-82d2-45ac-af5e-888e95185f07"/>
+				<box rightPadding="3">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font fontName="Verdana" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{tipoCambio}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="525" y="0" width="54" height="14" uuid="30faaac5-9f48-4345-9d82-c58c8a830b1b"/>
+				<box leftPadding="2">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Verdana" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{numeroCheque}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<summary>
+		<band height="32">
+			<rectangle>
+				<reportElement x="0" y="0" width="338" height="32" uuid="4b724399-dc12-4f6d-9347-31b7ca4eeef5"/>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="101" y="0" width="237" height="12" uuid="f810ac6c-1f01-4fa0-b86a-90448bbb1e2f"/>
+				<box leftPadding="2"/>
+				<textElement>
+					<font fontName="Verdana" size="8"/>
+				</textElement>
+				<text><![CDATA[TOTALES : ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="101" y="11" width="237" height="11" uuid="11fde46d-e35e-4a49-95ac-31ff15adbef1"/>
+				<box leftPadding="2"/>
+				<textElement>
+					<font fontName="Verdana" size="8"/>
+				</textElement>
+				<text><![CDATA[NETO : ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="101" y="21" width="237" height="11" uuid="6ae77307-c138-426b-a3d4-652a2f1acc19"/>
+				<box leftPadding="2"/>
+				<textElement>
+					<font fontName="Verdana" size="8"/>
+				</textElement>
+				<text><![CDATA[SALDO FINAL :]]></text>
+			</staticText>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement x="338" y="0" width="48" height="11" uuid="145ee9fe-608e-4576-9bbd-68fe3bfe173d"/>
+				<box rightPadding="3"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Verdana" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{sumaDebeDolar}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement x="386" y="0" width="53" height="11" uuid="b738efdc-3bc4-4a56-a5e1-6909bbbfb48e"/>
+				<box rightPadding="3"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Verdana" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{sumaHaberDolar}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement x="338" y="11" width="48" height="10" uuid="ab1ed202-c4a2-42cd-9374-06b89d34d726"/>
+				<box rightPadding="3"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Verdana" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{sumaNetoDebe}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement x="386" y="11" width="53" height="10" uuid="ad071063-b835-46c8-a2eb-96e1f83592e7"/>
+				<box rightPadding="3"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Verdana" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{sumaNetoHaber}]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

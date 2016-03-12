@@ -1,0 +1,225 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition  xmlns="http://www.w3.org/1999/xhtml"
+                 xmlns:h="http://java.sun.com/jsf/html"
+                 xmlns:p="http://primefaces.org/ui"
+                 xmlns:ui="http://java.sun.com/jsf/facelets"
+                 xmlns:f="http://java.sun.com/jsf/core"
+                 template="#{sessionState.pathTemplate}"
+                 xmlns:bap="http://java.sun.com/jsf/composite/bap.comp">
+    <ui:define name="content">
+        <script>
+            jQuery(document).ready(function () {
+                autoScroll();
+            });
+        </script>
+        <h:form id="form">  
+            <h:inputHidden id="scrollPos" value="#{sessionState.scrollPos}" />
+            <p:panel header="COMPROBANTES"  style="overflow-y:auto ; overflow-x: auto;border-style: hidden">
+                <h:panelGrid style="width: 100%;height: 100%;overflow-y:auto ; overflow-x: auto;" columns="2">
+                    <p:panel>
+                        <div align="center" style="padding:0em 0em;">
+                            <h:panelGrid columns="12">
+                                Aprobado:<p:panel style="width: 10%;background:#009999"/>
+                                Pendiente:<p:panel style="width: 10%;background:#E1E463"/>
+                                Anulado:<p:panel style="width: 10%;background:#D0332E"/>                                
+<!--                                <p:commandButton                                     
+                                    value="Buscar" 
+                                    onclick="PF('dialogo').show();"
+                                    />
+                                <p:commandButton 
+                                    type="reset" 
+                                    value="Limpiar"                                     
+                                    update="planTable"
+                                    action="# {cntComprobantesBacking.cargaListaFiltrada()}"/>-->
+                            </h:panelGrid>
+                            <p:dataTable id="planTable" 
+                                         var="item" 
+                                         value="#{cntComprobantesBacking.cntComprobantesList()}" 
+                                         rowKey="#{item.idComprobante}"  
+                                         selection="#{cntComprobantesBacking.cntComprobanteElegido}" 
+                                         selectionMode="single"
+                                         style="width: 100%;height: 90%"
+                                         emptyMessage="No existe ningún comprobante registrado"
+                                         scrollable="true" scrollHeight="270" resizableColumns="true" 
+                                         liveScroll="true"
+                                         filteredValue="#{cntComprobantesBacking.listaComprobantesFiltrados}"
+                                         scrollRows="100"
+                                         widgetVar="planTable">  
+                                <p:ajax event="rowSelect" update=":form:tabla2 :form:vistaPrevia copiarComprobante,revertirComprobante,modificar,eliminar,anular" listener="#{cntComprobantesBacking.cambiaNombreBotonModificarSoloPendientesCompletar(e)}"
+                                        onsuccess="saveScrollPos()"/>
+                                <f:facet name="header">  
+                                    Lista de Comprobantes
+                                </f:facet> 
+                                <p:column headerText="Nro" sortBy="#{item.numero}" width="8%" 
+                                          filterBy="#{item.numero}" filterMatchMode="contains" style="#{cntComprobantesBacking.cambiaColorPendientes(item.estado)?'font-weight: bold;color: #000000':null}; text-align: right">                                      
+                                    #{cntComprobantesBacking.muestraNumeroComprobante(item)}                                     
+                                </p:column>  
+                                <p:column headerText="Periodo" sortBy="#{item.periodo}" width="8%" 
+                                          filterBy="#{item.periodo}" filterMatchMode="contains" style="#{cntComprobantesBacking.cambiaColorPendientes(item.estado)?'font-weight: bold;color: #000000':null}; text-align: right">  
+                                    #{item.periodo}  
+                                </p:column>                                  
+                                <p:column headerText="Tipo" sortBy="#{item.parTipoComprobante.codigo}" width="13%" 
+                                          filterBy="#{item.parTipoComprobante.codigo}" filterMatchMode="exact" style="#{cntComprobantesBacking.cambiaColorPendientes(item.estado)?'font-weight: bold;color: #000000':null}">  
+                                    <f:facet name="filter">
+                                        <p:selectOneMenu onchange="PF('planTable').filter()" >   
+                                            <f:selectItem itemLabel="Todos" itemValue="" noSelectionOption="true" />
+                                            <f:selectItem itemLabel="Egreso" itemValue="EGRE" />
+                                            <f:selectItem itemLabel="Traspaso" itemValue="TRAS" />
+                                            <f:selectItem itemLabel="Ingreso" itemValue="INGR" />
+                                        </p:selectOneMenu>
+                                    </f:facet>                                 
+                                    #{item.parTipoComprobante.codigo=='EGRE' ? 'EGRESO' : item.parTipoComprobante.codigo == 'TRAS' ? 'TRASPASO' : 'INGRESO' }  
+                                </p:column>  
+
+                                <p:column headerText="Descripci&oacute;n" sortBy="#{item.descripcion}" width="46%" 
+                                          filterBy="#{item.descripcion}" filterMatchMode="contains" style="#{cntComprobantesBacking.cambiaColorPendientes(item.estado)?'font-weight: bold;color: #000000':null};text-align: left">  
+                                    #{item.descripcion}  
+                                </p:column>  
+                                <p:column headerText="Fecha" sortBy="#{item.fecha}" width="12%" 
+                                          style="#{cntComprobantesBacking.cambiaColorPendientes(item.estado)?'font-weight: bold;color: #000000':null}">  
+                                    <h:outputText value="#{item.fecha}">
+                                        <f:convertDateTime pattern="#{sessionState.dateFormat}"/>
+                                    </h:outputText>
+                                </p:column> 
+                                <p:column headerText="Estado" width="8%">  
+                                    <p:panel style="width: 50%;background: #{cntComprobantesBacking.cambiaColorEstadoCC(item.estado)}"/>
+                                </p:column> 
+                                <f:facet name="footer">
+                                    <div align="center" style="padding:1em 2.2em;">                                    
+<!--                                        <p:menuButton value="Adicionar">
+                                            <p:menuitem value="Comprobante Egreso" action="# {cntComprobantesBacking.adicionarDetalleComprobante('EGRE')}" icon="ui-icon-plusthick"  style="width: 200px" ajax="false"/>
+                                            <p:menuitem value="Comprobante Ingreso" action="# {cntComprobantesBacking.adicionarDetalleComprobante('INGR')}" icon="ui-icon-plusthick"  style="width: 200px" ajax="false"/>
+                                            <p:menuitem value="Comprobante Traspaso" action="# {cntComprobantesBacking.adicionarDetalleComprobante('TRAS')}" icon="ui-icon-plusthick"  style="width: 200px" ajax="false"/>
+                                        </p:menuButton>-->
+                                        <p:commandButton id="adiciona" 
+                                                         ajax="false" 
+                                                         value="Adicionar" 
+                                                         icon="#{cntComprobantesBacking.iconoRegistra()}" 
+                                                         action="#{cntComprobantesBacking.adicionarComprobante()}"/>   
+                                        <p:commandButton id="modificar" ajax="false" 
+                                                         value="#{cntComprobantesBacking.cambiaNombreBoton}" 
+                                                         icon="#{cntComprobantesBacking.iconoEdita()}" 
+                                                         action="#{cntComprobantesBacking.modificarComprobante()}"
+                                                         disabled="#{cntComprobantesBacking.activaBotonModifica}"/>   
+                                        <!--                                        <p:commandButton id="confirmar" value="Confirmar" 
+                                                                                                 icon="" 
+                                                                                                 onclick="dialogo.show()"/>-->
+                                        <p:commandButton id="copiarComprobante" value="Copiar" 
+                                                         disabled="#{cntComprobantesBacking.activaBotonCopiarComprobanteConfirmado}"                                                     
+                                                         action="#{cntComprobantesBacking.copiaComprobante()}" 
+                                                         icon="#{cntComprobantesBacking.iconoRegistra()}" 
+                                                         ajax="false"/>
+                                        <p:commandButton id="revertirComprobante" value="Revertir" 
+                                                         ajax="false" icon="#{cntComprobantesBacking.iconoEdita()}"
+                                                         disabled="#{cntComprobantesBacking.activaBotonRevertirComprobanteConfirmado}"
+                                                         action="#{cntComprobantesBacking.revertirComprobante()}"/>   
+                                        <p:commandButton id="anular" value="Anular" 
+                                                         action="#{cntComprobantesBacking.anularComprobante()}"
+                                                         disabled="#{cntComprobantesBacking.activaBotonAnularComprobante}"
+                                                         icon="#{cntComprobantesBacking.iconoEdita()}"/>   
+                                        <p:commandButton id="eliminar" value="Eliminar" 
+                                                         action="#{cntComprobantesBacking.eliminarComprobante()}"
+                                                         icon="#{cntComprobantesBacking.iconoElimina()}"
+                                                         ajax="false"
+                                                         disabled="#{cntComprobantesBacking.activaBotonElimina}"/>   
+                                    </div>
+                                </f:facet>
+                            </p:dataTable>
+                        </div>
+                    </p:panel>
+                    <p:panel id="vistaPrevia" header="VISTA PREVIA COMPROBANTE Nro. #{cntComprobantesBacking.cntComprobanteElegido.numero}" style="text-align: center;width: 100%;overflow-y:auto ; overflow-x: auto;height: 100%">
+                        <div align="center">
+                            <h:panelGrid columns="1" style="width: 100%" id="tabla2" >
+                                <p:panel style="overflow-y:auto; overflow-x: auto;border-style: hidden;width: 100%">
+                                    <h:panelGrid columns="4">
+                                        <h:outputText value="Fecha:" style="font-weight: bold;" />
+                                        <h:inputText value="#{cntComprobantesBacking.cntComprobanteElegido.fecha}" disabled="true" size="15">
+                                            <f:convertDateTime pattern="#{sessionState.dateFormat}"/>
+                                        </h:inputText>                                                                                                                        
+                                        <h:outputText value="Tipo de Cambio:" style="font-weight: bold;" />
+                                        <h:inputText value="#{cntComprobantesBacking.cntComprobanteElegido.tipoCambio}" disabled="true" size="10"/>                                                                                
+                                        <h:outputText value="Total Comprobante Bolivianos:" style="font-weight: bold;" />
+                                        <h:inputText value="#{cntComprobantesBacking.cntComprobanteElegido.totalComprobantes}" disabled="true" size="15"/>                                                                                
+                                        <h:outputText value="Total Comprobante Dolares:" style="font-weight: bold;" />
+                                        <h:inputText value="#{cntComprobantesBacking.cntComprobanteElegido.totalComprobantesSegMoneda}" disabled="true" size="10"/>                                                                                
+                                    </h:panelGrid>
+                                    <div align="center" style="padding:0em 0.0em;">
+                                        <p:dataTable id="cuentasPorComprobante" 
+                                                     var="item" 
+                                                     value="#{cntComprobantesBacking.generaCuentasPorComprobante()}" 
+                                                     rowKey="#{item}" 
+                                                     selection="#{cntComprobantesBacking.listaDeDetallesElegidos}"                                                      
+                                                     style="width: 100%;height: 90%"
+                                                     emptyMessage="No existen cuentas asignadas a este Comprobante"
+                                                     scrollable="true" scrollHeight="100"
+                                                     widgetVar="cuentasPorComprobante">
+                                            <p:ajax event="rowSelect" update=":form:datos"/> 
+
+                                            <p:column selectionMode="multiple" style="width:4%" />  
+                                            <f:facet name="header">  
+                                                Lista Detalle Comprobante
+                                            </f:facet>                                             
+                                            <p:column headerText="Nro. Cuenta" width="30%" >  
+                                                #{item.cntEntidad.mascaraGenerada}  
+                                            </p:column>  
+                                            <p:column style="text-align: right" headerText="Debe" width="30%">  
+                                                #{item.debe}    
+                                            </p:column>  
+                                            <p:column style="text-align: right" headerText="Haber" width="30%">  
+                                                #{item.haber}  
+                                            </p:column>  
+                                            <p:column headerText="Estado" width="10%">  
+                                                <p:panel style="width: 50%;background: #{cntComprobantesBacking.cambiaColorEstadoCC(item.estado)}"/>
+                                            </p:column> 
+                                            <f:facet name="footer">
+                                                <p:outputLabel value=""/>
+                                            </f:facet>
+                                        </p:dataTable>
+                                        <p:commandButton id="verMayor2" value="Ver Mayor elegido"                                                  
+                                                         action="#{cntComprobantesBacking.verMayorDetalleElegido()}"                                                  
+                                                         ajax="false"/>
+                                    </div>                                    
+                                </p:panel>     
+
+                                <p:panel header="Descripci&oacute;n de la Cuenta Seleccionada" style="overflow-y:auto; overflow-x: auto;border-style: hidden;width: 100%" id="datos">
+                                    <h:panelGrid columns="2" style="border-style: hidden">
+                                        <h:outputText value="Cuenta:" style="font-weight: bold;" />
+                                        <h:inputText value="#{cntComprobantesBacking.cntDetalleComprobanteElegido.cntEntidad.descripcion}" disabled="true" size="70"/>                                                                                
+                                        <h:outputText value="Glosa:" style="font-weight: bold;" />
+                                        <h:inputText value="#{cntComprobantesBacking.cntDetalleComprobanteElegido.glosa}" disabled="true" size="70"/>                                                                                
+                                    </h:panelGrid>
+                                    <h:outputText value="Monto en dolares (Sus):" style="font-weight: bold;" />
+                                    <h:panelGrid columns="4" style="border-style: hidden">
+                                        <h:outputText value="al Debe:" style="font-weight: bold;" />
+                                        <h:inputText value="#{cntComprobantesBacking.cntDetalleComprobanteElegido.debe / cntComprobantesBacking.cntDetalleComprobanteElegido.cntComprobante.tipoCambio}" disabled="true"/>                                                                                
+                                        <h:outputText value="al Haber:" style="font-weight: bold;" />
+                                        <h:inputText value="#{cntComprobantesBacking.cntDetalleComprobanteElegido.haber / cntComprobantesBacking.cntDetalleComprobanteElegido.cntComprobante.tipoCambio}" disabled="true"/>                                                                                
+                                    </h:panelGrid>
+                                </p:panel>  
+                            </h:panelGrid>
+                        </div>
+                    </p:panel>
+                </h:panelGrid>
+            </p:panel>
+            <p:dialog id="dialogoBusqueda" header="Dialogo Confirmacion" widgetVar="dialogo" 
+                      modal="true" showEffect="fade" hideEffect="fade" resizable="false" width="500" height="120" closable="false">
+                <p:panel>
+                    <p:selectOneRadio value="#{cntComprobantesBacking.tipoBuqueda}">  
+                        <f:selectItem itemLabel="Palabra" itemValue="PAL" />  
+                        <f:selectItem itemLabel="Monto" itemValue="MON" />                      
+                    </p:selectOneRadio>                 
+                    Introduzca parametro de busqueda: 
+                    <p:inputText value="#{cntComprobantesBacking.palabraBuqueda}"/>
+                </p:panel>
+                <p:commandButton 
+                    value="Buscar" 
+                    action="#{cntComprobantesBacking.realizaBusqueda()}"
+                    ajax="false"/>
+                <p:commandButton 
+                    value="Cancelar"
+                    onclick="PF('dialogo').hide();"/>                
+            </p:dialog>
+        </h:form>
+    </ui:define>
+</ui:composition>

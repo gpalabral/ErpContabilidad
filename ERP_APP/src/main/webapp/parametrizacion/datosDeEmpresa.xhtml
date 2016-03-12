@@ -1,0 +1,151 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition  xmlns="http://www.w3.org/1999/xhtml"
+                 xmlns:h="http://java.sun.com/jsf/html"
+                 xmlns:p="http://primefaces.org/ui"
+                 xmlns:ui="http://java.sun.com/jsf/facelets"
+                 xmlns:f="http://java.sun.com/jsf/core"
+                 template="#{sessionState.pathTemplate}">
+    <ui:define name="content">
+        <h:form id="form">
+            <p:panel header="DATOS DE EMPRESA" style="border-style: hidden;text-align: center" >
+                <div align="center">
+                    <p:panel style="text-align: left; white:98%" >
+                        <div align="center">
+                            <h:panelGrid columns="5" columnClasses="label, value" styleClass="grid">  
+                                <p:outputLabel value="Raz&oacute;n Social: " style="font-weight: bold"/>  
+                                <h:inputText id="razonsocial" value="#{cntDatosEmpresaBacking.datosEmpresaWrapper.razonSocial}" size="30" disabled="#{cntDatosEmpresaBacking.bloqueaUsuario}"/>  
+                                <p:spacer width="20"></p:spacer>
+                                <p:outputLabel value="N.I.T.:" style="font-weight: bold"/>  
+                                <h:inputText id="nit" value="#{cntDatosEmpresaBacking.datosEmpresaWrapper.nit}" disabled="#{cntDatosEmpresaBacking.bloqueaUsuario}"/>  
+                            </h:panelGrid>  
+                            <div align="center">
+                                <h:panelGrid columns="1" columnClasses="label, value" styleClass="grid">  
+                                    <h:panelGrid columns="5" columnClasses="label, value" >  
+                                        <p:outputLabel value="Ciudad:" style="font-weight: bold"/>
+                                        <p:inputText value="#{cntDatosEmpresaBacking.gestionContableWrapper.ciudad}" onkeyup="this.value=this.value.toUpperCase()"/>
+                                        <p:spacer width="30"></p:spacer>
+                                        <p:outputLabel value="Direcci&oacute;n:" style="font-weight: bold; width: 100px" />  
+                                        <p:inputText id="direccion" value="#{cntDatosEmpresaBacking.datosEmpresaWrapper.direccion}" size="80"/> 
+                                    </h:panelGrid>
+                                    <h:panelGrid columns="3">
+                                        <h:panelGrid columns="5"  width="270">
+                                            <p:outputLabel value="Periodo Actual:" style="font-weight: bold"/>
+                                            <p:selectOneMenu value="#{cntDatosEmpresaBacking.periodoActualVista}" >
+                                                <f:selectItems  value="#{cntDatosEmpresaBacking.gestionFiscalListNumeros}" var="a" itemLabel="#{a} "/>
+                                                <p:ajax event="change" update="mesPeriodo" listener="#{cntDatosEmpresaBacking.actualizaMesPeriodo(e)}" />        
+                                            </p:selectOneMenu>
+                                            <h:outputText id="mesPeriodo" value="#{cntDatosEmpresaBacking.mesPeriodo}" style="width: 200px"/>                                            
+                                            <p:outputLabel for="anio" value="Año:" style="font-weight: bold"/>                                            
+                                            <p:spinner id="anio" value="#{cntDatosEmpresaBacking.anioActualVista}" />                                            
+                                        </h:panelGrid> 
+                                        <p:spacer width="40"></p:spacer>                                                                                    
+                                        <h:panelGrid columns="5" width="250">
+                                            <p:outputLabel value="Inicio Gesti&oacute;n Fiscal:" style="font-weight: bold"/>
+                                            <p:selectOneMenu value="#{cntDatosEmpresaBacking.gestionContableWrapper.inicioGestionFiscal}">
+                                                <f:selectItems  value="#{cntDatosEmpresaBacking.gestionFiscalListNumeros}" var="a" itemLabel="#{a}"/>
+                                                <p:ajax event="change" update="mesGestionFiscal" listener="#{cntDatosEmpresaBacking.actualizaMesGestionFiscal(e)}" />        
+                                            </p:selectOneMenu>
+                                            <h:outputText id="mesGestionFiscal" value="#{cntDatosEmpresaBacking.mesGestionFiscal}"/>  
+                                        </h:panelGrid>
+                                    </h:panelGrid>
+                                </h:panelGrid>  
+                            </div>
+                        </div>
+                    </p:panel> 
+                    <p:panel style="text-align: left;">
+                        <div align="center">
+                            <h:panelGrid columns="1">
+                                <h:panelGrid columns="2">
+                                    <p:outputLabel value="Norma Contable 3:" style="font-weight: bold"/>
+                                    <p:selectOneRadio id="options" value="#{cntDatosEmpresaBacking.gestionContableWrapper.normaContable3}">  
+                                        <f:selectItem itemLabel="Anterior" itemValue="ANTERIOR" />  
+                                        <f:selectItem itemLabel="Actual" itemValue="ACTUAL" />
+                                        <p:ajax event="change" update="ajustesRei" listener="#{cntDatosEmpresaBacking.activaAjusteREI(e)}"/>  
+                                    </p:selectOneRadio>
+                                    <p:outputLabel id="ajustesRei" value="Ajustes REI sobre Cuenta:" style="font-weight: bold" rendered="#{cntDatosEmpresaBacking.activaAjustesREI}"/>
+                                    <p:selectOneRadio id="optionsAjustesRei" value="#{cntDatosEmpresaBacking.gestionContableWrapper.ajustesREI}" rendered="#{cntDatosEmpresaBacking.activaAjustesREI}">  
+                                        <f:selectItem itemLabel="Si" itemValue="true" />  
+                                        <f:selectItem itemLabel="No" itemValue="false" />
+                                    </p:selectOneRadio> 
+                                    <p:outputLabel id="modoProcesosAjustes" value="Modo de Procesos de Ajustes:" style="font-weight: bold"/>
+                                    <p:selectOneRadio id="options3" value="#{cntDatosEmpresaBacking.gestionContableWrapper.modoProcesosAjustes}" style="border-color: #ffffff">  
+                                        <f:selectItem itemLabel="Un comprobante por d&iacute;a" itemValue="UN COMPROBANTE POR DIA" />  
+                                        <f:selectItem itemLabel="Un comprobante mensual" itemValue="UN COMPROBANTE MENSUAL" />
+                                    </p:selectOneRadio> 
+<!--                                    <h:outputText value="Plazo de Registro de Comprobantes:" style="font-weight: bold;"/>
+                                    <p:panel>
+                                        <p:calendar value="# {cntDatosEmpresaBacking.gestionContableWrapper.fechaLimiteInicial}" pattern="dd/MM/yyyy" size="10"/> 
+                                        <h:outputText value=" al " style="font-weight: bold;"/>
+                                        <p:calendar value="# {cntDatosEmpresaBacking.gestionContableWrapper.fechaLimiteFinal}" pattern="dd/MM/yyyy" size="10"/> 
+                                    </p:panel>-->
+                                </h:panelGrid>
+                            </h:panelGrid>
+                        </div>
+                    </p:panel>  
+                    <p:panel style="text-align: left;">
+                        <div align="center">
+                            <h:panelGrid columns="2">
+                                <h:panelGrid id="confirmation" columns="2" width="265px">  
+                                    <p:outputLabel value="Presupuesto Fiscal:" style="font-weight: bold"/>
+                                    <p:selectOneRadio id="options11"  style="border: hidden " value="#{cntDatosEmpresaBacking.variosWrapper.ejecutaPresupuestoFiscal}">  
+                                        <f:selectItem itemLabel="Si" itemValue="true" />  
+                                        <f:selectItem itemLabel="No" itemValue="false" />
+                                    </p:selectOneRadio>
+                                    <p:outputLabel value="Centros de Costos:" style="font-weight: bold"/>
+                                    <p:selectOneRadio id="options21" value="#{cntDatosEmpresaBacking.variosWrapper.centroDeCostos}" disabled="#{cntDatosEmpresaBacking.habilitaCentroCostos}">  
+                                        <f:selectItem itemLabel="Si" itemValue="true"/>  
+                                        <f:selectItem itemLabel="No" itemValue="false" />
+                                    </p:selectOneRadio>
+                                </h:panelGrid>  
+                                <h:panelGrid columns="4" width="395">
+                                    <p:outputLabel value="Cuentas Corporativas:" style="font-weight: bold"/>
+                                    <p:selectOneRadio id="cuentas" value="#{cntDatosEmpresaBacking.variosWrapper.cuentasCoorporativas}">  
+                                        <f:selectItem itemLabel="Si" itemValue="true" />  
+                                        <f:selectItem itemLabel="No" itemValue="false" />
+                                        <p:ajax event="change" update="comboLongitud" listener="#{cntDatosEmpresaBacking.activaLongitud(e)}"/>  
+                                    </p:selectOneRadio> 
+                                    <p:outputLabel value="Tama&ntilde;o:" style="font-weight: bold"/>
+                                    <p:selectOneMenu id="comboLongitud" value="#{cntDatosEmpresaBacking.variosWrapper.longitud}" disabled="#{!cntDatosEmpresaBacking.activaLongitud}">
+                                        <f:selectItems  value="#{cntDatosEmpresaBacking.longitudListNumeros}" var="a" itemLabel="#{a}"/>
+                                    </p:selectOneMenu>
+                                </h:panelGrid>
+                                <h:panelGrid columns="2" width="365">
+                                    <p:outputLabel value="Proyectos:" style="font-weight: bold"/>
+                                    <p:selectOneRadio id="proyectos" value="#{cntDatosEmpresaBacking.variosWrapper.proyectos}"  style="border-color: #ffffff" >  
+                                        <f:selectItem itemLabel="Si" itemValue="true"  />  
+                                        <f:selectItem itemLabel="No" itemValue="false" />
+                                    </p:selectOneRadio>         
+                                    <p:outputLabel value="Auxiliares:" style="font-weight: bold"/>
+                                    <p:selectOneRadio id="auxiliares" value="#{cntDatosEmpresaBacking.variosWrapper.auxiliares}" disabled="#{cntDatosEmpresaBacking.habilitaAuxiliar}" >  
+                                        <f:selectItem itemLabel="Si" itemValue="true" />  
+                                        <f:selectItem itemLabel="No" itemValue="false" />
+                                    </p:selectOneRadio>    
+                                </h:panelGrid>
+                                <h:panelGrid columns="3" width="305">
+                                    <p:outputLabel value="Facturaci&oacute;n Computarizada:" style="font-weight: bold"/>
+                                    <p:selectOneRadio id="facturacion" value="#{cntDatosEmpresaBacking.variosWrapper.facturacionComputarizada}">  
+                                        <f:selectItem itemLabel="Si" itemValue="true" />  
+                                        <f:selectItem itemLabel="No" itemValue="false" />
+                                        <p:ajax event="change" update="facturaComputarizada" listener="#{cntDatosEmpresaBacking.activaFacturacionComputarizada(e)}"/>  
+                                    </p:selectOneRadio> 
+                                    <p:outputLabel id="facturaComputarizada" value="#{cntDatosEmpresaBacking.facturaComputarizada}" style="font-weight: bold"/>
+                                </h:panelGrid>
+                            </h:panelGrid>
+                        </div>
+                    </p:panel>  
+                    <div align="center">
+                        <p:commandButton id="Guardar" value="MODIFICAR"
+                                         title="Modifica los Datos de Empresa, Gesti&oacute;n Contable y Varios"
+                                         ajax="false" icon="ui-icon ui-icon-disk" action="#{cntDatosEmpresaBacking.modificaDatosEmpresa()}"/>
+                        <p:commandButton id="Cancelar" value="CANCELAR"
+                                         immediate="true"
+                                         title="Cancelar"
+                                         ajax="false" action="#{cntDatosEmpresaBacking.cancelar()}"/>
+                    </div> 
+                </div>
+            </p:panel>  
+        </h:form>
+    </ui:define>
+</ui:composition>
+

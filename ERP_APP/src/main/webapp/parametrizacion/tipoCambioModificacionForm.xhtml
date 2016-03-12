@@ -1,0 +1,45 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition  xmlns="http://www.w3.org/1999/xhtml"
+                 xmlns:h="http://java.sun.com/jsf/html"
+                 xmlns:p="http://primefaces.org/ui"
+                 xmlns:ui="http://java.sun.com/jsf/facelets"
+                 xmlns:f="http://java.sun.com/jsf/core"
+                 template="#{sessionState.pathTemplate}">
+    <ui:define name="content">       
+        <h:form id="Campo">
+            <div align="center">
+                <p:panel header="MODIFICAR TIPO DE CAMBIO" style="border-style: hidden">
+                    <h:panelGrid id="display" columns="2">
+                        <h:outputText value="Tipo Cambio:" style="font-weight: bold;" />
+                        <p:inputMask value="#{cntTipoCambioModificacionBacking.tipoCambioAux}" size="7" maxlength="4" mask="9.99" required="true" id="Tipo_Cambio"/>    
+                        <h:outputText value="Tipo UFV:" style="font-weight: bold;"/>
+                        <p:inputMask value="#{cntTipoCambioModificacionBacking.tipoUfvAux}"  size="7" maxlength="7" mask="9.99999" required="true" id="Tipo_UFV"/>    
+                    </h:panelGrid>  
+                    <div align="center" style="padding:1em 2.2em;">
+                        <p:commandButton id="submitButton" styleClass="ui-confirmdialog-yes" 
+                                         icon="#{cntTipoCambioModificacionBacking.iconoModificar()}" value="MODIFICAR"
+                                         title="Modifica el registro de UFV"
+                                         action="#{cntTipoCambioModificacionBacking.modificarUFV()}"
+                                         ajax="false"
+                                         onclick="PF('itemDialog').hide();"/>  
+                        <p:commandButton
+                            value="CANCELAR"
+                            title="Retorna a la lista de Tipo de Cambio"
+                            immediate="true"
+                            action="#{cntTipoCambioModificacionBacking.volverListaTipoCambio()}"
+                            ajax="false"
+                            icon="#{cntTipoCambioModificacionBacking.iconoAtras()}" />
+
+
+
+
+
+                      
+                    </div>
+                </p:panel>
+            </div>    
+        </h:form>            
+    </ui:define>
+</ui:composition>
+

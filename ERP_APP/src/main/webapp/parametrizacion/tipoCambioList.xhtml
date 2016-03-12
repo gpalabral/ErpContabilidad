@@ -1,0 +1,194 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition  xmlns="http://www.w3.org/1999/xhtml"
+                 xmlns:h="http://java.sun.com/jsf/html"
+                 xmlns:p="http://primefaces.org/ui"
+                 xmlns:ui="http://java.sun.com/jsf/facelets"
+                 xmlns:f="http://java.sun.com/jsf/core"
+                 template="#{sessionState.pathTemplate}">
+
+    <ui:define name="content">
+        <f:view>
+
+            <div  align="center"  >
+                <p:panel header="TIPO DE CAMBIO" style="border-style: hidden">
+                    <h:form id="Camposs">
+                        <fieldset  style="width: 40%; alignment-adjust: central"  >
+                            <legend style="text-align: left;font-weight: bold"><div align="left">Datos del &Uacute;ltimo Tipo de Cambio registrado</div></legend>   
+                            <h:panelGrid id="Campo" columns="11">
+                                <h:outputText value="Ultima Fecha:" style="font-weight: bold;" />
+                                <h:outputLabel value="#{cntTipoCambioBacking.ultimaFechaRegistro}">
+                                    <f:convertDateTime pattern="#{sessionState.dateFormat}"/>
+                                </h:outputLabel>
+                                <p:spacer height="15"/>
+                                <h:outputText value="Tipo Cambio:" style="font-weight: bold;" />
+                                <p:outputLabel value ="#{cntTipoCambioBacking.ultimoTipoCambioRegistro==null?'No existe':cntTipoCambioBacking.ultimoTipoCambioRegistro}"></p:outputLabel>
+                                <p:spacer height="15"/>
+                                <h:outputText value="Tipo UFV:" style="font-weight: bold;" />
+                                <p:outputLabel value="#{cntTipoCambioBacking.ultimoTipoUFVCambioRegistro}"></p:outputLabel>
+                                <p:spacer height="15"/>
+                                <h:outputText value="Fecha Hoy:" style="font-weight: bold;"/>
+                                <h:outputLabel value="#{cntTipoCambioBacking.fechaActual}">
+                                    <f:convertDateTime pattern="#{sessionState.dateFormat}"/>
+                                </h:outputLabel>
+                            </h:panelGrid> 
+                        </fieldset>
+                        <div  align="center" style="padding: 1em 2.2em;" >
+
+
+
+
+                            <p:dataTable id="tablaTipoCambio" 
+                                         var="tipoCambio" 
+                                         value="#{cntTipoCambioBacking.listadoTipoCambio()}" 
+                                         selectionMode="single" 
+                                         selection="#{cntTipoCambioBacking.seleccionaTipoCambio}" 
+                                         rowKey="#{tipoCambio.idTipoCambio}"
+                                         scrollable="true" scrollHeight="250"
+                                         style="width: 40%;height: 40%">
+                                <p:ajax event="rowSelect" listener="#{cntTipoCambioBacking.selecionaTipoCambio(e)}" update="btnEditar :Camposs:dialogoDetalle"/>
+                                <f:facet name="header">
+                                    Lista de Tipo de Cambio y Tipo UFV  
+                                </f:facet>
+                                <p:column headerText="Fecha" style="text-align: right;width: 20%">
+                                    <h:outputText value="#{tipoCambio.fecha}">
+                                        <f:convertDateTime pattern="#{sessionState.dateFormat}"/>
+                                    </h:outputText>
+                                </p:column>
+                                <p:column headerText="Tipo Cambio" style="text-align: right;width: 20%">
+                                    <h:outputText value="#{tipoCambio.tipoCambio}" />
+                                </p:column>
+                                <p:column headerText="Tipo Ufv" style="text-align: right;width: 20%">
+                                    <h:outputText value="#{tipoCambio.tipoUfv}" />
+                                </p:column>
+                                <p:column  headerText="Modificar" style="width: 50px">  
+                                    <p:outputLabel value="COMPLETAR" rendered="#{tipoCambio.fechaModificacion == null}" style="color: #BD1E4A;text-decoration: blink"/>
+                                    <p:outputLabel value="REGISTRADO" rendered="#{tipoCambio.fechaModificacion != null}" style="color: #009BAE"/>
+                                    <p:effect type="explode" event="click" />
+                                </p:column>  
+                                <f:facet name="footer">
+                                    <p:commandButton
+                                        id="btnNuevo"
+                                        value="Completar Registros"
+                                        title="Adiciona nuevo Tipo de Cambio"
+                                        ajax="false"
+                                        action="#{cntTipoCambioBacking.irFormTipoCambio()}" 
+                                        immediate="true"/>
+                                    <p:commandButton
+                                        id="btnEditar"
+                                        value="Editar"
+                                        title="Adiciona nuevo Tipo de Cambio"
+                                        disabled="#{cntTipoCambioBacking.activaBotonEditar}"
+                                        ajax="false"
+                                        action="#{cntTipoCambioBacking.modificarTipoDeCambio(cntTipoCambioBacking.seleccionaTipoCambio)}" 
+                                        immediate="true"/>
+                                </f:facet>
+                            </p:dataTable>  
+
+                            <p:dialog id="dialogoDetalle" header="Dialogo Confirmacion" widgetVar="itemDialog" 
+                                      modal="true" showEffect="fade" hideEffect="fade" resizable="false" width="30%" height="90%" closable="false">
+
+                                <div align="center">
+
+                                    <h:panelGrid id="display" columns="2">
+                                        <h:outputText value="Tipo Cambio:" style="font-weight: bold;" />
+                                        <p:inputMask value="#{cntTipoCambioBacking.seleccionaTipoCambio.tipoCambio}" size="7" maxlength="4" mask="9.99" required="true" id="Tipo_Cambio"/>    
+                                        <h:outputText value="Tipo UFV:" style="font-weight: bold;"/>
+                                        <p:inputMask value="#{cntTipoCambioBacking.seleccionaTipoCambio.tipoUfv}"  size="7" maxlength="7" mask="9.99999" required="true" id="Tipo_UFV"/>    
+                                    </h:panelGrid>  
+                                    <h:panelGrid columns="2">
+                                        <p:commandButton id="submitButton" styleClass="ui-confirmdialog-yes" 
+                                                         icon="#{cntTipoCambioBacking.iconoModificar()}" value="MODIFICAR"
+                                                         title="Modifica el registro de UFV"
+                                                         action="#{cntTipoCambioBacking.modificarUFV()}"
+                                                         ajax="false"
+                                                         onclick="PF('itemDialog').hide();"/>  
+                                        <p:commandButton
+                                            value="CANCELAR"
+                                            title="Retorna a la lista de Tipo de Cambio"
+                                            immediate="true"
+                                            actionListener="#{cntTipoCambioBacking.cierrraDialogo(e)}"
+                                            ajax="false"
+                                            icon="#{cntTipoCambioBacking.iconoAtras()}" />
+                                    </h:panelGrid>
+                                </div>
+                            </p:dialog>
+
+
+
+
+
+                            <!--                            <p:dataTable id="itemsTable" 
+                                                                     var="item" 
+                                                                     value="# {cntTipoCambioBacking.listadoTipoCambio()}" 
+                                                                     rowKey="# {item}" 
+                                                                     selection="# {cntTipoCambioBacking.seleccionaTipoCambio}" 
+                                                                     selectionMode="single" 
+                                                                     emptyMessage="No existe cuenta con el valor"
+                                                                     scrollable="true" scrollHeight="150"
+                                                                     widgetVar="planTable" style="width: 44%;height: 40%" >
+                                                            <p:ajax event="rowSelect" />  
+                                                            <f:facet name="header">  
+                                                                Lista de Tipo de Cambio y Tipo UFV  
+                                                            </f:facet>  
+                                                            <p:column  id="fecha"
+                                                                       headerText="Fecha" 
+                                                                       style="width: 25px;"  >  
+                                                                <div align="right">
+                                                                    <h:outputText value="# {item.fecha}" style="text-align: right">
+                                                                        <f:convertDateTime pattern="# {sessionState.dateFormat}"/>
+                                                                    </h:outputText>
+                                                                </div>
+                                                            </p:column>  
+                                                            <p:column id="Tipo_Cambio"
+                                                                      headerText="Tipo Cambio"
+                            
+                                                                      filterMatchMode="contains" style="width: 30px">
+                                                                <div align="right">
+                                                                    <h:outputText value="# {item.tipoCambio}"/>
+                                                                </div> 
+                                                            </p:column>
+                                                            <p:column  headerText="Tipo Ufv" 
+                            
+                                                                       filterMatchMode="contains" style="width: 40px">  
+                                                                <div align="right"> 
+                                                                    <h:outputText value="# {item.tipoUfv}"/> 
+                                                                </div>
+                                                            </p:column>  
+                                                            <p:column  headerText="Modificar" 
+                                                                       filterMatchMode="contains" style="width: 40px">  
+                                                                <div align="center"> 
+                                                                    <p:commandButton
+                                                                        image="ui-icon-pencil"
+                                                                        ajax="false"
+                                                                        action="# {cntTipoCambioBacking.irModificar(item)}" 
+                                                                        immediate="true"
+                                                                        disabled="# {item.fechaModificacion == null}"/>
+                                                                </div>
+                                                            </p:column>  
+                                                            <f:facet name="footer">  
+                                                                <p:commandButton
+                                                                    id="btn_nuevo"
+                                                                    value="ADICIONAR"
+                                                                    title="Adiciona nuevo Tipo de Cambio"
+                                                                    ajax="false"
+                                                                    action="# {cntTipoCambioBacking.irFormTipoCambio()}" 
+                                                                    immediate="true"/>
+                                                                <p:commandButton
+                                                                    id="btn_editar"
+                                                                    value="Modificar"
+                                                                    title="Adiciona nuevo Tipo de Cambio"
+                                                                    ajax="false"
+                                                                    action="# {cntTipoCambioBacking.irModificar(cntTipoCambioBacking.seleccionaTipoCambio)}" 
+                                                                    immediate="true"/>
+                                                            </f:facet>  
+                                                        </p:dataTable>-->
+
+
+                        </div>
+                    </h:form>
+                </p:panel>
+            </div>
+        </f:view>
+    </ui:define>
+</ui:composition>

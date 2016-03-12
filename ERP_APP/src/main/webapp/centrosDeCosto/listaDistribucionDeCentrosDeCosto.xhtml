@@ -1,0 +1,107 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition  xmlns="http://www.w3.org/1999/xhtml"
+                 xmlns:h="http://java.sun.com/jsf/html"
+                 xmlns:p="http://primefaces.org/ui"
+                 xmlns:ui="http://java.sun.com/jsf/facelets"
+                 xmlns:f="http://java.sun.com/jsf/core"
+                 template="#{sessionState.pathTemplate}"
+                 xmlns:bap="http://java.sun.com/jsf/composite/bap.comp">
+
+    <ui:define name="content">
+        <f:view>
+            <p:panel header="DISTRIBUCI&Oacute;N DE CENTRO DE COSTOS" style="border-style: hidden;text-align: center;width:100%; overflow-y:auto ; overflow-x: auto;">
+                <h:form id="form">
+                    <h:panelGrid columns="2" id="panelGridComprobantes" style="width: 100%">  
+                        <p:panel style="width: 90%">
+                            <p:dataTable id="comprobanteTable" 
+                                         var="item" 
+                                         value="#{cntRecetasDistribucionCentroCostoBacking.listadoRecetas()}" 
+                                         rowKey="#{item.codigo}"  
+                                         selection="#{cntRecetasDistribucionCentroCostoBacking.selectedParValor}" 
+                                         selectionMode="single"
+                                         style="width: 95%;height: 60%"
+                                         emptyMessage="No existe ningún comprobante registrado"
+                                         scrollable="true" scrollHeight="310" resizableColumns="true" 
+                                         widgetVar="comprobanteTable">  
+                                <p:ajax event="rowSelect" update=":form:panelGridComprobantes"/>
+                                <f:facet name="header">  
+                                    Lista de Distribuciones de Centro de Costos
+                                </f:facet> 
+                                <p:column headerText="Codigo" sortBy="#{item.codigo}" width="20%" 
+                                          filterBy="#{item.codigo}" filterMatchMode="contains" filterStyle="display:none">  
+                                    #{item.codigo} 
+                                </p:column>  
+                                <p:column headerText="Nombre" sortBy="#{item.descripcion}" width="60%" style="text-align: left"
+                                          filterBy="#{item.descripcion}" filterMatchMode="contains" filterStyle="display:none">  
+                                    #{item.descripcion}  
+                                </p:column>  
+                                <f:facet name="footer">
+                                    <div align="center" style="padding:1em 2.2em;">   
+                                        <p:commandButton id="adicionar" value="ADICIONAR" 
+                                                         ajax="false" 
+                                                         title="Adiciona una nueva Receta"
+                                                         icon="#{cntRecetasDistribucionCentroCostoBacking.iconoRegistra()}" 
+                                                         action="#{cntRecetasDistribucionCentroCostoBacking.irFormDistribucion()}"/>
+                                        <p:commandButton id="modificar" value="MODIFICAR" 
+                                                         ajax="false" 
+                                                         title="Modifica la Receta y los Centros de Costo"
+                                                         icon="#{cntRecetasDistribucionCentroCostoBacking.iconoEdita()}" 
+                                                         action="#{cntRecetasDistribucionCentroCostoBacking.irFormDistribucionModificacion()}"/>
+                                        <p:commandButton id="eliminar"
+                                                         value="ELIMINAR"
+                                                         title="Elimina una Receta y los Centros de Costos asignados a esta."
+                                                         icon="#{cntRecetasDistribucionCentroCostoBacking.iconoElimina()}" 
+                                                         onclick="dialogoEliminacion.show()"/> 
+                                    </div>
+                                </f:facet>
+                            </p:dataTable>
+                        </p:panel>
+                        <p:panel style="width: 100%">
+                            <h:panelGrid columns="1" style="width: 100%">
+                                <div align="center" style="padding:1em 2.2em;">
+                                    <p:dataTable id="cuentasPorComprobante" 
+                                                 var="item" 
+                                                 value="#{cntRecetasDistribucionCentroCostoBacking.listaCentroCostoPorReceta()}" 
+                                                 rowKey="#{item.codigoDistribucionCentroCosto}" 
+                                                 selectionMode="single"
+                                                 style="width: 100%;height: 100%"
+                                                 emptyMessage="No existen cuentas asignadas a este Comprobante"
+                                                 scrollable="true" resizableColumns="true" scrollHeight="330"
+                                                 widgetVar="cuentasPorComprobante">
+                                        <p:ajax event="rowSelect"/> 
+                                        <f:facet name="header">  
+                                            Lista Centro de Costos
+                                        </f:facet> 
+                                        <p:column headerText="Codigo" width="30%">  
+                                            #{item.idCentroCosto.mascaraGenerada}  
+                                        </p:column>  
+                                        <p:column headerText="Centro de Costo" width="60%">  
+                                            #{item.idCentroCosto.descripcion}  
+                                        </p:column>  
+                                        <p:column headerText="Porcentaje" width="10%">  
+                                            #{item.porcentaje}  
+                                        </p:column>  
+                                    </p:dataTable>
+                                </div>                                    
+
+                            </h:panelGrid>
+
+                            <p:dialog id="eliminacion" header="Dialogo Confirmación" widgetVar="dialogoEliminacion">
+                                <div align="center" style="padding:1em 2.2em;">
+                                    <bap:informacion mensaje="Esta seguro de eliminar la Receta y los Centros de Costo asignados a esta." dimension="90%"/>
+                                    <h:panelGrid columns="2">
+                                        <p:commandButton value="SI" action="#{cntRecetasDistribucionCentroCostoBacking.eliminaReceta()}" oncomplete="PF(dialogoEliminacion).hide();" ajax="false"/>
+                                        <p:commandButton value="NO" styleClass="ui-confirmdialog-yes" onclick="PF(dialogoEliminacion).hide();" ajax="false"/>
+                                    </h:panelGrid>
+                                </div>
+                            </p:dialog>
+
+                        </p:panel>
+                    </h:panelGrid>
+
+                </h:form>
+            </p:panel>
+        </f:view>
+    </ui:define>
+</ui:composition>

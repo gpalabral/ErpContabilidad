@@ -1,0 +1,59 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition  xmlns="http://www.w3.org/1999/xhtml"
+                 xmlns:h="http://java.sun.com/jsf/html"
+                 xmlns:p="http://primefaces.org/ui"
+                 xmlns:ui="http://java.sun.com/jsf/facelets"
+                 xmlns:f="http://java.sun.com/jsf/core"
+                 template="#{sessionState.pathTemplate}">
+    <ui:define name="content">       
+        <h:form id="Campo">
+            <p:panel header="AUXILIARES" style="border-style: hidden;text-align: center">
+                <div align="center" style="padding:1em 2.2em;">
+                    <h:panelGrid id="display" columns="2">
+                        <h:outputText value="Número:" style="font-weight: bold;" />
+                        <h:inputText value="#{cntAuxiliaresBacking.selectedAuxiliar.numero}" disabled="true" size="10"/>    
+                        <h:outputText value="Sigla:" style="font-weight: bold;"/>
+                        <p:inputText value="#{cntAuxiliaresBacking.selectedAuxiliar.sigla}" onkeyup="this.value=this.value.toUpperCase()" maxlength="4" id="Sigla" size="10" autocomplete="off">
+                            <f:validator validatorId="validaEsVacio"/>
+                        </p:inputText>    
+                        <h:outputText value="Nombre:" style="font-weight: bold;"/>
+                        <p:inputText value="#{cntAuxiliaresBacking.selectedAuxiliar.nombre}" onkeyup="this.value=this.value.toUpperCase()" id="Nombre" size="50" autocomplete="off">
+                            <f:validator validatorId="validaEsVacio"/>
+                        </p:inputText>    
+                        <h:outputText value="Descripción:"  style="font-weight: bold;"/>  
+                        <p:inputTextarea rows="5" cols="50" value="#{cntAuxiliaresBacking.selectedAuxiliar.descripcion}" onkeyup="this.value=this.value.toUpperCase()" id="Descripcion">
+                            <f:validator validatorId="validaEsVacio"/>
+                        </p:inputTextarea>
+                        <h:outputText value="Fecha de Registro:" style="font-weight: bold;"/>
+                        <p:calendar value="#{cntAuxiliaresBacking.selectedAuxiliar.fechaAlta}" pattern="dd/MM/yyyy" id="Fecha_registro" size="10"/> 
+                    </h:panelGrid>  
+                    <div align="center" style="padding:1em 2.2em;">
+                        <h:panelGrid columns="2">
+                            <p:commandButton value="GUARDAR"
+                                             icon="#{cntAuxiliaresBacking.iconoGuardar()}" 
+                                             action="#{cntAuxiliaresBacking.saveCntAuxiliares()}" 
+                                             ajax="false"
+                                             title="Adiciona nuevo Auxiliar"
+                                             rendered="#{!cntAuxiliaresBacking.botonModifica}"/>
+                            <p:commandButton value="MODIFICAR"
+                                             icon="#{cntAuxiliaresBacking.iconoModificar()}" 
+                                             action="#{cntAuxiliaresBacking.editCntAuxiliares()}" 
+                                             ajax="false"
+                                             title="Modifica el registro de Auxiliares"
+                                             rendered="#{cntAuxiliaresBacking.botonModifica}"/>
+                            <p:commandButton value="CANCELAR"
+                                             icon="#{cntAuxiliaresBacking.iconoAtras()}" 
+                                             action="#{cntAuxiliaresBacking.actionReturnAuxiliares()}" 
+                                             ajax="false"
+                                             title="Elimina el registro de Auxiliares"
+                                             rendered="true"
+                                             immediate="true"/>
+                        </h:panelGrid>
+                    </div>
+                </div>    
+            </p:panel>
+        </h:form>            
+    </ui:define>
+</ui:composition>
+

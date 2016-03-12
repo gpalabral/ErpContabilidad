@@ -1,0 +1,60 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition  xmlns="http://www.w3.org/1999/xhtml"
+                 xmlns:h="http://java.sun.com/jsf/html"
+                 xmlns:p="http://primefaces.org/ui"
+                 xmlns:ui="http://java.sun.com/jsf/facelets"
+                 xmlns:f="http://java.sun.com/jsf/core"
+                 template="#{sessionState.pathTemplate}">
+    <ui:define name="content">
+        <div align="center" style="padding:1em 2.2em;">
+            <p:panel header="Modificar Plan de Cuentas">
+                <h:form id="form">      
+                    <h:panelGrid columns="2">
+                        <p:dataTable id="dataTable" var="item" value="#{cntCuentasAdicionarModificarBacking.listaSuperiorDeObjetoselecionado()}"
+                                     emptyMessage="No existe cuenta con el valor"
+                                     paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                     style="width: 100%">
+                            <f:facet name="header">  
+                            </f:facet>  
+                            <!--                                    <p:ajax event="rowSelect" listener="# {cntCuentasAdicionarModificarBacking.obtieneObjetoHermano(e)}" update=":form:panelGridPlanCuentas"/>  -->
+                            <p:column headerText="Cuenta" sortBy="#{item.mascaraGenerada}" 
+                                      filterBy="#{item.mascaraGenerada}" filterMatchMode="contains" filterStyle="display:none">  
+                                #{item.mascaraGenerada}  
+                            </p:column>  
+                            <p:column headerText="Descripcion" sortBy="#{item.descripcion}" 
+                                      filterBy="#{item.descripcion}" filterMatchMode="contains" filterStyle="display:none">  
+                                #{item.descripcion}  
+                            </p:column>                          
+                        </p:dataTable>
+                        <h:panelGrid id="display" columns="1">
+                            <p:panel>
+                                <h:panelGrid columns="2" cellpadding="4">  
+                                    <h:outputText value="Cuenta:" id="centroCostoAdd"/>  
+                                    <h:outputText value="#{cntCuentasAdicionarModificarBacking.selectedObjetos.mascaraGenerada}" />  
+                                    <h:outputText value="Descripcion:" />  
+                                    <p:inputText value="#{cntCuentasAdicionarModificarBacking.descripcionaux}" style="width: 250px" onkeyup="this.value=this.value.toUpperCase()"/>
+                                </h:panelGrid>  
+                                <div align="center" style="padding:1em 2.2em;">
+                                    <h:panelGrid columns="3">
+                                        <p:commandButton
+                                            value="Modificar"
+                                            action="#{cntCuentasAdicionarModificarBacking.mergeCntObjetos_action()}" 
+                                            ajax="false"
+                                            icon="ui-icon ui-icon-disk"/>
+                                        <p:commandButton
+                                            value="Cancelar"
+                                            action="#{cntCuentasAdicionarModificarBacking.cancelar()}"
+                                            ajax="false"
+                                            immediate="true"
+                                            icon="ui-icon ui-icon-disk"/> 
+                                    </h:panelGrid>  
+                                </div> 
+                            </p:panel>
+                        </h:panelGrid>  
+                    </h:panelGrid>
+                </h:form>  
+            </p:panel>
+        </div>
+    </ui:define>
+</ui:composition>

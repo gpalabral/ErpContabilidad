@@ -1,0 +1,91 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition  xmlns="http://www.w3.org/1999/xhtml"
+                 xmlns:h="http://java.sun.com/jsf/html"
+                 xmlns:p="http://primefaces.org/ui"
+                 xmlns:ui="http://java.sun.com/jsf/facelets"
+                 xmlns:f="http://java.sun.com/jsf/core"
+                 template="#{sessionState.pathTemplate}">
+
+    <ui:define name="content">
+        <f:view>
+            <p:panel header="AUXILIARES" style="border-style: hidden;text-align: center">
+                <h:form id="form">
+                    <div align="center" style="padding:1em 2.2em;">
+                        <div align="center" style="padding:1em 2.2em;">
+                        </div> 
+                        <p:dataTable var="item" 
+                                     value="#{cntAuxiliaresBacking.listasAuxiliares()}"
+                                     rowKey="#{item}" 
+                                     filteredValue="#{cntAuxiliaresBacking.filteredCntAuxiliar}" 
+                                     selection="#{cntAuxiliaresBacking.selectedAuxiliar}" 
+                                     selectionMode="single"
+                                     id="itemsTable"
+                                     widgetVar="table"
+                                     style="width: 80%;height: 50%"
+                                     scrollable="true" scrollHeight="150">  
+                            <p:ajax event="rowSelect" listener="#{cntAuxiliaresBacking.obtieneObjetoAuxiliar(e)}"/>  
+                            <f:facet name="header">  
+                                Listado de Auxiliares  
+                            </f:facet>  
+                            <p:column  headerText="Número" 
+                                       filterMatchMode="contains" style="width: 30px">  
+                                #{item.numero}
+                            </p:column>  
+                            <p:column 
+                                headerText="Sigla"
+                                filterMatchMode="contains" style="width: 30px">
+                                #{item.sigla}
+                            </p:column>
+                            <p:column  headerText="Nombre" 
+                                       filterMatchMode="contains" style="width: 50px">  
+                                #{item.nombre}
+                            </p:column>  
+                            <p:column  headerText="Descripción" style="width: 300px">  
+                                #{item.descripcion}  
+                            </p:column>
+                            <f:facet name="footer">  
+                                <p:commandButton ajax="false" value="ADICIONAR "  
+                                                 immediate="true"
+                                                 title="Adiciona un nuevo Auxiliar"
+                                                 icon="ui-icon-disk"  
+                                                 action="#{cntAuxiliaresBacking.irFormAuxiliares()}"/>    
+                                <p:commandButton value="MODIFICAR" 
+                                                 action="#{cntAuxiliaresBacking.irFormAuxiliaresModificar()}"
+                                                 id="iconEditar" 
+                                                 title="Modificar el registro de Auxiliares" 
+                                                 icon="#{cntAuxiliaresBacking.iconoModificar()}" 
+                                                 ajax="false">
+                                </p:commandButton>
+                                <p:commandButton value="ELIMINAR"
+                                                 title="Elimina el registro de Auxiliares"
+                                                 icon="ui-icon-trash" 
+                                                 onclick="PF('dlgB').show();"/>
+                            </f:facet>  
+                        </p:dataTable>
+                    </div>
+
+                    <p:dialog header="Eliminar Auxiliar" showEffect="fade"
+                              widgetVar="dlgB"  width="250" height="100" closable="false">  
+                        <div align="center" style="padding:1em 2.2em;">
+                            <p:outputLabel value="Está seguro de eliminar el registro."/>
+                        </div>
+                        <div align="center" style="padding:1em 2.2em;">
+                            <h:panelGrid columns="2">
+                                <p:commandButton id="submitButton" styleClass="ui-confirmdialog-yes" 
+                                                 icon="ui-icon-check" value="Si" action="#{cntAuxiliaresBacking.removeCntAuxiliares()}"
+                                                 ajax="false"
+                                                 onclick="PF('dlgB').hide();"/>  
+                                <p:commandButton value="Cancelar"
+                                                 immediate="true"
+                                                 actionListener="#{cntAuxiliaresBacking.cierrraDialogo(e)}"
+                                                 ajax="false"/>
+                            </h:panelGrid>
+                        </div>
+                    </p:dialog>
+
+                </h:form>
+            </p:panel>
+        </f:view>
+    </ui:define>
+</ui:composition>

@@ -1,0 +1,187 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition  xmlns="http://www.w3.org/1999/xhtml"
+                 xmlns:h="http://java.sun.com/jsf/html"
+                 xmlns:p="http://primefaces.org/ui"
+                 xmlns:ui="http://java.sun.com/jsf/facelets"
+                 xmlns:f="http://java.sun.com/jsf/core"
+                 template="#{sessionState.pathTemplate}">
+    <ui:define name="content">       
+        <h:form>
+            <p:panel header="COMPROBANTE DE : #{cntImprimeComprobanteBacking.cntComprobante.parTipoComprobante.descripcion}" >
+                <div align="left">
+                    <h:panelGrid columns="12" style="margin-bottom:5px">  
+                        <h:panelGroup>
+                            <h:outputLabel  value="Imprimir del Comprobante:" style="font-weight: bold" />  
+                            <p:inputText id="inicioimpresion" value="#{cntImprimeComprobanteBacking.inicioImpresion}" onkeyup="return ValNumero(this);" style="text-align: right" size="10"/> 
+                            <h:outputLabel value="al:" style="font-weight: bold"/>  
+                            <p:inputText id="finimpresion" value="#{cntImprimeComprobanteBacking.finImpresion}" onkeyup="return ValNumero(this);" style="text-align: right" size="10"/>  
+                        </h:panelGroup>
+                        <p:spacer width="30">  </p:spacer>
+                        <h:outputLabel  value="Periodo:" style="font-weight: bold" onkeyup="return ValNumero(this);"/>  
+                        <p:inputText id="periodo" value="#{cntImprimeComprobanteBacking.periodo}" style="text-align: right" size="10"/>  
+                        <h:outputLabel  value="Año:" style="font-weight: bold"/>  
+                        <p:spinner id="anio" value="#{cntImprimeComprobanteBacking.anio}" size="10"/>  
+                        <p:spacer width="30">  </p:spacer>
+                        <h:outputLabel  value="Tipo Comprobante:" style="font-weight: bold" />  
+                        <p:selectOneMenu value="#{cntImprimeComprobanteBacking.tipo}">
+                            <f:selectItems value="#{cntImprimeComprobanteBacking.listaTiposComprobantes()}" var="a" itemLabel="#{a.descripcion}" itemValue="#{a.codigo}"/>                                    
+                        </p:selectOneMenu>
+                        <p:spacer width="30">  </p:spacer>
+                        <p:commandButton
+                            value="Aceptar"
+                            action="#{cntImprimeComprobanteBacking.listaDetallesComprobantesPorConsulta()}"                                
+                            ajax="false"            
+                            update="panelDeBotones"
+                            onclick="PF('itemDialog').hide();"/>
+                    </h:panelGrid> 
+                </div>
+
+
+                <div align="center" style="padding:1em 2.2em;">
+                    <p:dataTable id="listadoDeConsulta" 
+                                 var="item" 
+                                 value="#{cntImprimeComprobanteBacking.listaResultadoConsulta}" 
+                                 rowKey="#{item.idDetalleComprobante}" 
+                                 selection="#{cntImprimeComprobanteBacking.cntDetalleComprobanteElegido}"                                          
+                                 style="width: 100%;height: 100%"
+                                 emptyMessage="No existen cuentas para estos par&aacute;metros"
+                                 scrollable="true" resizableColumns="true" scrollHeight="250"
+                                 rowStyleClass="#{item.idDetalleComprobante == null ? 'para-filas' : null}">                                
+
+                        <f:facet name="header">                                  
+                            <p:outputLabel value="#{cntImprimeComprobanteBacking.tituloDeComprobante}"/>
+                        </f:facet> 
+                        <p:column headerText="Nro" width="5%" style="text-align: right">  
+                            <p:outputLabel value="#{item.posicion}"/>                                                                
+                        </p:column>                                                          
+                        <p:column headerText="Cuenta" width="30%" >  
+                            <!--<p:outputLabel value="# {item.cntEntidad.mascaraGenerada} # {item.cntEntidad.descripcion}" rendered="# {item.cntEntidad != null ? true : false}"/>-->                                                                
+                            <p:outputLabel value="#{item.cntEntidad.mascaraGenerada}  #{cntImprimeComprobanteBacking.insertaPuntosAutomatio(item.cntEntidad)}" rendered="#{item.cntEntidad != null ? true : false}"/>
+                        </p:column>                                                          
+                        <p:column headerText="Glosa" width="45%">                                  
+                            <p:outputLabel value="#{item.glosa}" />                                                                
+                        </p:column>  
+                        <p:column headerText="Debe (Bs.)" width="10%" style="text-align: right" rendered="#{cntImprimeComprobanteBacking.moneda == 'BOL'  ? true : false}">  
+                            <p:outputLabel value="#{item.debe}">
+                                <f:convertNumber pattern="###,###,###,##0.00" />
+                            </p:outputLabel>
+                        </p:column>  
+                        <p:column headerText="Haber (Bs.)" width="10%" style="text-align: right" rendered="#{cntImprimeComprobanteBacking.moneda == 'BOL'  ? true : false}">  
+                            <p:outputLabel value="#{item.haber}">
+                                <f:convertNumber pattern="###,###,###,##0.00" />
+                            </p:outputLabel>                              
+                        </p:column>  
+                        <p:column headerText="Debe ($us.)" width="10%" style="text-align: right" rendered="#{cntImprimeComprobanteBacking.moneda == 'SUS'  ? true : false}">  
+                            <p:outputLabel value="#{item.debeDolar}">
+                                <f:convertNumber pattern="###,###,###,##0.00" />
+                            </p:outputLabel>  
+                        </p:column>  
+                        <p:column headerText="Haber ($us.)" width="10%" style="text-align: right" rendered="#{cntImprimeComprobanteBacking.moneda == 'SUS'  ? true : false}">  
+                            <p:outputLabel value="#{item.haberDolar}">
+                                <f:convertNumber pattern="###,###,###,##0.00" />
+                            </p:outputLabel>  
+                        </p:column>  
+                        <p:columnGroup type="footer">  
+
+                            <p:row>  
+                                <p:column footerText="" />  
+                                <p:column footerText="" />                                          
+                                <p:column footerText="TOTALES:" style="text-align:right"/>  
+                                <p:column style="text-align:right" footerText="#{cntImprimeComprobanteBacking.debes}" rendered="#{cntImprimeComprobanteBacking.moneda == 'BOL'  ? true : false}"/>  
+                                <p:column style="text-align:right" footerText="#{cntImprimeComprobanteBacking.habers}" rendered="#{cntImprimeComprobanteBacking.moneda == 'BOL'  ? true : false}"/>  
+                                <p:column style="text-align:right" footerText="#{cntImprimeComprobanteBacking.debeDolars}" rendered="#{cntImprimeComprobanteBacking.moneda == 'SUS'  ? true : false}"/>  
+                                <p:column style="text-align:right" footerText="#{cntImprimeComprobanteBacking.haberDolars}" rendered="#{cntImprimeComprobanteBacking.moneda == 'SUS'  ? true : false}"/>                                                                                  
+                            </p:row> 
+
+                        </p:columnGroup>
+                    </p:dataTable>
+
+                </div>   
+
+                <h:panelGrid columns="30"  id="panelDeBotones" >
+                    <h:outputLabel value="Moneda:" style="font-weight: bold" />  
+                    <p:selectOneRadio id="moneda" value="#{cntImprimeComprobanteBacking.moneda}">  
+                        <f:selectItem itemLabel="Bolivianos" itemValue="BOL" />  
+                        <f:selectItem itemLabel="Dolares" itemValue="SUS" /> 
+                        <!--<p:ajax update="listadoDeConsulta" listener=""/>-->    
+                        <p:ajax listener="#{cntImprimeComprobanteBacking.cargaListadoPorMoneda(event)}" update="listadoDeConsulta" />
+                    </p:selectOneRadio>
+                    <p:spacer width="50" ></p:spacer>
+                    <h:outputText value="Imprimir Fecha de Emisi&oacute;n: " style="font-weight: bold"/>  
+                    <p:selectOneRadio id="opciones" value="#{cntImprimeComprobanteBacking.opcionImpresion}">  
+                        <f:selectItem itemLabel="Si" itemValue="true" />  
+                        <f:selectItem itemLabel="No" itemValue="false" />  
+                    </p:selectOneRadio>  
+                    <p:commandButton 
+                        value="Cancelar"
+                        action="#{cntImprimeComprobanteBacking.cancelaImpresionDeComprobantes()}"
+                        title="Icon Only"
+                        rendered="#{cntImprimeComprobanteBacking.habilitaCancelar}"
+                        />
+                    <p:commandButton                                
+                        action="#{cntImprimeComprobanteBacking.botonComprobanteInicial()}"                                
+                        update="divDePanelDeBotonespanelDeBotones"
+                        ajax="false"
+                        icon="ui-icon-arrowthickstop-1-w"
+                        disabled="#{cntImprimeComprobanteBacking.limiteInicial}">
+                    </p:commandButton>  
+                    <p:commandButton                                
+                        action="#{cntImprimeComprobanteBacking.botonComprobanteAnterior()}"                                
+                        update="panelDeBotones"
+                        ajax="false"
+                        icon="ui-icon-arrowthick-1-w"                               
+                        disabled="#{cntImprimeComprobanteBacking.limiteInicial}">
+                    </p:commandButton>  
+                    <p:selectOneMenu value="#{cntImprimeComprobanteBacking.comprobanteElegido}" disabled="#{cntImprimeComprobanteBacking.limiteInicial == true ? cntImprimeComprobanteBacking.limiteFinal == true? true : false : false}">
+                        <f:selectItems value="#{cntImprimeComprobanteBacking.listaDePaginasYComprobantes()}" var="a" itemLabel="#{a}" itemValue="#{cntImprimeComprobanteBacking.extraeNumeroDeCadena(a)}"/>
+                        <p:ajax listener="#{cntImprimeComprobanteBacking.eligeComprobante(event)}" update="listadoDeConsulta, panelDeBotones" />
+                    </p:selectOneMenu>
+                    <p:outputLabel id="restantes"
+                                   value=" de  #{cntImprimeComprobanteBacking.comprobanteFinal} P&aacute;g."
+                                   style="font-weight: bold"
+                                   />
+                    <p:commandButton                                
+                        action="#{cntImprimeComprobanteBacking.botonComprobanteSiguiente()}"                                                                                   
+                        update="panelDeBotones"
+                        ajax="false"
+                        icon="ui-icon-arrowthick-1-e"
+                        disabled="#{cntImprimeComprobanteBacking.limiteFinal}">
+                    </p:commandButton>  
+                    <p:commandButton                                
+                        action="#{cntImprimeComprobanteBacking.botonComprobanteUltimo()}"                                
+                        update="panelDeBotones"
+                        ajax="false"
+                        icon="ui-icon-arrowthickstop-1-e"
+                        disabled="#{cntImprimeComprobanteBacking.limiteFinal}">
+                    </p:commandButton>  
+                    <p:commandButton
+                        value="REPORTE"
+                        action="#{cntImprimeComprobanteBacking.reporteComprobantes_action()}"    
+                        disabled="#{cntImprimeComprobanteBacking.habilitaReporte}"
+                        ajax="false" >
+                        <p:graphicImage value="/resources/images/printer.png" style="border: 0px"/>
+                        <p:fileDownload contentDisposition="inline"  value="#{cntImprimeComprobanteBacking.reporteComprobantes_action()}"/>
+                    </p:commandButton>                        
+                    <h:commandLink action="#{cntImprimeComprobanteBacking.reporteComprobantesEIT_action()}" 
+                                   value="Imprimir Comprobantes"
+                                   target="popupWindow" 
+                                   disabled="#{cntImprimeComprobanteBacking.habilitaReporte}">
+                        <p:graphicImage value="/resources/images/printer.png" style="border: 0px"/>
+                    </h:commandLink>
+
+                    <p:commandButton 
+                        value="Volver"
+                        action="#{cntImprimeComprobanteBacking.vuelveALibroMayor()}"
+                        title="Volver" 
+                        ajax="false"
+                        immediate="true"
+                        icon="ui-icon-arrowthick-1-w"
+                        rendered="#{cntImprimeComprobanteBacking.habilitaVolver}"/>
+
+                </h:panelGrid> 
+            </p:panel>
+
+        </h:form>  
+    </ui:define>
+</ui:composition>

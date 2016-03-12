@@ -1,0 +1,35 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition  xmlns="http://www.w3.org/1999/xhtml"
+                 xmlns:h="http://java.sun.com/jsf/html"
+                 xmlns:p="http://primefaces.org/ui"
+                 xmlns:ui="http://java.sun.com/jsf/facelets"
+                 xmlns:f="http://java.sun.com/jsf/core"
+                 template="#{sessionState.pathTemplate}">
+    <ui:define name="content">
+        <h:form>
+            <div style="padding:3em 3em;overflow-x: hidden;overflow-y: hidden;width: 80%;" align="center">
+                <div style="padding:5em 2.2em;
+                     border-radius: 25px;
+                     border: 1px solid;
+                     box-shadow: 10px 10px 3px #CEDBE6;
+                     background: #F1F7FB;
+                     border-color: #3C82B4;overflow-x: hidden;overflow-y: hidden" 
+                     align="center" >
+                    <p:graphicImage id="bandera" value="/resources/images/error.png" />
+                    <h:panelGrid columns="1" >
+                        <h1 style="color: #3C82B4">Página no encontrada!!!</h1>
+                        <h4>
+                            Puede que la información o página que usted estaba buscando ya no exista 
+                            o que el enlace esté temporalmente fuera de servicio. 
+                        </h4>
+
+                        <h4>
+                            Le invitamos a realizar una nueva búsqueda o visitar los enlaces disponibles en la parte superior.                        
+                        </h4>
+                    </h:panelGrid>
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>

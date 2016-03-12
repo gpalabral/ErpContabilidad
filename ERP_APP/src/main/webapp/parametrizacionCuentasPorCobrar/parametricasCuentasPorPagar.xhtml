@@ -1,0 +1,93 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition  xmlns="http://www.w3.org/1999/xhtml"
+                 xmlns:h="http://java.sun.com/jsf/html"
+                 xmlns:p="http://primefaces.org/ui"
+                 xmlns:ui="http://java.sun.com/jsf/facelets"    
+                 xmlns:f="http://java.sun.com/jsf/core"
+                 template="#{sessionState.pathTemplate}"
+                 xmlns:bap="http://java.sun.com/jsf/composite/bap.comp">
+    <ui:define name="content">
+        <p:panel header="PAR&Aacute;METROS CUENTAS x COBRAR" style="border-style: hidden;text-align: center">
+            <div align="center" style="padding:1em 2.2em;">
+                <h:form id="Campo">
+                    <h:panelGrid columns="2" cellpadding="5">  
+                        <p:outputLabel value="Tipo de Documento:" style="font-weight: bold"/>
+                        <p:selectOneMenu value="#{cppParametrosCuentasPorPagarBacking.periodoActualVista}">
+                            <f:selectItems  value="#{cppParametrosCuentasPorPagarBacking.listadoSegunParametro()}" var="a" itemLabel="#{a}" itemValue="#{cppParametrosCuentasPorPagarBacking.extraeNumeroDeCadena(a)}"/>
+                            <p:ajax event="change" update="listadoParametro" listener="#{cppParametrosCuentasPorPagarBacking.actualizaListado(event)}" />        
+                        </p:selectOneMenu>
+                    </h:panelGrid>
+                    <p:panel id="listadoParametro" style="border-style: hidden">
+                        <p:dataTable var="item" 
+                                     value="#{cppParametrosCuentasPorPagarBacking.listaParametricasSegunOpcion}"
+                                     rowKey="#{item}" 
+                                     filteredValue="#{cppParametrosCuentasPorPagarBacking.filteredParValor}" 
+                                     selection="#{cppParametrosCuentasPorPagarBacking.selectedParValor}" 
+                                     selectionMode="single"
+                                     id="itemsTable"
+                                     widgetVar="table"
+                                     style="width: 80%;height: 50%"
+                                     scrollable="true" scrollHeight="150">  
+                            <p:ajax event="rowSelect" update=":Campo:henrry :Campo:datos" oncomplete="dlg.show()" listener="#{cppParametrosCuentasPorPagarBacking.actualizaParValorDos(event)}"/>  
+                            <f:facet name="header">  
+                                Listado de Parametros
+                            </f:facet>  
+                            <p:column  headerText="C&oacute;digo" 
+                                       filterMatchMode="contains" style="width: 50px">  
+                                #{item.codigo}
+                            </p:column>  
+                            <p:column  headerText="Descripci&oacute;n" filterMatchMode="contains" style="width: 300px">  
+                                #{item.descripcion}  
+                            </p:column>
+                            <f:facet name="footer">  
+                                <p:commandButton id="showDialogButton"  
+                                                 value="ADICIONAR" 
+                                                 onclick="PF('dlg').show();" 
+                                                 update=":Campo:henrry :Campo:datos"
+                                                 actionListener="#{cppParametrosCuentasPorPagarBacking.actualizaParValor(event)}"/>
+
+                                <p:commandButton value="ELIMINAR"
+                                                 title="Elimina el registro de Auxiliares"
+                                                 icon="ui-icon-trash" 
+                                                 onclick="PF('dlg').show();"/>
+                            </f:facet>  
+                        </p:dataTable>
+                        <p:dialog id="dialogo" header="Adicionar Par&aacute;metro" widgetVar="dlg" resizable="false" >  
+                            <h:panelGrid columns="2" style="margin-bottom:10px" id="datos">  
+                                <h:outputLabel  value="C&oacute;digo:" />  
+                                <p:inputText id="codigo" onkeyup="this.value=this.value.toUpperCase()" value="#{cppParametrosCuentasPorPagarBacking.codigo}" />  
+                                <h:outputLabel  value="Nombre" />  
+                                <p:inputText id="nommbre" value="#{cppParametrosCuentasPorPagarBacking.descripcion}" size="40" />  
+                            </h:panelGrid> 
+                            <p:panelGrid columns="2" id="henrry">
+                                <p:commandButton value="GUARDAR" 
+                                                 id="idguardar"
+                                                 title="Adiciona Par&aacute;metro"
+                                                 icon="ui-icon-trash" 
+                                                 update="Campo"
+                                                 rendered="#{!cppParametrosCuentasPorPagarBacking.activaModifica}"
+                                                 action="#{cppParametrosCuentasPorPagarBacking.guardaParametros()}"
+                                                 onclick="PF('dlg').hide();"/>
+                                <p:commandButton value="MODIFICAR" 
+                                                 id="idmodificar"
+                                                 title="Modifica Par&aacute;metro Seleccionado"
+                                                 icon="ui-icon-trash" 
+                                                 update="Campo"
+                                                 rendered="#{cppParametrosCuentasPorPagarBacking.activaModifica}"
+                                                 action="#{cppParametrosCuentasPorPagarBacking.modificaParametros()}"
+                                                 onclick="PF('dlg').hide();"/>
+                                <p:commandButton value="CANCELAR"
+                                                 title="Retorna a listado de par&aacute;metros"
+                                                 icon="ui-icon-trash" 
+                                                 onclick="PF('dlg').hide();"/>
+                            </p:panelGrid>
+                        </p:dialog> 
+                    </p:panel>
+                </h:form>
+            </div>
+        </p:panel>
+    </ui:define>
+
+</ui:composition>
+

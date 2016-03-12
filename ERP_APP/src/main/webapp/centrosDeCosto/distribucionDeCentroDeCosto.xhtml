@@ -1,0 +1,148 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition  xmlns="http://www.w3.org/1999/xhtml"
+                 xmlns:h="http://java.sun.com/jsf/html"
+                 xmlns:p="http://primefaces.org/ui"
+                 xmlns:ui="http://java.sun.com/jsf/facelets"
+                 xmlns:f="http://java.sun.com/jsf/core"
+                 template="#{sessionState.pathTemplate}"
+                 xmlns:c="http://java.sun.com/jsp/jstl/core"
+                 xmlns:bap="http://java.sun.com/jsf/composite/bap.comp">
+    <ui:define name="content">
+        <p:panel header="DISTRIBUCIÓN DE CENTROS DE COSTO" style="border-style: hidden;text-align: center">
+            <h:form id="form">  
+                <div align="center" style="padding:1em 2.2em;">
+                    <p:panel style="border-style: hidden">
+                        <div align="center">
+                            <p:panel>
+                                <h:panelGrid columns="7">
+                                    <h:outputText style="font-weight: bold;text-align:right" value="Cuenta:" />  
+                                    <h:inputText style="text-align:right" value="#{cntDistribucionCentrosDeCostoBacking.cntDetalleComprobante.cntEntidad.mascaraGenerada}" disabled="true" size="15"/>  
+                                    <h:inputText value="#{cntDistribucionCentrosDeCostoBacking.cntDetalleComprobante.cntEntidad.descripcion}" disabled="true" size="70"/>   
+                                    <p:spacer width="20"></p:spacer>
+                                    <h:outputText style="font-weight: bold" value="Monto:" />  
+                                    <h:inputText style="text-align:right" value="#{cntDistribucionCentrosDeCostoBacking.monto}" disabled="true" size="10"/>  
+                                    <p:outputLabel value="Bs."/>     
+                                </h:panelGrid>
+                            </p:panel>
+                        </div>
+                    </p:panel>
+                    <p:panel>
+                        <div align="center" style="padding:1em 2.2em;">
+
+                            <h:panelGrid columns="6">
+
+                                <p:selectBooleanButton value="#{cntDistribucionCentrosDeCostoBacking.valorDefinicion}" onLabel="DEFINICION" offLabel="DEFINICION" onIcon="ui-icon-check" id="definicion" offIcon="ui-icon-close" >  
+                                    <p:ajax update="listaCC,recetas,definicion,alterna,libre,panelPromedios,messages,"  listener="#{cntDistribucionCentrosDeCostoBacking.enviaRegistroSiguienteListaDefinicion()}" />  
+                                </p:selectBooleanButton>  
+                                <p:selectBooleanButton value="#{cntDistribucionCentrosDeCostoBacking.valorLibre}"  onLabel="LIBRE" offLabel="LIBRE" onIcon="ui-icon-check" id="libre" offIcon="ui-icon-close">  
+                                    <p:ajax update="listaCC,recetas,definicion,alterna,libre,panelPromedios"  listener="#{cntDistribucionCentrosDeCostoBacking.enviaRegistroSiguienteLista()}" />  
+                                </p:selectBooleanButton>  
+                                <p:selectBooleanButton value="#{cntDistribucionCentrosDeCostoBacking.valorAlterna}" onLabel="ALTERNA" offLabel="ALTERNA" onIcon="ui-icon-check" id="alterna" offIcon="ui-icon-close">  
+                                    <p:ajax update="listaCC,recetas,definicion,libre,alterna,panelPromedios"  listener="#{cntDistribucionCentrosDeCostoBacking.activaRecetas(e)}" />  
+                                </p:selectBooleanButton>  
+
+                                <h:outputText style="font-weight: bold" value=""/>  
+                                <p:selectOneMenu id="recetas" value="#{cntDistribucionCentrosDeCostoBacking.codigoReceta}" disabled="#{cntDistribucionCentrosDeCostoBacking.habilitaAlternativa}">
+                                    <f:selectItems value="#{cntDistribucionCentrosDeCostoBacking.listadoRecetas()}" var="a" itemLabel="#{a.descripcion}" itemValue="#{a.codigo}"/>
+                                    <p:ajax event="change" update="listaCC" listener="#{cntDistribucionCentrosDeCostoBacking.distribucionAlternativa(e)}" />        
+                                </p:selectOneMenu>
+                            </h:panelGrid>
+
+                            <p:panel style="border-style: hidden">                                
+                                <div align="center" style="padding:1em 2.2em;">
+                                    <p:dataTable var="item" 
+                                                 value="#{cntDistribucionCentrosDeCostoBacking.cntDistribucionCentrocostoList}" 
+                                                 id="listaCC" 
+                                                 rowKey="#{item}" 
+                                                 editable="true"
+                                                 emptyMessage="No existe cuenta con el valor"
+                                                 selection="#{cntDistribucionCentrosDeCostoBacking.cntDistribucionCentrocostoSelect}"    
+                                                 selectionMode="single"
+                                                 scrollable="true" scrollHeight="150" 
+                                                 widgetVar="listaCC" style="width: 50%;height: 40%">  
+                                        <f:facet name="header"> 
+                                            Listado de Configuraci&oacute;n #{cntDistribucionCentrosDeCostoBacking.tituloListaTipoDistribucion}
+                                        </f:facet>  
+                                        <p:ajax event="rowEdit" listener="#{cntDistribucionCentrosDeCostoBacking.onEdit}" update=":form:resto :form:promedioTotal :form:montoTotal" />  
+                                        <p:ajax event="rowEditCancel" listener="#{cntDistribucionCentrosDeCostoBacking.onCancel}" />  
+
+                                        <p:column headerText="Código" style="width:10%">  
+                                            <p:cellEditor>  
+                                                <f:facet name="output">  
+                                                    <h:outputText value="#{item.cntCentroDeCosto.mascaraGenerada}"/>  
+                                                </f:facet>  
+                                                <f:facet name="input">  
+                                                    <p:inputText value="#{item.cntCentroDeCosto.mascaraGenerada}" disabled="true" style="width:100%"/>  
+                                                </f:facet>  
+                                            </p:cellEditor>  
+                                        </p:column>  
+
+                                        <p:column headerText="Centro de Costo" style="width:20%">  
+                                            <p:cellEditor>  
+                                                <f:facet name="output">  
+                                                    <h:outputText value="#{cntDistribucionCentrosDeCostoBacking.insertaPuntosAutomatio(item.cntCentroDeCosto)}" />  
+                                                </f:facet>  
+                                                <f:facet name="input">  
+                                                    <p:inputText value="#{item.cntCentroDeCosto.descripcion}" disabled="true" style="width:100%"/>  
+                                                </f:facet>  
+                                            </p:cellEditor>  
+                                        </p:column>  
+                                        <p:column headerText="Porcentaje" style="width:10%;text-align: right">  
+                                            <p:cellEditor>  
+                                                <f:facet name="output">  
+                                                    <h:outputText value="#{item.porcentaje}"/>  
+                                                </f:facet>  
+                                                <f:facet name="input">  
+                                                    <p:inputText value="#{item.porcentaje}" disabled="#{cntDistribucionCentrosDeCostoBacking.verificaEntidadSiEsNivelUno(item.cntCentroDeCosto)}" style="width:100%">
+                                                        <p:ajax event="keyup" listener="#{cntDistribucionCentrosDeCostoBacking.activaPorcentaje(e)}" />  
+                                                    </p:inputText>  
+                                                </f:facet>  
+                                            </p:cellEditor>  
+                                        </p:column>  
+                                        <p:column headerText="Monto" style="width:10%;text-align: right">  
+                                            <p:cellEditor>  
+                                                <f:facet name="output">  
+                                                    <h:outputText value="#{item.monto}" style="text-align:right"/>  
+                                                </f:facet>  
+                                                <f:facet name="input">  
+                                                    <p:inputText value="#{item.monto}" disabled="#{cntDistribucionCentrosDeCostoBacking.verificaEntidadSiEsNivelUno(item.cntCentroDeCosto)}" style="width:100%">
+                                                        <p:ajax event="keyup" listener="#{cntDistribucionCentrosDeCostoBacking.activaMonto(e)}" />  
+                                                    </p:inputText>  
+                                                </f:facet>  
+                                            </p:cellEditor>  
+                                        </p:column>  
+                                        <p:column style="width:6%" rendered="#{!cntDistribucionCentrosDeCostoBacking.habilitaEditarPorcentajes}">  
+                                            <p:rowEditor />  
+                                        </p:column>  
+                                        <f:facet name="footer">  
+                                            <p:spacer width="30" height="20"/>
+                                        </f:facet>  
+                                    </p:dataTable>  
+                                    <p:panel id="panelPromedios">
+                                        <h:panelGrid columns="5">
+                                            <h:inputText value="#{cntDistribucionCentrosDeCostoBacking.totalRestoPorcentaje}" id="resto"  style="text-align:right"/>  
+                                            <p:outputLabel value="Promedio Total: " style="font-weight: bold"/>
+                                            <h:inputText value="#{cntDistribucionCentrosDeCostoBacking.promedioTotal} %" id="promedioTotal" disabled="true" style="text-align:right"/>
+                                            <p:outputLabel value="Monto Total: " style="font-weight: bold"/>
+                                            <h:inputText value="#{cntDistribucionCentrosDeCostoBacking.montoTotal} " id="montoTotal" disabled="true" style="text-align:right"/>
+                                        </h:panelGrid>
+                                        <h:panelGrid columns="2">
+                                            <p:commandButton
+                                                value="GRABAR"
+                                                action="#{cntDistribucionCentrosDeCostoBacking.guardaDistribucionCentroDeCosto()}"
+                                                ajax="false"
+                                                icon="#{cntDistribucionCentrosDeCostoBacking.iconoRegistra()}">
+                                            </p:commandButton>  
+                                        </h:panelGrid>
+                                    </p:panel>
+                                </div>
+                            </p:panel>
+                            <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" />  
+                        </div>
+                    </p:panel>
+                </div>
+            </h:form>  
+        </p:panel>
+    </ui:define>
+</ui:composition>

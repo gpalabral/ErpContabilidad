@@ -1,0 +1,31 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core" 
+      xmlns:p="http://primefaces.org/ui">
+
+    <h:body>
+        <!-- <ui:composition template="./META-INF/appTemplate.xhtml">  -->
+        <ui:composition>
+            <h:form>
+                <p:accordionPanel dynamic="true" cache="true">  
+                    <p:tab title="Parametrizacion">  
+                        <p:commandLink value="Parametros de la Gestion" action="#{menuBacking.parametrosGestion()}" immediate="true"/>
+                        <p:commandLink value="Empresa" action="#{menuBacking.empresa()}" immediate="true"/>
+                    </p:tab>  
+                    <p:tab title="Plan Cuentas">  
+                        <p:commandLink value="Creación de estructura Plan de Cuentas" action="#{menuBacking.nivelesPlanCuentas()}" immediate="true"/>
+                        <p:commandLink value="Definición de Cuentas Generales" action="#{menuBacking.definicionCuentas()}" immediate="true"/>
+                        <p:commandLink value="Plan de Cuentas" action="#{menuBacking.entidadAdicionar()}" immediate="true"/>
+                    </p:tab>  
+                    <p:tab title="Otros">  
+                        <p:commandLink value="Auxiliares" action="#{menuBacking.auxiliares()}" immediate="true"/>
+                    </p:tab>  
+                </p:accordionPanel>  
+            </h:form> 
+        </ui:composition>
+    </h:body>
+</html>
+

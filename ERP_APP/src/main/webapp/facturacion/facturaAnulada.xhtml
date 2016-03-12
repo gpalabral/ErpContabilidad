@@ -1,0 +1,49 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition  xmlns="http://www.w3.org/1999/xhtml"
+                 xmlns:h="http://java.sun.com/jsf/html"
+                 xmlns:p="http://primefaces.org/ui"
+                 xmlns:ui="http://java.sun.com/jsf/facelets"
+                 xmlns:f="http://java.sun.com/jsf/core"
+                 template="#{sessionState.pathTemplate}">
+    <ui:define name="content">       
+        <h:form>
+
+            <div align="center" style="padding:1em 2.2em;">
+                <p:panel header="ANULAR FACTURA" style="border-style: hidden;">
+
+                    <p:panel>
+
+                        <h:panelGrid columns="2">
+                            <p:outputLabel id="numeroFacturaInicio" style="font-weight: bold" value="Nº Factura:" />
+                            <p:inputText value="#{cntReporteLibroDeVentasBacking.cntFacturacion.nroInicial}" autocomplete="off" onkeyup="return ValNumero(this);" >
+                            </p:inputText>
+                            
+                            <h:outputText style="font-weight: bold" value="Sucursal:"/>  
+                            <p:selectOneMenu value="#{cntReporteLibroDeVentasBacking.cntFacturacion.sucursal}">
+                                <f:selectItems value="#{cntReporteLibroDeVentasBacking.listaTodasLasSucursales()}" var="suc" itemLabel="#{suc.descripcion}" itemValue="#{suc.descripcion}"/>                                
+                            </p:selectOneMenu>
+
+                            <p:outputLabel style="font-weight: bold" value="Autorizaci&oacute;n:"/>
+                            <p:inputText id="autorizacion2" value="#{cntReporteLibroDeVentasBacking.numeroAutorizacion}" autocomplete="off" >
+                                <p:ajax event="keyup" update="codigoControl" listener="#{cntReporteLibroDeVentasBacking.activaCodigoControlVenta(e)}"/>                                        
+                            </p:inputText>
+                            <h:outputText style="font-weight: bold" value="C&oacute;digo de Control:" />  
+                            <p:inputText id="codigoControl" value="#{cntReporteLibroDeVentasBacking.cntFacturacion.codigoControl}" disabled="#{cntReporteLibroDeVentasBacking.activaCodigoControl}" autocomplete="off" onkeyup="this.value = this.value.toUpperCase()"/>                        
+                            <h:outputText style="font-weight: bold" value="Fecha:" />  
+                            <p:calendar value="#{cntReporteLibroDeVentasBacking.cntFacturacion.fechaFactura}" pattern="dd/MM/yyyy" maxdate="#{cntReporteLibroDeVentasBacking.fechaActual}" size="12" style="text-align:center" locale="es">
+                            </p:calendar>
+
+                        </h:panelGrid>
+                    </p:panel>
+                    <p:commandButton id="anulaFactura" value=" Guardar Factura"                                                  
+                                     action="#{cntReporteLibroDeVentasBacking.guardarFacturaAnulada_action()}"                                                   
+                                     ajax="false"/>
+                    
+
+                </p:panel>
+            </div>    
+        </h:form>            
+    </ui:define>
+</ui:composition>
+

@@ -1,0 +1,180 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition  xmlns="http://www.w3.org/1999/xhtml"
+                 xmlns:h="http://java.sun.com/jsf/html"
+                 xmlns:p="http://primefaces.org/ui"
+                 xmlns:ui="http://java.sun.com/jsf/facelets"
+                 xmlns:f="http://java.sun.com/jsf/core"
+                 template="#{sessionState.pathTemplate}">
+    <ui:define name="content">
+        <script>
+            jQuery(document).ready(function () {
+                autoScroll();
+            });
+        </script>
+        <h:form id="form">
+            <h:inputHidden id="scrollPos" value="#{sessionState.scrollPos}" />
+            <p:panel id="panelGridListado" header="SUMAS Y SALDOS" style="border-style: hidden;text-align: center">
+                <div align="left">
+                    <h:panelGrid columns="9" style="margin-bottom:10px">  
+                        <p:selectOneRadio id="opcionImpresion" value="#{cntImprimeSumasSadosComprobanteBacking.opcionFiltroImpresion}">  
+                            <f:selectItem itemLabel="A Periodo" itemValue="PER" />  
+                            <f:selectItem itemLabel="A Fecha" itemValue="FEC" /> 
+                            <p:ajax update="planTable,fechaFiltro" listener="#{cntImprimeSumasSadosComprobanteBacking.activaFechaFiltro()}"/>                                    
+                        </p:selectOneRadio>
+                        <p:outputLabel value=""/>
+                        <p:calendar id="fechaFiltro" value="#{cntImprimeSumasSadosComprobanteBacking.fechaHasta}" pattern="dd/MM/yyyy"  size="12" style="text-align:center" disabled="#{cntImprimeSumasSadosComprobanteBacking.activaFecha}" locale="es">
+                            <!--                            <p:ajax event="dateSelect" listener="# {cntFormularioComprobanteBacking.devuelveTipoCambioPorFecha(e)}" update="tipoCambio,detalleComprobante" />  -->
+                        </p:calendar>
+                        <p:commandButton
+                            value="Aceptar"
+                            action="#{cntImprimeSumasSadosComprobanteBacking.listaDetallesComprobantesPorConsulta()}"
+                            ajax="false"                       
+                            icon="ui-icon-search"
+                            onclick="PF('itemDialog').hide();"/>
+
+
+                    </h:panelGrid> 
+                </div>
+
+                <div align="center" style="padding:1em 2.2em;">
+                    <p:dataTable id="planTable" 
+                                 var="item" 
+                                 value="#{cntImprimeSumasSadosComprobanteBacking.listaResultadoConsulta}" 
+                                 rowKey="#{item}" 
+                                 selection="#{cntImprimeSumasSadosComprobanteBacking.selectedPojoCntEntidadBGyEERR}"                                          
+                                 selectionMode="single"
+                                 style="width: 100%;height: 100%"
+                                 emptyMessage="No existen cuentas para estos par&aacute;metros"
+                                 scrollable="true"
+                                 resizableColumns="true" 
+                                 liveScroll="true"
+                                 scrollRows="100"
+                                 scrollHeight="250">
+                        <p:ajax event="rowSelect" listener="#{cntImprimeSumasSadosComprobanteBacking.obtieneObjeto(e)}" update=":form:panelGridListado" onsuccess="saveScrollPos()"/>
+                        <f:facet name="header">  
+                            Lista de Transacciones
+                        </f:facet> 
+                        <p:column headerText="Descripcion" width="40%" >                                  
+                            <p:outputLabel value="#{item.idEntidad.mascaraGenerada}  #{item.idEntidad.descripcion}"/>                                
+                        </p:column>  
+                        <p:column headerText="Debe (Bs.)" width="10%" style="text-align: right" rendered="#{cntImprimeSumasSadosComprobanteBacking.moneda == 'BOL'  ? true : false}">  
+                            <p:outputLabel value="#{item.sumaDebe}">
+                                <f:convertNumber pattern="#,##0.00" />
+                            </p:outputLabel>
+                        </p:column>
+                        <p:column headerText="Haber (Bs.)" width="10%" style="text-align: right" rendered="#{cntImprimeSumasSadosComprobanteBacking.moneda == 'BOL'  ? true : false}">  
+                            <p:outputLabel value="#{item.sumaHaber}">
+                                <f:convertNumber pattern="###,###,###,##0.00" />
+                            </p:outputLabel>
+                        </p:column>  
+                        <p:column headerText="Deudor (Bs.)" width="10%" style="text-align: right" rendered="#{cntImprimeSumasSadosComprobanteBacking.moneda == 'BOL'  ? true : false}">  
+                            <p:outputLabel value="#{item.deudor}">
+                                <f:convertNumber pattern="###,###,###,##0.00" />
+                            </p:outputLabel>
+                        </p:column>  
+                        <p:column headerText="Acreedor (Bs.)" width="10%" style="text-align: right" rendered="#{cntImprimeSumasSadosComprobanteBacking.moneda == 'BOL'  ? true : false}">  
+                            <p:outputLabel value="#{item.acreedor}">
+                                <f:convertNumber pattern="###,###,###,##0.00" />
+                            </p:outputLabel>
+                        </p:column>  
+                        <p:column headerText="Debe ($)" width="10%" style="text-align: right" rendered="#{cntImprimeSumasSadosComprobanteBacking.moneda == 'SUS'  ? true : false}">  
+                            <p:outputLabel value="#{item.sumaDebeDolar}">
+                                <f:convertNumber pattern="###,###,###,##0.00" />
+                            </p:outputLabel>
+                        </p:column>  
+                        <p:column headerText="Haber ($)" width="10%" style="text-align: right" rendered="#{cntImprimeSumasSadosComprobanteBacking.moneda == 'SUS'  ? true : false}">  
+                            <p:outputLabel value="#{item.sumaHaberDolar}">
+                                <f:convertNumber pattern="###,###,###,##0.00" />
+                            </p:outputLabel>
+                        </p:column>  
+                        <p:column headerText="Deudor ($)" width="10%" style="text-align: right" rendered="#{cntImprimeSumasSadosComprobanteBacking.moneda == 'SUS'  ? true : false}">  
+                            <p:outputLabel value="#{item.deudorDolar}">
+                                <f:convertNumber pattern="###,###,###,##0.00" />
+                            </p:outputLabel>
+                        </p:column>  
+                        <p:column headerText="Acreedor ($)" width="10%" style="text-align: right" rendered="#{cntImprimeSumasSadosComprobanteBacking.moneda == 'SUS'  ? true : false}">  
+                            <p:outputLabel value="#{item.acreedorDolar}">
+                                <f:convertNumber pattern="###,###,###,##0.00" />
+                            </p:outputLabel>
+                        </p:column>  
+                        <p:columnGroup type="footer">  
+                            <p:row>  
+                                <p:column footerText="TOTALES:" style="text-align:right;font-weight: bold" width="45%"/>  
+                                <p:column style="text-align:right" footerText="#{cntImprimeSumasSadosComprobanteBacking.sumaGeneralDebes}" rendered="#{cntImprimeSumasSadosComprobanteBacking.moneda == 'BOL'  ? true : false}"/>  
+                                <p:column style="text-align:right" footerText="#{cntImprimeSumasSadosComprobanteBacking.sumaGeneralHabers}" rendered="#{cntImprimeSumasSadosComprobanteBacking.moneda == 'BOL'  ? true : false}"/>  
+                                <p:column style="text-align:right" footerText="#{cntImprimeSumasSadosComprobanteBacking.sumaGeneralDeudors}" rendered="#{cntImprimeSumasSadosComprobanteBacking.moneda == 'BOL'  ? true : false}"/>  
+                                <p:column style="text-align:right" footerText="#{cntImprimeSumasSadosComprobanteBacking.sumaGeneralAcreedors}" rendered="#{cntImprimeSumasSadosComprobanteBacking.moneda == 'BOL'  ? true : false}"/>  
+                                <p:column style="text-align:right" footerText="#{cntImprimeSumasSadosComprobanteBacking.sumaGeneralDebeDolars}" rendered="#{cntImprimeSumasSadosComprobanteBacking.moneda == 'SUS'  ? true : false}"/>  
+                                <p:column style="text-align:right" footerText="#{cntImprimeSumasSadosComprobanteBacking.sumaGeneralHaberDolars}" rendered="#{cntImprimeSumasSadosComprobanteBacking.moneda == 'SUS'  ? true : false}"/>  
+                                <p:column style="text-align:right" footerText="#{cntImprimeSumasSadosComprobanteBacking.sumaGeneralDeudorDolars}" rendered="#{cntImprimeSumasSadosComprobanteBacking.moneda == 'SUS'  ? true : false}"/>  
+                                <p:column style="text-align:right" footerText="#{cntImprimeSumasSadosComprobanteBacking.sumaGeneralAcreedorDolars}" rendered="#{cntImprimeSumasSadosComprobanteBacking.moneda == 'SUS'  ? true : false}"/>  
+
+                            </p:row>  
+                        </p:columnGroup>  
+                        <f:facet name="footer">
+                            <p:spacer height="13" ></p:spacer>
+                        </f:facet>  
+                    </p:dataTable>
+
+                    <h:panelGrid columns="16">
+                        <h:panelGroup>
+                            <h:outputLabel  value="Nivel:" style="font-weight: bold" />  
+                            <p:spacer width="10" ></p:spacer>
+                            <p:selectOneMenu value="#{cntImprimeSumasSadosComprobanteBacking.nivel}">
+                                <f:selectItems value="#{cntImprimeSumasSadosComprobanteBacking.listaNivelesComprobantes()}" var="a" itemLabel="#{a.descripcion}" itemValue="#{a.nivel}"/>                                    
+                                <p:ajax update="planTable,fechaFiltro" listener="#{cntImprimeSumasSadosComprobanteBacking.activaNivel()}"/>                                    
+                            </p:selectOneMenu>
+                        </h:panelGroup>
+                        <p:spacer width="20" ></p:spacer>
+                        <h:outputLabel value="Moneda:" style="font-weight: bold" />  
+                        <p:selectOneRadio id="moneda" value="#{cntImprimeSumasSadosComprobanteBacking.moneda}">  
+                            <f:selectItem itemLabel="Bolivianos" itemValue="BOL" />  
+                            <f:selectItem itemLabel="Dolares" itemValue="SUS" /> 
+                            <p:ajax update="planTable"/>                                    
+                        </p:selectOneRadio>
+                        <p:spacer width="20" ></p:spacer>
+                        <h:outputText value="Incluye Ceros: " style="font-weight: bold"/>  
+                        <p:selectOneRadio id="opciones2" value="#{cntImprimeSumasSadosComprobanteBacking.incluyeCeros}">  
+                            <f:selectItem itemLabel="Si" itemValue="true" />  
+                            <f:selectItem itemLabel="No" itemValue="false" />  
+                            <p:ajax event="change" update="planTable" listener="#{cntImprimeSumasSadosComprobanteBacking.activaCeros(e)}"/>                                    
+                        </p:selectOneRadio>  
+
+                        <p:spacer width="20" ></p:spacer>
+                        <h:outputText value="Imprimir Fecha de Emisi&oacute;n: " style="font-weight: bold"/>  
+                        <p:selectOneRadio id="opciones" value="#{cntImprimeSumasSadosComprobanteBacking.opcionImpresion}">  
+                            <f:selectItem itemLabel="Si" itemValue="true" />  
+                            <f:selectItem itemLabel="No" itemValue="false" />  
+                        </p:selectOneRadio>  
+
+                        <p:spacer width="20" ></p:spacer>
+                        <h:commandLink action="#{cntImprimeSumasSadosComprobanteBacking.reporteSumasySaldos_action()}" 
+                                       value="Visualiza y/o Imprime Sumas y Saldos"
+                                       target="popupWindow" >
+                            <p:graphicImage value="/resources/images/printer.png" style="border: 0px"/>
+                        </h:commandLink>
+                        <h:commandLink value="EXPORTAR A XLS" >                              
+                            <p:dataExporter type="xls"
+                                            postProcessor="#{cntImprimeSumasSadosComprobanteBacking.postProcessXLS}"
+
+                                            target="planTable" fileName="myexcel" pageOnly="true"/>
+
+                        </h:commandLink>
+                        <p:spacer width="20" ></p:spacer>
+                        <p:commandButton id="verMayor" value="VER MAYOR"                                                  
+                                         action="#{cntImprimeSumasSadosComprobanteBacking.verMayorCntaElegida()}"                                                  
+                                         ajax="false"/>
+                        <p:commandButton 
+                            value="Cancelar"
+                            action="#{cntImprimeSumasSadosComprobanteBacking.cancelaImpresionDeComprobantes()}"
+                            icon="ui-icon-arrowthick-1-w"
+                            title="Icon Only" 
+                            />
+                    </h:panelGrid> 
+                </div>                                   
+            </p:panel>
+        </h:form>  
+    </ui:define>
+</ui:composition>
+

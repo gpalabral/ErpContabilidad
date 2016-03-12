@@ -1,0 +1,131 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core" 
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+    <h:body>
+        <h:form id="fr">
+            <div class="barra" style="width: 100%">
+                <div class="vector" style="width: 100%">    
+<!--                    <table width="100%" border="0" align="center" cellpadding="0" cellspacing="0">
+                        <tr>
+                            <td align="left">
+                                <div class="logoMinisterio" />
+                            </td>
+                            <td width="550px">&nbsp;</td>
+
+                            <td align="right">
+                                <div class="logoSenapi" /> 
+                            </td>  
+                        </tr>
+                    </table>-->
+                </div>   
+                <p:spacer height="65" />
+                <div align="center">
+                   <p:toolbar style="width: 99%;">  
+                            <p:toolbarGroup align="left">  
+                                <p:menuButton value="Parametrizacion Genral">  
+                                    <p:separator />  
+                                    <p:menuitem value="Creaci&oacute;n de Estructura Plan Cuentas" action="#{menuBacking.nivelesPlanCuentas()}" ajax="false"/>  
+                                    <p:separator />  
+                                    <p:menuitem value="Definición de Cuentas Generales" action="#{menuBacking.definicionCuentas()}" />  
+                                    <p:separator />  
+                                    <p:menuitem value="Creaci&oacute;n de Estructura Centros de Costo" action="#{menuBacking.mascaraCentrosDeCosto()}" /> 
+                                    <p:separator />  
+                                    <p:menuitem value="Datos de Empresa" action="#{menuBacking.datosDeEmpresa()}" />  
+                                    <p:separator />  
+                                    <p:menuitem value="Parametros Gestion" action="#{menuBacking.parametrosGestion()}" />  
+                                    <p:separator />  
+                                    <p:menuitem value="Parametros Servidor" action="#{menuBacking.parametrosServidor()}" />  
+                                    <p:separator />  
+                                </p:menuButton>  
+                            </p:toolbarGroup>  
+                            <p:toolbarGroup align="left">  
+                                <p:commandButton id="nomenclaturaButton" value="Nomenclatura" type="button" icon="ui-icon-triangle-1-s"/>
+                                <p:slideMenu overlay="true" trigger="nomenclaturaButton" my="left top" at="left bottom" style="width:180px" backLabel="Atras">
+                                    <p:separator />  
+                                    <p:submenu label="Plan de Cuentas">
+                                        <p:separator />  
+                                        <p:menuitem value="Plan de Cuentas" action="#{menuBacking.entidadAdicionar()}" /> 
+                                        <p:separator />  
+                                        <p:menuitem value="Plan de Cuentas Parametrizado" action="#{menuBacking.planDeCuentasParametrizado()}" /> 
+                                        <p:separator />  
+                                    </p:submenu>
+                                    <p:separator />  
+                                    <p:submenu label="Centros de Costo">
+                                        <p:separator />  
+                                        <p:menuitem value="Centros de Costo" action="#{menuBacking.centrosDeCosto}" />  
+                                        <p:separator />  
+                                        <p:menuitem value="Receta Centros de Costo" action="#{menuBacking.recetasCostos()}" /> 
+                                        <p:separator />  
+                                    </p:submenu>
+                                    <p:separator />  
+                                    <p:submenu label="Auxiliares">
+                                        <p:separator />  
+                                        <p:menuitem value="Auxiliares" action="#{menuBacking.auxiliares()}" />  
+                                        <p:separator />  
+                                        <p:menuitem value="Asignacion"/>  
+                                        <p:separator />  
+                                    </p:submenu>
+                                    <p:separator />  
+                                    <p:submenu label="Proyectos">
+                                        <p:separator />  
+                                        <p:menuitem value="Proyectos" action="#{menuBacking.proyectos()}" />  
+                                        <p:separator />  
+                                    </p:submenu>
+                                    <p:separator />  
+                                    <p:submenu label="Cuentas Corporativas">
+                                        <p:separator />  
+                                        <p:menuitem value="Cuentas Corporativas"/>  
+                                        <p:separator />  
+                                        <p:menuitem value="Asignacion"/>  
+                                        <p:separator />  
+                                    </p:submenu>
+                                    <p:separator />  
+                                    <p:submenu label="Tipo de Cambio">
+                                        <p:separator />  
+                                        <p:menuitem value="Tipo de Cambio" action="#{menuBacking.tipoDeCambio()}" />  
+                                        <p:separator />  
+                                    </p:submenu>
+                                </p:slideMenu>
+                            </p:toolbarGroup>  
+                            <p:toolbarGroup align="left">  
+                                <p:menuButton value="Comprobantes">  
+                                    <p:separator />  
+                                    <p:menuitem value="Comprobantes" action="#{menuBacking.comprobantesList()}" />         
+                                    <p:separator />  
+                                    <p:menuitem value="Migracion Plan de Cuentas" action="#{menuBacking.cargaPlanCuentas()}" />         
+                                    <p:separator />  
+                                    <p:menuitem value="Migracion Factura" action="#{menuBacking.cargaFacturas()}" />         
+                                    <p:separator />  
+                                </p:menuButton>  
+                            </p:toolbarGroup>  
+                            <p:toolbarGroup align="left">  
+                                <p:menuButton value="Reportes">  
+                                    <p:separator />  
+                                    <p:menuitem value="Libro Mayor" action="#{menuBacking.libroMayor()}" />                                      
+                                    <p:separator />  
+                                    <p:menuitem value="Comprobantes" action="#{menuBacking.reporteComprobantes()}" />     
+                                    <p:separator />  
+                                    <p:menuitem value="Sumas y Saldos" action="#{menuBacking.sumasSaldos()}" />        
+                                    <p:separator />  
+                                    <p:menuitem value="Balance General" action="#{menuBacking.balanceGeneral()}" />        
+                                    <p:separator />  
+                                    <p:menuitem value="EERR" action="#{menuBacking.estadoResultadosEERR()}" />        
+                                    <p:separator />  
+                                    <p:menuitem value="Libro de Ventas" action="#{menuBacking.libroDeVentas()}" />        
+                                    <p:separator />  
+                                    <p:menuitem value="Libro de Compra" action="#{menuBacking.libroDeCompras()}" />        
+                                    <p:separator />  
+                                </p:menuButton>  
+                            </p:toolbarGroup>  
+                        </p:toolbar>  
+                </div>
+            </div>
+        </h:form>
+    </h:body>
+</html>

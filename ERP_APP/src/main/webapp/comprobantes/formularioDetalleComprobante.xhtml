@@ -1,0 +1,73 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition  xmlns="http://www.w3.org/1999/xhtml"
+                 xmlns:h="http://java.sun.com/jsf/html"
+                 xmlns:p="http://primefaces.org/ui"
+                 xmlns:ui="http://java.sun.com/jsf/facelets"
+                 xmlns:f="http://java.sun.com/jsf/core"
+                 template="#{sessionState.pathTemplate}">
+    <ui:define name="content">
+        <p:panel header="Adici&oacute;n de Comprobante" style="border-style: hidden">
+            <div align="center" style="padding:1em 2.2em;">
+                <h:form>
+                    <p:panel id="formularioDetalleComprobante">
+                        <h:panelGrid columns="2" id="planCuenta">
+                            <p:outputLabel value="Nº de Cuenta"/>
+                            <p:outputLabel value="Descripcion"/>
+                            <p:inputText value="#{cntFormularioDetalleComprobanteBacking.cntEntidad.mascaraGenerada}" size="30"/>
+                            <p:inputText value="#{cntFormularioDetalleComprobanteBacking.cntEntidad.descripcion}" size="100"/>
+                        </h:panelGrid>
+                        <div align="center" style="padding:1em 2.2em;">
+                            <p:commandButton
+                                value="Plan de Cuentas"
+                                action="#{cntFormularioDetalleComprobanteBacking.irPlanCuentas()}"
+                                ajax="false"
+                                icon="#{cntFormularioDetalleComprobanteBacking.iconoAtras()}"
+                                immediate="true"/>       
+                        </div>
+                        <h:panelGrid columns="1">
+                            <h:panelGrid columns="2">
+                                <p:outputLabel value="Glosa:"/>
+                                    <p:inputText id="Glosa" value="#{cntFormularioDetalleComprobanteBacking.cntDetalleComprobante.glosa}" size="100" onkeyup="this.value=this.value.toUpperCase()">
+                                </p:inputText>
+                            </h:panelGrid>
+                            <h:panelGrid id="DebeHaber" columns="2">
+                                <p:outputLabel value="Debe"/>
+                                <p:outputLabel value="Haber"/>
+                                <p:inputText id="debe" value="#{cntFormularioDetalleComprobanteBacking.cntDetalleComprobante.debe}" size="40" disabled="#{!cntFormularioDetalleComprobanteBacking.swDebe}">
+                                    <p:ajax update="haber,boton" event="keyup"  listener="#{cntFormularioDetalleComprobanteBacking.bloqueaOpcionDebe(e)}" />  
+                                </p:inputText>
+                                <p:inputText id="haber" value="#{cntFormularioDetalleComprobanteBacking.cntDetalleComprobante.haber}" size="40" disabled="#{!cntFormularioDetalleComprobanteBacking.swHaber}">
+                                    <p:ajax update="debe,boton" event="keyup"  listener="#{cntFormularioDetalleComprobanteBacking.bloqueaOpcionHaber(e)}" />  
+                                </p:inputText>
+                            </h:panelGrid>
+                        </h:panelGrid>
+                        <div align="center" style="padding:1em 2.2em;">
+                            <h:panelGrid columns="3">
+                                <p:menuButton value="Guardar" rendered="#{!cntFormularioDetalleComprobanteBacking.editable}" id="boton" disabled="#{cntFormularioDetalleComprobanteBacking.activaBotonGuardar}">  
+                                    <p:menuitem value="Factura De Compra" action="#{cntFormularioDetalleComprobanteBacking.adicionaDetalleComprobanteFacturaVenta()}" icon="ui-icon-disk" />  
+                                    <p:menuitem value="Factura De Venta" action="#{cntFormularioDetalleComprobanteBacking.irFacturaVenta()}" icon="ui-icon-disk" rendered="#{cntFormularioDetalleComprobanteBacking.activaFacturaDeVenta}"/>  
+                                    <p:menuitem value="Credito Fiscal No Deducible" action="#{cntFormularioDetalleComprobanteBacking.irCreditoFiscalNoDecucible()}" icon="ui-icon-disk" rendered="#{cntFormularioDetalleComprobanteBacking.activaCreditoFiscalNoDeducible}"/>  
+                                    <p:menuitem value="Sin Factura" icon="ui-icon-disk" action="#{cntFormularioDetalleComprobanteBacking.adicionaDeatlleComprobanteConEstado()}" rendered="#{cntFormularioDetalleComprobanteBacking.activaSinFactura}"/>                                 
+                                </p:menuButton>  
+                                <p:menuButton value="Editar" rendered="#{cntFormularioDetalleComprobanteBacking.editable}">  
+                                    <p:menuitem value="Sin Factura" icon="ui-icon-disk" action="#{cntFormularioDetalleComprobanteBacking.modificarDeatlleComprobanteConEstado()}"/>  
+                                    <p:separator />  
+                                    <p:separator />  
+                                </p:menuButton>  
+                                <p:commandButton
+                                    value="Cancelar"
+                                    action="#{cntFormularioDetalleComprobanteBacking.irAtras()}"
+                                    ajax="false"
+                                    immediate="true"
+                                    icon="#{cntFormularioDetalleComprobanteBacking.iconoAtras()}"/>
+                            </h:panelGrid>
+                        </div>
+                    </p:panel>
+                </h:form>
+            </div>
+        </p:panel>
+    </ui:define>
+
+</ui:composition>
+

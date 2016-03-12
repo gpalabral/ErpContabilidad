@@ -1,0 +1,118 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition  xmlns="http://www.w3.org/1999/xhtml"
+                 xmlns:h="http://java.sun.com/jsf/html"
+                 xmlns:p="http://primefaces.org/ui"
+                 xmlns:ui="http://java.sun.com/jsf/facelets"
+                 xmlns:f="http://java.sun.com/jsf/core"
+                 template="#{sessionState.pathTemplate}">
+    <ui:define name="content">       
+        <h:form id="form">
+            <p:panel id="padrePanel" header="BALANCE GENERAL" style="border-style: hidden;text-align: center">
+                <div align="center">
+                    <h:panelGrid columns="9" style="margin-bottom:10px">  
+                        <p:selectOneRadio id="opcionImpresion" value="#{cntReporteBalanceGeneralBacking.opcionFiltroImpresion}">  
+                            <!--<f:selectItem itemLabel="A Periodo" itemValue="PER" /> ESTA OPCION FALTA CONSULTAR Y DESARROLLAR (NO BORRAR)-->  
+                            <f:selectItem itemLabel="A Fecha" itemValue="FEC" /> 
+                            <p:ajax update="listadoDeConsulta,fechaFiltro" listener="#{cntReporteBalanceGeneralBacking.activaFechaFiltro()}"/>                                    
+                        </p:selectOneRadio>
+                        <p:outputLabel value=""/>
+                        <p:calendar id="fechaFiltro" value="#{cntReporteBalanceGeneralBacking.fechaHasta}" pattern="dd/MM/yyyy"  size="12" style="text-align:center" disabled="#{cntReporteBalanceGeneralBacking.activaFecha}" locale="es">
+                            <!--                            <p:ajax event="dateSelect" listener="# {cntFormularioComprobanteBacking.devuelveTipoCambioPorFecha(e)}" update="tipoCambio,detalleComprobante" />  -->
+                        </p:calendar>
+                        <p:commandButton
+                            value="Buscar"
+                            action="#{cntReporteBalanceGeneralBacking.listaDetallesComprobantesPorConsulta()}"
+                            update="listadoDeConsulta"
+                            ajax="false"                       
+                            icon="ui-icon-search"
+                            onclick="PF('itemDialog').hide();"/>
+
+
+                    </h:panelGrid> 
+                </div>
+
+                <div align="center" style="padding:1em 2.2em;">
+                    <!--                    
+                                            EN DESARROLLO (NO BORRAR)
+                                            <p:commandButton
+                                            value="REPORTE"
+                                            ajax="false" >
+                                            <p:graphicImage value="/resources/images/printer.png" style="border: 0px"/>
+                                        </p:commandButton> -->
+                    <h:commandLink action="#{cntReporteBalanceGeneralBacking.reporteBalanceGeneral_action()}" 
+                                   value="Visualizar y/o Imprimir Balance General"
+                                   target="popupWindow" >
+                        <p:graphicImage value="/resources/images/printer.png" style="border: 0px"/>
+                    </h:commandLink>
+
+                    <p:dataTable id="listadoDeConsulta" 
+                                 var="item" 
+                                 value="#{cntReporteBalanceGeneralBacking.listaResultadoConsulta}" 
+                                 rowKey="#{item.idEntidad.idEntidad}" 
+                                 selection="#{cntReporteBalanceGeneralBacking.cntDetalleComprobanteElegido}"                                          
+                                 style="width: 70%;height: 100%"
+                                 emptyMessage="No existen cuentas para estos par&aacute;metros"
+                                 scrollable="true"
+                                 resizableColumns="true" 
+                                 liveScroll="true"
+                                 scrollRows="100"
+                                 scrollHeight="150">                                
+                        <f:facet name="header">  
+                            Lista de Transacciones
+                        </f:facet> 
+                        <!--rendered="# {cntReporteEERRBacking.nivel>=item.idEntidad.nivel}"-->
+                        <p:column headerText="Cuenta" width="15%">  
+                            <p:outputLabel value="#{item.idEntidad.mascaraGenerada}" rendered="#{cntReporteBalanceGeneralBacking.activaDatoParaVisualizar(item)}"/>                                                                
+                        </p:column>                                                          
+                        <p:column headerText="Descripcion" width="45%">  
+                            <p:outputLabel value="#{item.idEntidad.descripcion}" rendered="#{cntReporteBalanceGeneralBacking.activaDatoParaVisualizar(item)}"/>                                
+                        </p:column>
+                        <p:column headerText="Monto (Bs.)" width="10%" style="text-align: right">  
+                            <p:outputLabel value="#{item.montoMonedaUno}" rendered="#{cntReporteBalanceGeneralBacking.activaDatoParaVisualizar(item)}"/>
+                        </p:column>
+                        <p:column headerText="Monto ($)" width="10%" style="text-align: right">  
+                            <p:outputLabel value="#{item.montoMonedaDos}" rendered="#{cntReporteBalanceGeneralBacking.activaDatoParaVisualizar(item)}"/>
+                        </p:column>
+                        <p:columnGroup type="footer">  
+                            <p:row>  
+                                <p:column footerText="" />  
+                                <p:column footerText="TOTALES:" style="text-align:right;font-weight: bold"/>  
+                                <p:column style="text-align:right" footerText="#{cntReporteBalanceGeneralBacking.devuelvePositivo(cntReporteBalanceGeneralBacking.montoTotalBolivianos)}"/>  
+                                <p:column style="text-align:right" footerText="#{cntReporteBalanceGeneralBacking.devuelvePositivo(cntReporteBalanceGeneralBacking.montoTotalDolares)}"/>                              
+                            </p:row>  
+                        </p:columnGroup>  
+                        <f:facet name="footer">
+                            <p:spacer height="13" ></p:spacer>
+                        </f:facet>  
+                    </p:dataTable>
+
+                    <!--                 
+                                        ESTA OPCION FALTA CONSULTAR Y DESARROLLAR (NO BORRAR) 
+                                        <h:panelGrid columns="11">                         
+                                            <h:outputLabel  value="Nivel:" style="font-weight: bold" />  
+                                            <p:selectOneMenu value="# {cntReporteBalanceGeneralBacking.nivel}">
+                                                <f:selectItems value="# {cntReporteBalanceGeneralBacking.listaNivelesComprobantes()}" var="a" itemLabel="# {a.descripcion}" itemValue="# {a.nivel}"/>                                    
+                                                <p:ajax update="listadoDeConsulta,fechaFiltro" listener="# {cntReporteBalanceGeneralBacking.activaNivel()}"/>                                    
+                                            </p:selectOneMenu>
+                        <p:spacer width="50" ></p:spacer>
+                                            <h:outputText value="Incluye Ceros: " style="font-weight: bold"/>  
+                                            <p:selectOneRadio id="opciones2" value="# {cntReporteBalanceGeneralBacking.incluyeCeros}">  
+                                                <f:selectItem itemLabel="Si" itemValue="true" />  
+                                                <f:selectItem itemLabel="No" itemValue="false" />  
+                                                <p:ajax event="change" update="listadoDeConsulta" listener="# {cntReporteBalanceGeneralBacking.activaCeros(e)}"/>                                    
+                        </p:selectOneRadio>
+                    
+                        <p:spacer width="50" ></p:spacer>
+                                            <h:outputText value="Imprimir Fecha de Emisi&oacute;n: " style="font-weight: bold"/>  
+                                            <p:selectOneRadio id="opciones" value="# {cntReporteBalanceGeneralBacking.opcionImpresion}">  
+                                                <f:selectItem itemLabel="Si" itemValue="true" />  
+                                                <f:selectItem itemLabel="No" itemValue="false" />  
+                        </p:selectOneRadio> 
+                                        </h:panelGrid> -->
+                </div>                                   
+            </p:panel>
+        </h:form>  
+    </ui:define>
+</ui:composition>
+

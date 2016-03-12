@@ -1,0 +1,148 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition  xmlns="http://www.w3.org/1999/xhtml"
+                 xmlns:h="http://java.sun.com/jsf/html"
+                 xmlns:p="http://primefaces.org/ui"
+                 xmlns:ui="http://java.sun.com/jsf/facelets"
+                 xmlns:f="http://java.sun.com/jsf/core"
+                 template="#{sessionState.pathTemplate}">
+    <ui:define name="content">
+
+        <h:form id="form" enctype="multipart/form-data">
+            <p:panel header="Actualización del Tipo de Cambio" style="border-style: hidden;text-align: center;width: max-content;height:max-content" id="panelImport">
+                <div align="center" style="padding:1em 2.2em;">
+
+                    <fieldset style="width: 400px;height:max-content">
+                        <legend>Importación de Datos</legend>
+
+                        <h:panelGrid columns="2">
+                            <h:outputLabel value="Descargue el formato de Archivo Excel" />
+                            <h:commandButton value="Click Aquí" action="#{cntCargaPlanDeCuentasBacking.downloadExcelFile_action()}" image="/resources/images/excel.png" style="border-image: 0"/> 
+                        </h:panelGrid>
+
+                    </fieldset>
+
+                    <fieldset style="width: 400px;height:max-content">
+                        <legend>Elegir Archivo Excel</legend>
+                        <p:fileUpload value="#{cntCargaPlanDeCuentasBacking.file}" mode="simple"/>                          
+                        <div align="center" style="padding:1em 2.2em;">                                    
+
+                            <p:commandButton id="submitButton"
+                                             icon="ui-icon-check" 
+                                             value="Upload" 
+                                             action="#{cntCargaPlanDeCuentasBacking.upload_action()}"
+                                             ajax="false"/> 
+                            <p:commandButton                                                                         
+                                value="Continuar la Importacion"
+                                icon="ui-icon-circle-arrow-e"
+                                onclick="PF('dialogoNiveles').show();"/>
+
+                            <!--                            <p:commandButton id="nivel"
+                                                                         icon="ui-icon-check" 
+                                                                         value="Persist a la Base de Datos" 
+                                                                         action="# {cntCargaPlanDeCuentasBacking.saveCntMascarCntNivelesCntPlancuentasCntParametroAutomatico()}"
+                                                                         ajax="false"/>  -->
+                        </div>
+                    </fieldset>
+
+                </div>
+            </p:panel>              
+            <p:dialog header="Migraci&oacute;n" widgetVar="dialogoNiveles" resizable="false" closable="false"  
+                      width="550" height="350" showEffect="clip" hideEffect="fold">  
+                <div align="center" style="padding:1em 2.2em;">
+                    <p:outputLabel value="Asigne un nombre a cada nivel"/>
+                </div>
+                <h:panelGrid columns="2">
+                    <p:graphicImage value="/resources/images/informacion3.png" />
+                    <h:outputText value="Asigne un nombre a cada nivel." style="font-size:12px;color:#045491 "/>
+                </h:panelGrid>
+                <div align="center" style="padding:1em 2.2em;" >
+                    <p:dataTable id="nivelesDataTable" var="cntNivel" value="#{cntCargaPlanDeCuentasBacking.listaCntNivelesMigracion}" 
+                                 editable="true" editMode="cell" style="width: 70%">
+                        <f:facet name="header">
+                            Lista de Niveles
+                        </f:facet>
+
+                        <p:ajax event="cellEdit" listener="#{cntCargaPlanDeCuentasBacking.onCellEdit}" update=":form:botonContinuarNiveles"/>
+
+                        <p:column headerText="Nivel" width="15%" style="text-align: center">
+                            <h:outputText value="#{cntNivel.nivel}"/>
+                        </p:column>
+
+                        <p:column headerText="Tamanio" width="15%" style="text-align: center">
+                            <h:outputText value="#{cntNivel.tamanio}"/>
+                        </p:column>
+
+                        <p:column headerText="Descripcion" width="70%">
+                            <p:cellEditor>
+                                <f:facet name="output"><h:outputText value="#{cntNivel.descripcion}" /></f:facet>
+                                <f:facet name="input"><p:inputText value="#{cntNivel.descripcion}" style="width:96%" label="Descripcion"/></f:facet>
+                            </p:cellEditor>
+                        </p:column>
+
+
+                    </p:dataTable>
+                </div>
+
+
+                <p:commandButton                                                                         
+                    value="Continuar"
+                    id="botonContinuarNiveles"
+                    icon="ui-icon-circle-arrow-e"
+                    disabled="#{!cntCargaPlanDeCuentasBacking.activaBotonContinuarNiveles}"
+                    onclick="PF('dialogoCuentas').show();"/>
+
+            </p:dialog>  
+            <p:dialog header="Migraci&oacute;n del Plan de Cuentas" showEffect="fade"
+                      widgetVar="dialogoCuentas"  width="550" height="350" closable="false">  
+                <div align="center" style="padding:1em 2.2em;">
+                    <p:outputLabel value="Asigne a que cuentas pertenece por Definici&oacute;n"/>
+                </div>
+                <div align="center" style="padding:1em 2.2em;" >
+                    <p:dataTable var="item" 
+                                 value="#{cntCargaPlanDeCuentasBacking.listaSuperioresPadres}"                                 
+                                 id="tabla"                                 
+                                 style="width: 100%;height: 100%"
+                                 editable="true">  
+                        <f:facet name="header">  
+                            Listado de Cuentas
+                        </f:facet>  
+
+                        <p:column  headerText="Descripción" filterBy="descripcion" filterStyle="display:none" width="50%">  
+                            #{cntCargaPlanDeCuentasBacking.generaDigitoMascaraGenerada(item.cntEntidad.mascaraGenerada)} #{item.cntEntidad.descripcion}
+                        </p:column>                          
+                        <p:column  headerText="Tipo Cuenta" width="50%" >  
+                            <p:selectOneMenu value="#{item.codigoCuentaGeneral}" effect="fold" >  
+                                <f:selectItems value="#{cntCargaPlanDeCuentasBacking.listaCuentasGenerales}"  
+                                               var="cuenta"    
+                                               itemLabel="#{cuenta.descripcion}"
+                                               itemValue="#{cuenta.codigo}" />       
+                                <!--<p:ajax listener="# {cntCargaPlanDeCuentasBacking.controlaCuenta(event)}" update="tabla"/>-->
+                            </p:selectOneMenu>                       
+                        </p:column>                          
+                    </p:dataTable>
+                    <h:panelGrid columns="2">
+                        <p:commandButton 
+                            value="Continuar"
+                            id="botonContinuarCuentas"
+                            icon="ui-icon-circle-arrow-e"
+                            disabled="#{!cntCargaPlanDeCuentasBacking.activaBotonContinuarCuentas}"
+                            action="#{cntCargaPlanDeCuentasBacking.guardarDefinicionCuentas()}"
+                            ajax="false"
+                            />  
+                        <p:commandButton                                                                         
+                            value="Guarda Primera parte"
+                            action="#{cntCargaPlanDeCuentasBacking.guardaCntMascarCntNivelesCntPlancuentasCntParametroAutomatico()}"
+                            ajax="false"
+                            icon="ui-icon-circle-arrow-e"/>
+                        <p:commandButton value="Cancelar"
+                                         immediate="true"
+                                         actionListener="#{cntCargaPlanDeCuentasBacking.cierraDialogo(e)}"
+                                         ajax="false"/>
+                    </h:panelGrid>
+                </div>
+            </p:dialog>
+        </h:form>
+
+    </ui:define>
+</ui:composition>

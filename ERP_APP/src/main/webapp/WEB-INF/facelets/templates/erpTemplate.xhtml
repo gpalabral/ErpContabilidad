@@ -1,0 +1,347 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html" 
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
+
+    <h:head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>MODULO CONTABILIDAD</title>
+
+        <!--        <h:outputStylesheet library="themes/start" name="jquery-ui-1.10.3.custom.css"/>
+                <h:outputStylesheet library="themes/start" name="jquery-ui-1.10.3.custom.min.css"/>
+        -->
+
+        <!--        <link type="text/css" rel="stylesheet" href="/project/faces/javax.faces.resource/theme.css?ln=primefaces-glass-x" />-->
+
+        <h:outputStylesheet library="bap.css" name="cssLayout.css"/>
+        <!--
+        <h:outputScript library="jqueryv" name="jquery-1.9.1.js" />
+        <h:outputScript library="jqueryv" name="jquery-ui.js" />
+        -->
+
+        <h:outputScript library="primefaces" name="jquery/jquery.js" />   
+        <script type="text/javascript">
+            function Solo_Numerico(variable) {
+                Numer = parseInt(variable);
+                if (isNaN(Numer)) {
+                    return "";
+                }
+                return Numer;
+            }
+            function ValNumero(Control) {
+                Control.value = Solo_Numerico(Control.value);
+            }
+        </script>
+        <script type="text/javascript">
+            function fullScreamHenrry() {
+                alert("test");
+                return false;
+            }
+        </script>
+        <script type="text/javascript">
+            PrimeFaces.locales['es'] = {
+                closeText: 'Cerrar',
+                prevText: 'Anterior',
+                nextText: 'Siguiente',
+                monthNames: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+                monthNamesShort: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+                dayNames: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
+                dayNamesShort: ['Dom', 'Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab'],
+                dayNamesMin: ['D', 'L', 'M', 'X', 'J', 'V', 'S'],
+                weekHeader: 'Semana',
+                firstDay: 1,
+                isRTL: false,
+                showMonthAfterYear: false,
+                yearSuffix: '',
+                timeOnlyTitle: 'Sólo hora',
+                timeText: 'Tiempo',
+                hourText: 'Hora',
+                minuteText: 'Minuto',
+                secondText: 'Segundo',
+                currentText: 'Fecha actual',
+                ampm: false,
+                month: 'Mes',
+                week: 'Semana',
+                day: 'Día',
+                allDayText: 'Todo el día'
+            };
+        </script>
+        <script type="text/javascript">
+            function checkPassword(form) {
+                var password = form[form.id + ":passwordNuevo"].value;
+                if (!ValidarPassword(password)) {
+                    return false;
+                }
+                var passwordConfirm = form[form.id + ":passwordConfirmado"].value;
+                if (password === "") {
+                    alert("Error, debe escribir el password nuevo");
+                    return false;
+                }
+                if (password !== passwordConfirm)
+                {
+                    alert("Error, El Password y el Password de confirmacion no coinciden");
+                    return false;
+                }
+                var passActual = form[form.id + ":password"].value;
+                if (passActual === "") {
+                    alert("Error, debe escribir el password Actual");
+                    return false;
+                }
+                if (!confirm("Esta seguro de cambiar el password?"))
+                    return false;
+            }
+            function ValidarPassword(valor)
+            {
+                var error = 0;
+                var mensaje = "El nuevo password debe contener ";
+                /*
+                 if(6>valor.length){
+                 mensaje=mensaje+"minimo 6 caracteres, ";
+                 error=1;
+                 }*/
+                var exr = /.{10,}/;
+                if (!exr.test(valor)) {
+                    mensaje = mensaje + "minimo 10 caracteres, ";
+                    error = 1;
+                }
+
+                //var exr = /[0-9]/;
+                var exr = /(?=.*\d)/;
+                if (!exr.test(valor)) {
+                    mensaje = mensaje + "numeros, ";
+                    error = 1;
+                }
+                //exr = /[A-Z]/;
+                exr = /(?=.*[A-Z])/;
+                if (!exr.test(valor)) {
+                    mensaje = mensaje + "letras mayusculas, ";
+                    error = 1;
+                }
+                //exr = /[a-z]/;
+                exr = /(?=.*[a-z])/;
+                if (!exr.test(valor)) {
+                    mensaje = mensaje + "letras minusculas, ";
+                    error = 1;
+                }
+                //exr = /[!"$%()=?Â¿'Â¡*^`+-_{}@;:]/;
+                exr = /(?=['~!Â¡Ã‡@#$%*_+=])/;
+                if (!exr.test(valor)) {
+                    mensaje = mensaje + "caracteres especiales como ?=['~!Â¡Ã‡@#$%*_+= ";
+                    error = 1;
+                }
+
+                if (error === 0) {
+                    return true;
+                } else {
+                    alert(mensaje);
+                    return false;
+                }
+
+            }
+        </script>
+        <script type="text/javascript">
+            function saveScrollPos() {
+                console.log(":::::::::::::::::saveScrollPos ");
+                var scrollPos = jQuery('#form\\:planTable .ui-datatable-scrollable-body').prop('scrollTop');
+                document.getElementById('form:scrollPos').value = scrollPos;
+            }
+
+            function autoScroll() {
+                console.log("::::::::::::::::::::::::autoScroll");
+                var scrollPos = document.getElementById('form:scrollPos').value;
+                jQuery('#form\\:planTable .ui-datatable-scrollable-body').animate({scrollTop: scrollPos}, scrollPos);
+
+            }
+        </script>
+        <script type="text/javascript">
+            function getHeigth() {
+                if (window.innerWidth !== undefined) {
+                    return window.innerHeight;
+                }
+                else {
+                    var B = document.body,
+                            D = document.documentElement;
+                    return Math.max(D.clientHeight, B.clientHeight);
+                }
+            }
+            function adjust() {
+                var idContent = document.getElementById("content");
+                idContent.style.height = (getHeigth() - 130) + "px";
+                var idMenu = document.getElementById("senapiMenu");
+                idMenu.style.height = (getHeigth() - 215) + "px";
+                var idtadaTabletList = document.getElementById("tadaTabletList");
+                idtadaTabletList.style.height = (getHeigth() - 130) + "px";
+            }
+            window.onload = function () {
+                adjust();
+            };
+            window.onresize = function () {
+                adjust();
+            };
+        </script>
+    </h:head>
+
+    <h:body style="background-color: #F2F5F7;overflow-x: hidden;overflow-y: hidden;">
+        <div id="headerBap">
+            <h:form id="fr">
+                <div class="barra" style="width: 100%">
+                    <div class="vector" style="width: 100%">    
+                        <table width="100%" border="0" align="center" cellpadding="0" cellspacing="0">
+                            <tr>
+                                <td align="left">
+                                    <div class="logoBAP" />
+                                </td>
+                                <td width="550px">&nbsp;</td>
+
+                                <td align="right" style="padding:1em 1em;">
+                                    <h:panelGrid columns="4" cellpadding="10">  
+                                        <h:outputLabel value="Bienvenido:" 
+                                                       style="font-weight:bold;"/>
+                                        <h:outputLabel value="#{sessionState.nombreUsuario}"/>
+
+
+                                        <p:commandLink action="#{admLoginBacking.logout()}" style="border-style: hidden" ajax="false">
+                                            <p:graphicImage value="/resources/images/login.png" /> 
+                                            <p:graphicImage value="/resources/images/cerrar.png" style="border: 0px"/>  
+                                        </p:commandLink>
+
+                                    </h:panelGrid>  
+                                </td>  
+                            </tr>
+                        </table>
+
+
+                    </div>   
+                    <p:spacer height="65" />
+                    <div align="center">
+                        <p:toolbar style="width: 99%;">  
+                            <p:toolbarGroup align="left" rendered="#{sessionState.tipoUsuario=='ADM'?true:false}">  
+                                <p:menuButton value="Administrador">  
+                                    <p:separator />                                        
+                                    <p:menuitem value="Parametros Active Directory" action="#{menuBacking.parametrosActiveDirectory()}" ajax="false"/>  
+                                    <p:separator />  
+                                    <p:menuitem value="Usuarios" action="#{menuBacking.listaUsuarios()}" ajax="false"/>  
+                                </p:menuButton>  
+                            </p:toolbarGroup>  
+                            <p:toolbarGroup align="left">  
+                                <p:menuButton value="Parametrizacion General">  
+                                    <p:separator />  
+                                    <p:menuitem value="Creaci&oacute;n de Estructura Plan Cuentas" action="#{menuBacking.nivelesPlanCuentas()}" ajax="false"/>  
+                                    <p:separator />  
+                                    <p:menuitem value="Definición de Cuentas Generales" action="#{menuBacking.definicionCuentas()}" ajax="false"/>  
+                                    <p:separator />  
+                                    <p:menuitem value="Creaci&oacute;n de Estructura Centros de Costo" action="#{menuBacking.mascaraCentrosDeCosto()}" ajax="false"/> 
+                                    <p:separator />  
+                                    <p:menuitem value="Datos de Empresa" action="#{menuBacking.datosDeEmpresa()}" ajax="false"/>  
+                                    <p:separator />  
+                                    <p:menuitem value="Parametros Gestion" action="#{menuBacking.parametrosGestion()}" ajax="false"/>  
+                                    <p:separator />                                      
+                                </p:menuButton>  
+                            </p:toolbarGroup>  
+                            <p:toolbarGroup align="left">  
+                                <p:commandButton id="nomenclaturaButton" value="Nomenclatura" type="button" icon="ui-icon-triangle-1-s"/>
+                                <p:slideMenu overlay="true" trigger="nomenclaturaButton" my="left top" at="left bottom" style="width:180px" backLabel="Atras">
+                                    <p:separator />  
+                                    <p:submenu label="Plan de Cuentas">
+                                        <p:separator />  
+                                        <p:menuitem value="Plan de Cuentas" action="#{menuBacking.entidadAdicionar()}" ajax="false"/> 
+                                        <p:separator />  
+                                        <p:menuitem value="Plan de Cuentas Parametrizado" action="#{menuBacking.planDeCuentasParametrizado()}" ajax="false"/> 
+                                        <p:separator />  
+                                    </p:submenu>
+                                    <p:separator />  
+                                    <p:submenu label="Centros de Costo">
+                                        <p:separator />  
+                                        <p:menuitem value="Centros de Costo" action="#{menuBacking.centrosDeCosto}" ajax="false"/>  
+                                        <p:separator />  
+                                        <p:menuitem value="Receta Centros de Costo" action="#{menuBacking.recetasCostos()}" ajax="false"/> 
+                                        <p:separator />  
+                                    </p:submenu>
+                                    <p:separator />  
+                                    <p:submenu label="Auxiliares">
+                                        <p:separator />  
+                                        <p:menuitem value="Auxiliares" action="#{menuBacking.auxiliares()}" ajax="false"/>  
+                                        <p:separator />  
+                                        <p:menuitem value="Asignacion" ajax="false"/>  
+                                        <p:separator />  
+                                    </p:submenu>
+                                    <p:separator />  
+                                    <p:submenu label="Proyectos">
+                                        <p:separator />  
+                                        <p:menuitem value="Proyectos" action="#{menuBacking.proyectos()}" ajax="false"/>  
+                                        <p:separator />  
+                                    </p:submenu>
+                                    <p:separator />  
+                                    <p:submenu label="Cuentas Corporativas">
+                                        <p:separator />  
+                                        <p:menuitem value="Cuentas Corporativas" ajax="false"/>  
+                                        <p:separator />  
+                                        <p:menuitem value="Asignacion" ajax="false"/>  
+                                        <p:separator />  
+                                    </p:submenu>
+                                    <p:separator />  
+                                    <p:submenu label="Tipo de Cambio">
+                                        <p:separator />  
+                                        <p:menuitem value="Tipo de Cambio" action="#{menuBacking.tipoDeCambio()}" ajax="false"/>  
+                                        <p:separator />  
+                                    </p:submenu>
+                                </p:slideMenu>
+                            </p:toolbarGroup>  
+                            <p:toolbarGroup align="left">  
+                                <p:menuButton value="Comprobantes">  
+                                    <p:separator />  
+                                    <p:menuitem value="Comprobantes" action="#{menuBacking.comprobantesList()}" ajax="false"/>         
+                                    <p:separator />  
+                                    <p:menuitem value="Migracion Plan de Cuentas" action="#{menuBacking.cargaPlanCuentas()}" ajax="false"/>         
+                                    <p:separator />  
+                                    <p:menuitem value="Migracion Comprobantes" action="#{menuBacking.cargaComprobantes()}" ajax="false"/>         
+                                    <p:separator /> 
+                                    <p:menuitem value="Migracion Facturas" action="#{menuBacking.cargaFacturas()}" ajax="false"/>         
+                                    <p:separator /> 
+                                </p:menuButton>  
+                            </p:toolbarGroup>  
+                            <p:toolbarGroup align="left">  
+                                <p:menuButton value="Reportes">  
+                                    <p:separator />  
+                                    <p:menuitem value="Libro Mayor" action="#{menuBacking.libroMayor()}" ajax="false"/>                                      
+                                    <p:separator />  
+                                    <p:menuitem value="Comprobantes" action="#{menuBacking.reporteComprobantes()}" ajax="false"/>     
+                                    <p:separator />  
+                                    <p:menuitem value="Sumas y Saldos" action="#{menuBacking.sumasSaldos()}" ajax="false"/>        
+                                    <p:separator />  
+                                    <p:menuitem value="Balance General" action="#{menuBacking.balanceGeneral()}" ajax="false"/>        
+                                    <p:separator />  
+                                    <p:menuitem value="EERR" action="#{menuBacking.estadoResultadosEERR()}" ajax="false"/>        
+                                    <p:separator />  
+                                    <p:menuitem value="Libro de Ventas" action="#{menuBacking.libroDeVentas()}" ajax="false"/>        
+                                    <p:separator />  
+                                    <p:menuitem value="Libro de Compra" action="#{menuBacking.libroDeCompras()}" ajax="false"/>        
+                                    <p:separator />  
+                                </p:menuButton>  
+                            </p:toolbarGroup>  
+
+
+                        </p:toolbar>  
+                    </div>
+                </div>
+            </h:form>
+        </div>
+        <p:dialog header="Mensajes del Sistema" visible="#{sessionState.anyError}" showEffect="fade" hideEffect="explode" widgetVar="dlg" modal="true" appendTo="@(body)" width="500" height="150">  
+            <h:form id="formMessages">
+                <div align="left" style="padding:1em 2.2em;">
+                    <p:messages id="messages" showDetail="false" showSummary="true"/>
+                </div>
+                <div align="center" style="padding:1em 2.2em;">
+                    <p:commandButton id="submitButton" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" value="Aceptar" onclick="PF('dlg').hide();"/>  
+                </div>
+            </h:form>
+        </p:dialog>
+        <div id="content">
+            <ui:insert name="content"/>
+        </div>                
+    </h:body>
+
+</html>

@@ -1,0 +1,154 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition  xmlns="http://www.w3.org/1999/xhtml"
+                 xmlns:h="http://java.sun.com/jsf/html"
+                 xmlns:p="http://primefaces.org/ui"
+                 xmlns:ui="http://java.sun.com/jsf/facelets"
+                 xmlns:f="http://java.sun.com/jsf/core"
+                 template="#{sessionState.pathTemplate}">
+
+    <ui:define name="content">
+        <p:accordionPanel >  
+            <p:tab title="Adicionar Plan de Cuentas">  
+                <h:panelGrid columns="2" cellpadding="10">  
+                    <h:form id="form">
+                        <div align="center" style="padding:1em 2.2em;">
+                            <h:panelGrid columns="3" >
+                                <p:fieldset legend="Niveles Cuenta(s)" align="left" >                      
+                                    <p:dataTable id="dataTable" var="item" value="#{cntCuentasAdicionarModificarBacking.listaSuperiorDeObjetoselecionado()}"
+                                                 emptyMessage="No existe cuenta con el valor"
+                                                 paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                                 style="width: 100% ">
+                                        <f:facet name="header">  
+                                        </f:facet>  
+                                        <p:column  headerText="Cuenta" sortBy="#{item.mascaraGenerada}" 
+                                                   filterBy="#{item.mascaraGenerada}" filterMatchMode="contains" filterStyle="display:none">  
+                                            #{item.mascaraGenerada}  
+                                        </p:column>  
+                                        <p:column  headerText="Descripcion" sortBy="#{item.descripcion}" 
+                                                   filterBy="#{item.descripcion}" filterMatchMode="contains" filterStyle="display:none">  
+                                            #{item.descripcion}  
+                                        </p:column>                          
+                                    </p:dataTable>
+                                </p:fieldset>
+                                <h:panelGrid id="display" columns="1">  
+                                    <p:fieldset legend="Parámetros">
+                                        <p:panel>
+                                            <h:panelGrid columns="2">
+                                                <h:outputText value="Cuentas:" />  
+                                                <h:outputText value="#{cntCuentasAdicionarModificarBacking.selectedObjetos.mascaraGenerada}" id="cuen"/>  
+                                                <h:outputText value="Descripcion:" />  
+                                                <h:outputText value="#{cntCuentasAdicionarModificarBacking.selectedObjetos.descripcion}" id="des"/>                                                                
+                                            </h:panelGrid>
+                                        </p:panel>
+                                    </p:fieldset>
+                                    <p:panel>
+                                        <h:panelGrid columns="4">                                
+                                            <h:outputText value="Descripcion : "/>
+                                            <p:inputText value="#{cntCuentasAdicionarModificarBacking.descripcion}" 
+                                                         id="descrip" style="width: 100%" onkeyup="this.value=this.value.toUpperCase()"/>
+                                            <p:message for="descrip" display="icon"/>
+                                            <p:message for="descrip" display="icon"/>
+
+                                            <h:outputText value="Escoja una opcion: " />  
+                                            <p:selectOneRadio id="options" value="#{cntCuentasAdicionarModificarBacking.mascaraNuevoOpcion}">  
+                                                <f:selectItem itemLabel="Nivel" itemValue="N" />  
+                                                <f:selectItem itemLabel="Sub Nivel" itemValue="S"/>  
+                                                <p:ajax event="change" update="r" listener="#{cntCuentasAdicionarModificarBacking.activaCombillo(e)}" />                                        
+                                            </p:selectOneRadio>  
+                                        </h:panelGrid>                                
+
+                                        <p:panel id="r">
+                                            
+                                            <h:panelGrid columns="4" rendered="#{cntCuentasAdicionarModificarBacking.swnivel}">
+                                                <h:outputText value="Nivel: "/>  
+                                                <h:outputText id="out1" value="#{cntCuentasAdicionarModificarBacking.mascaraNivel}" />  
+                                                <h:outputText id="ver1" value="#{cntCuentasAdicionarModificarBacking.mensajeVerifica1}" style="color: #{cntCuentasAdicionarModificarBacking.mensajeVerifica1== 'Codigo Existente'?'red':'#045491'}"/>  
+                                                <p:inputText id="firstname" value="#{cntCuentasAdicionarModificarBacking.nivelIn}" size="#{cntCuentasAdicionarModificarBacking.longitudNivel+1}" maxlength="#{cntCuentasAdicionarModificarBacking.longitudNivel}" onkeyup="return ValNumero(this);">  
+                                                    <p:ajax event="keyup" update="out1,ver1" listener="#{cntCuentasAdicionarModificarBacking.generaPruebaNivel(e)}"/>  
+                                                </p:inputText>  
+                                            </h:panelGrid>   
+
+                                            <h:panelGrid columns="4" rendered="#{cntCuentasAdicionarModificarBacking.swsubnivel}">
+                                                <h:outputText value="Sub Nivel: " />  
+                                                <h:outputText id="out2" value="#{cntCuentasAdicionarModificarBacking.mascaraSubNivel}" />  
+                                                <h:outputText id="ver2" value="#{cntCuentasAdicionarModificarBacking.mensajeVerifica2}" style="color: #{cntCuentasAdicionarModificarBacking.mensajeVerifica2== 'Codigo Existente'?'red':'#045491'}"/>  
+                                                <p:inputText id="firstname1" value="#{cntCuentasAdicionarModificarBacking.subNivelIn}" size="#{cntCuentasAdicionarModificarBacking.longitudNivel+1}" maxlength="#{cntCuentasAdicionarModificarBacking.longitudSubNivel}">  
+                                                    <p:ajax event="keyup" update="out2,ver2" listener="#{cntCuentasAdicionarModificarBacking.generaPruebaSubNivel(e)}"/>  
+                                                </p:inputText>  
+                                            </h:panelGrid>
+
+                                            
+                                            
+                                            <p:selectOneRadio id="customRadio" value="#{cntCuentasAdicionarModificarBacking.ajuste}" layout="custom">  
+                                                <f:selectItem itemLabel="Option 1" itemValue="API" />  
+                                                <f:selectItem itemLabel="Option 2" itemValue="ADC" />  
+                                                <f:selectItem itemLabel="Option 3" itemValue="ACM" />  
+                                                <f:selectItem itemLabel="Option 4" itemValue="AAC" />  
+                                                <f:selectItem itemLabel="Option 5" itemValue="ARP" />  
+                                                <f:selectItem itemLabel="Option 6" itemValue="SAN" />  
+                                            </p:selectOneRadio>  
+
+                                            <p:fieldset legend="Tipo de Ajuste"  rendered="#{cntCuentasAdicionarModificarBacking.swajuste}">
+                                                <h:panelGrid columns="2" rendered="#{cntCuentasAdicionarModificarBacking.swajuste}">  
+                                                    <p:radioButton id="opt1" for="customRadio" itemIndex="0"/>  
+                                                    <h:outputLabel for="opt1" value=" Ajuste por Inflacion" />  
+                                                    <p:radioButton id="opt2" for="customRadio" itemIndex="1"/>  
+                                                    <h:outputLabel for="opt2" value=" Ajuste por Diferencia de Cambio" />  
+                                                    <p:radioButton id="opt3" for="customRadio" itemIndex="2"/>  
+                                                    <h:outputLabel for="opt3" value=" Ajuste por Correccion Monetaria" />  
+                                                    <p:radioButton id="opt4" for="customRadio" itemIndex="3"/>  
+                                                    <h:outputLabel for="opt4" value=" Ajuste al Capital" />  
+                                                    <p:radioButton id="opt5" for="customRadio" itemIndex="4"/>  
+                                                    <h:outputLabel for="opt5" value=" Ajuste de Reservas Patrimoniales" />  
+                                                    <p:radioButton id="opt6" for="customRadio" itemIndex="5"/>  
+                                                    <h:outputLabel for="opt6" value=" Sin Ajustes" />  
+                                                </h:panelGrid>  
+                                            </p:fieldset>
+                                            <p:fieldset legend="Tipo de Movimiento" rendered="#{cntCuentasAdicionarModificarBacking.swajuste}">    
+                                                <h:panelGrid columns="2">
+                                                    <h:outputText value="Movimiento" id="mov" rendered="#{cntCuentasAdicionarModificarBacking.swajuste}"/>                                                                    
+                                                    <p:selectOneRadio value="#{cntCuentasAdicionarModificarBacking.movimiento}" id="opcAddSelect" rendered="#{cntCuentasAdicionarModificarBacking.swajuste}">  
+                                                        <f:selectItem itemLabel="Debe" itemValue="DEB"/> 
+                                                        <f:selectItem itemLabel="Haber" itemValue="HAB"/>                                            
+                                                        <f:selectItem itemLabel="Ambos" itemValue="AMB"/>  
+                                                        <f:selectItem itemLabel="Ninguno" itemValue="NIG"/>  
+                                                    </p:selectOneRadio>                                    
+                                                </h:panelGrid>
+                                            </p:fieldset>
+                                        </p:panel>
+
+                                        <div align="center" style="padding:1em 2.2em;">
+                                            <h:panelGrid columns="2">
+                                                <p:commandButton
+                                                    value="Guardar"
+                                                    action="#{cntCuentasAdicionarModificarBacking.saveCntObjetos_action()}"
+                                                    ajax="false"
+                                                    icon="ui-icon ui-icon-disk"/>                                
+                                                <p:commandButton
+                                                    value="Cancelar"
+                                                    action="#{cntCuentasAdicionarModificarBacking.cancelar()}"
+                                                    ajax="false"
+                                                    immediate="true"
+                                                    icon="ui-icon ui-icon-disk"/>                               
+                                            </h:panelGrid>  
+                                        </div> 
+                                    </p:panel>     
+                                </h:panelGrid>    
+                            </h:panelGrid>
+                        </div>
+                    </h:form>  
+                </h:panelGrid>  
+            </p:tab>  
+            <p:tab title="Centro de Costos">  
+                <h:panelGrid columns="2" cellpadding="10">  
+
+                    <h:outputText value="Codigo para Centro de Costos" />  
+                </h:panelGrid>  
+            </p:tab>              
+        </p:accordionPanel>
+        <!--        <p:panel header="Adicionar Plan de Cuentas" style="height: 100%; width: 100%; margin-left: auto; margin-right: auto; border: none; background: transparent;">
+        
+                </p:panel>-->
+    </ui:define>
+</ui:composition>

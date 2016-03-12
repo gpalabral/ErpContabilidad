@@ -1,0 +1,525 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition  xmlns="http://www.w3.org/1999/xhtml"
+                 xmlns:h="http://java.sun.com/jsf/html"
+                 xmlns:p="http://primefaces.org/ui"
+                 xmlns:ui="http://java.sun.com/jsf/facelets"
+                 xmlns:f="http://java.sun.com/jsf/core"
+                 template="#{sessionState.pathTemplate}"
+                 xmlns:c="http://java.sun.com/jsp/jstl/core"
+                 xmlns:bap="http://java.sun.com/jsf/composite/bap.comp">
+    <ui:define name="content">
+        <p:panel header="Adicionar Plan de Cuentas" style="border-style: hidden">
+            <h:form id="form">  
+                <div align="left" style="padding:1em 2.2em;">
+                    <h:panelGrid id="displaymaster" columns="3"  >  
+                        <h:panelGrid>
+                            <p:panel id="antecesores" style="border-style: hidden">
+                                <p:dataTable id="dataTables" var="item" value="#{cntCuentasAdicionarBacking.listadoDePadres()}"
+                                             emptyMessage="No existe cuenta con el valor"
+                                             paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                             style="width: 100%; border-style: hidden">
+                                    <f:facet name="header">  
+                                        ANTECESORES
+                                    </f:facet>  
+                                    <p:column  id="nivel"
+                                               headerText="Nombre Nivel" >  
+                                        <h:outputText value="#{cntCuentasAdicionarBacking.muestraDescripcion(item.nivel)}">    
+                                        </h:outputText>
+                                    </p:column>  
+                                    <p:column id="Descripcion"
+                                              headerText="Descripci&oacute;n"
+                                              sortBy="#{item.descripcion}"
+                                              filterMatchMode="contains">
+                                        <h:outputText  value="#{item.descripcion}"/>
+                                    </p:column>
+                                </p:dataTable>
+                            </p:panel>
+                            <p:spacer width="30" height="#{cntCuentasAdicionarBacking.numeroEspaciadorAdicionar}"/>
+                        </h:panelGrid>
+                        <h:panelGrid id="display" columns="2">  
+                            <p:panel style="border-style: hidden" id="panelPrincipal">
+                                <h:panelGrid columns="3">
+                                    <h:outputText style="font-weight: bold" value="Cuenta:" />  
+                                    <h:outputText value="#{cntCuentasAdicionarBacking.selectedEntidad.mascaraGenerada}" id="cuen"/>  
+                                    <h:outputText value="#{cntCuentasAdicionarBacking.selectedEntidad.descripcion}" id="des"/>                                                                
+                                </h:panelGrid>
+                                <hr width="100%"/>
+                                <p:outputPanel id="customPanel1">  
+                                    <p:selectOneRadio id="customRadioNiveles" value="#{cntCuentasAdicionarBacking.mascaraNuevoOpcion}" layout="custom">  
+                                        <f:selectItem itemLabel="Nivel" itemValue="N" />  
+                                        <f:selectItem itemLabel="Sub Nivel" itemValue="S" />
+                                        <p:ajax event="change" update="r,panelAutomatico,botones,botonGuardarPadre,panelPrincipal" listener="#{cntCuentasAdicionarBacking.activaCombillo(e)}" />                                        
+                                    </p:selectOneRadio> 
+                                    <h:panelGrid columns="4">  
+                                        <p:radioButton id="nivelRadio" for="customRadioNiveles" itemIndex="0"/>
+                                        <h:outputLabel for="nivelRadio" value="Nivel" />
+                                        <p:panel>
+                                            #{cntCuentasAdicionarBacking.mascaraNivelPosicionUno}
+                                            <p:inputText value="#{cntCuentasAdicionarBacking.nivelIn}" onkeyup="return ValNumero(this);" size="#{cntCuentasAdicionarBacking.longitudNivel}" maxlength="#{cntCuentasAdicionarBacking.longitudNivel}" autocomplete="off" style="#{cntCuentasAdicionarBacking.cambiaColorCuadroTextoCuentaNivel==true?'border-color: #C00':' '};" >
+                                                <p:ajax event="keyup" update="verifica1,botones,panelDialogo,descrip" listener="#{cntCuentasAdicionarBacking.generaPruebaNivel(e)}"/>  
+                                            </p:inputText>
+                                            #{cntCuentasAdicionarBacking.mascaraNivelPosicionDos}
+                                        </p:panel>
+                                        <h:outputText id="verifica1" value="#{cntCuentasAdicionarBacking.mensajeVerifica1}" style="color: #{cntCuentasAdicionarBacking.mensajeVerifica1== 'Codigo Existente'?'red':cntCuentasAdicionarBacking.mensajeVerifica1== 'Codigo Fuera de Rango'?'red':'#045491'}"/>  
+                                        <p:radioButton id="subNivelRadio" for="customRadioNiveles" itemIndex="1" rendered="#{cntCuentasAdicionarBacking.desactivaRadioButtonSubNivel}"/>  
+                                        <h:outputLabel for="subNivelRadio" value="Sub Nivel" rendered="#{cntCuentasAdicionarBacking.desactivaRadioButtonSubNivel}"/>  
+                                        <p:panel rendered="#{cntCuentasAdicionarBacking.desactivaRadioButtonSubNivel}">
+                                            #{cntCuentasAdicionarBacking.mascaraSubNivelPosicionUno}
+                                            <p:inputText value="#{cntCuentasAdicionarBacking.subNivelIn}" onkeyup="return ValNumero(this);" size="#{cntCuentasAdicionarBacking.longitudSubNivel}" maxlength="#{cntCuentasAdicionarBacking.longitudSubNivel}" style="#{cntCuentasAdicionarBacking.cambiaColorCuadroTextoCuentaSubNivel==true?'border-color: #C00':' '};">
+                                                <p:ajax event="keyup" update="verifica2,botones,panelDialogo,descrip" listener="#{cntCuentasAdicionarBacking.generaPruebaSubNivel(e)}"/>  
+                                            </p:inputText>
+                                            #{cntCuentasAdicionarBacking.mascaraSubNivelPosicionDos}
+                                        </p:panel>
+                                        <h:outputText id="verifica2" value="#{cntCuentasAdicionarBacking.mensajeVerifica2}" style="color: #{cntCuentasAdicionarBacking.mensajeVerifica2== 'Codigo Existente'?'red':cntCuentasAdicionarBacking.mensajeVerifica2== 'Codigo Fuera de Rango'?'red':'#045491'}"/>  
+                                    </h:panelGrid>
+                                    <h:panelGrid columns="2">
+                                        <h:outputText style="font-weight: bold" value="Descripci&oacute;n: "/>
+                                        <p:inputTextarea value="#{cntCuentasAdicionarBacking.descripcion}" 
+                                                         id="descrip" rows="3" cols="40"  onkeyup="this.value = this.value.toUpperCase()" >
+                                            <p:ajax event="keyup" update="form:botones :form:panelDialogo" listener="#{cntCuentasAdicionarBacking.verificaValoresAdicionPlanCuenta(e)}"/>  
+                                        </p:inputTextarea>
+                                    </h:panelGrid>
+                                </p:outputPanel>
+                                <p:panel id="idPanelCCMasivo" style="border-style: hidden" rendered="#{cntCuentasAdicionarBacking.habilitaCentroDeCostoNivel3}">
+                                    <bap:informacion mensaje="Esta configuracion afectara a todas las cuentas de ultimo nivel." dimension="90%"/>
+                                    <h:panelGrid columns="2">
+                                        <h:outputText value="Habilitar Centro de Costo Niveles Inferiores: " />  
+                                        <p:selectBooleanButton value="#{cntCuentasAdicionarBacking.tieneCCMasivo}"  onLabel="SI" offLabel="No" onIcon="ui-icon-check" offIcon="ui-icon-close"  disabled="#{!cntCuentasAdicionarBacking.tieneCentroDeCostoNivel3}"/>  
+                                    </h:panelGrid>
+                                </p:panel>
+                                <p:spacer width="30" height="180"/>
+                            </p:panel>
+                        </h:panelGrid> 
+                        <h:panelGrid>
+                            <p:panel id="r" style="border-style: hidden">
+                                <p:panel id="panelAutomatico" rendered="#{cntCuentasAdicionarBacking.swParAutomatico}" style="border-style: hidden">
+                                    <p:panel rendered="#{cntCuentasAdicionarBacking.desactivaRadioButtonSubNivel}">
+                                        <bap:informacion mensaje="Esta configuracion afectara a todas las cuentas de ultimo nivel." dimension="90%"/>
+                                    </p:panel>
+                                    <h:panelGrid columns="1">
+                                        <p:panel>
+                                            <fieldset>
+                                                <legend>Tipo de Movimiento</legend>
+                                                <p:outputPanel id="customPanel" >  
+                                                    <p:selectOneRadio id="customRadio" value="#{cntCuentasAdicionarBacking.tipoMovimiento}" layout="custom">  
+                                                        <f:selectItem itemLabel="Debe" itemValue="DEB" />  
+                                                        <f:selectItem itemLabel="Haber" itemValue="HAB" />
+                                                        <f:selectItem itemLabel="Ambos" itemValue="AMB" />
+                                                        <f:selectItem itemLabel="Ninguno" itemValue="NIN" />
+                                                    </p:selectOneRadio>  
+                                                    <h:panelGrid columns="8">  
+                                                        <p:radioButton id="opt1" for="customRadio" itemIndex="0"/>
+                                                        <h:outputLabel for="opt1" value="Debe" />                                                      
+                                                        <p:radioButton id="opt2" for="customRadio" itemIndex="1"/>  
+                                                        <h:outputLabel for="opt2" value="Haber" />  
+                                                        <p:radioButton id="opt3" for="customRadio" itemIndex="2"/>  
+                                                        <h:outputLabel for="opt3" value="Ambos" />  
+                                                        <p:radioButton id="opt4" for="customRadio" itemIndex="3"/>  
+                                                        <h:outputLabel for="opt4" value="Ninguno" />  
+                                                    </h:panelGrid> 
+                                                </p:outputPanel>    
+                                            </fieldset>
+                                        </p:panel>
+                                        <p:panel>
+                                            <p:outputPanel id="calculosAutomaticosPanel" >  
+                                                <div align="center" >
+                                                    <p:selectOneRadio id="calculosAutomaticosRadio" value="#{cntCuentasAdicionarBacking.tipoCalculoAutomatico}" layout="custom">  
+                                                        <f:selectItem itemLabel="Compra" itemValue="COMP" />  
+                                                        <f:selectItem itemLabel="Venta" itemValue="VENT" />
+                                                        <f:selectItem itemLabel="Ninguno" itemValue="NING" />
+                                                        <p:ajax event="change" update="calculosAutomaticos,panelAjuste" listener="#{cntCuentasAdicionarBacking.activaCalculoAutomatico(e)}"/>  
+                                                    </p:selectOneRadio>  
+                                                    <h:panelGrid columns="8">  
+                                                        <p:radioButton id="opcion1" for="calculosAutomaticosRadio" itemIndex="0"/>
+                                                        <h:outputLabel for="opcion1" value="Compra" />                                                      
+                                                        <p:radioButton id="opcion2" for="calculosAutomaticosRadio" itemIndex="1"/>  
+                                                        <h:outputLabel for="opcion2" value="Venta" />  
+                                                        <p:radioButton id="opcion4" for="calculosAutomaticosRadio" itemIndex="2"/>  
+                                                        <h:outputLabel for="opcion4" value="Ninguno" />  
+                                                    </h:panelGrid> 
+                                                </div>
+                                            </p:outputPanel>    
+                                        </p:panel>
+                                        <p:panel id="calculosAutomaticos">
+                                            <fieldset>
+                                                <legend>C&aacute;lculos Autom&aacute;ticos</legend>   
+                                                <h:panelGrid columns="2">
+                                                    <h:outputText value="FACTURA DE COMPRA:" />  
+                                                    <h:panelGrid columns="6">
+                                                        <p:selectBooleanButton value="#{cntCuentasAdicionarBacking.facDeCompraHabilita}" disabled="#{cntCuentasAdicionarBacking.botonFacturaCompraHabilita}" onLabel="SI" offLabel="No" onIcon="ui-icon-check" offIcon="ui-icon-close">  
+                                                            <p:ajax update="combustible" listener="#{cntCuentasAdicionarBacking.activaCombustible(e)}"/>  
+                                                        </p:selectBooleanButton>  
+                                                        <h:outputText value="CON COMBUSTIBLE:" />  
+                                                        <p:selectOneRadio  value="#{cntCuentasAdicionarBacking.combustible}"  id="combustible" style="border-color: #ffffff" disabled="#{!cntCuentasAdicionarBacking.combustibleHabilita}">  
+                                                            <f:selectItem itemLabel="Si" itemValue="S"/>  
+                                                            <f:selectItem itemLabel="No" itemValue="N" />
+                                                        </p:selectOneRadio> 
+                                                    </h:panelGrid>
+                                                    <h:outputText value="CREDITO FISCAL NO DEDUCIBLE:" />  
+                                                    <p:selectBooleanButton value="#{cntCuentasAdicionarBacking.noDeducibleHabilita}" disabled="#{cntCuentasAdicionarBacking.botonCreditoFiscalNoDeducibleHabilita}" onLabel="SI" offLabel="No" onIcon="ui-icon-check" offIcon="ui-icon-close">  
+                                                        <p:ajax  listener="#{cntCuentasAdicionarBacking.activaCreditoFiscal(e)}"/>  
+                                                    </p:selectBooleanButton>  
+                                                    <h:outputText value="FACTURA DE VENTA:" />  
+                                                    <p:selectBooleanButton value="#{cntCuentasAdicionarBacking.facDeVentaHabilita}" disabled="#{cntCuentasAdicionarBacking.botonFacturaVentaHabilita}" onLabel="SI" offLabel="No" onIcon="ui-icon-check" offIcon="ui-icon-close">  
+                                                        <p:ajax listener="#{cntCuentasAdicionarBacking.activaFacturaDeCompra(e)}"/>  
+                                                    </p:selectBooleanButton> 
+
+                                                    <h:outputText value="SIN FACTURA:" />  
+                                                    <h:panelGrid columns="5">
+                                                        <p:selectBooleanButton value="#{cntCuentasAdicionarBacking.sinfacturaHabilita}" disabled="#{cntCuentasAdicionarBacking.botonSinFacturaHabilita}" onLabel="SI" offLabel="No" onIcon="ui-icon-check" offIcon="ui-icon-close">  
+                                                            <p:ajax update="sinFacDebe,sinFacHaber" listener="#{cntCuentasAdicionarBacking.activaSinFactura(e)}"/>  
+                                                        </p:selectBooleanButton>
+                                                        <p:selectBooleanCheckbox value="#{cntCuentasAdicionarBacking.sinfacturaDebe}" id="sinFacDebe" disabled="#{!cntCuentasAdicionarBacking.sinfacturaHabilita}"/>  
+                                                        <h:outputText value="DEBE " />  
+                                                        <p:selectBooleanCheckbox value="#{cntCuentasAdicionarBacking.sinfacturaHaber}" id="sinFacHaber" disabled="#{!cntCuentasAdicionarBacking.sinfacturaHabilita}"/>  
+                                                        <h:outputText value="HABER " />  
+                                                    </h:panelGrid>      
+
+                                                    <h:outputText value="RETENCIONES:" />
+                                                    <h:panelGrid columns="2">
+                                                        <p:selectBooleanButton id="retencion" disabled="#{cntCuentasAdicionarBacking.botonRetencionesHabilita}" value="#{cntCuentasAdicionarBacking.retencionHabilita}" onLabel="SI" offLabel="No" onIcon="ui-icon-check" offIcon="ui-icon-close">  
+                                                            <p:ajax update="comboRetencion" listener="#{cntCuentasAdicionarBacking.activaRetencion(e)}"/>  
+                                                        </p:selectBooleanButton> 
+                                                        <p:selectOneMenu value="#{cntCuentasAdicionarBacking.retencion}" id="comboRetencion" disabled="#{cntCuentasAdicionarBacking.comboRetencionHabilita}">  
+                                                            <f:selectItems value="#{cntCuentasAdicionarBacking.listadoDeRetencion()}" var="r" itemLabel="#{r.descripcion}" itemValue="#{r.codigo}"/>
+                                                            <p:ajax update="grossing" listener="#{cntCuentasAdicionarBacking.igualavalorRetencionGrossing(e)}"/>  
+                                                        </p:selectOneMenu>  
+                                                    </h:panelGrid>
+                                                    <h:outputText value="GROSSING UP: " />
+                                                    <h:panelGrid columns="2">
+                                                        <p:selectBooleanButton disabled="#{cntCuentasAdicionarBacking.botonGrossinUpHabilita}" id="grossingUp" value="#{cntCuentasAdicionarBacking.grossingHabilita}" onLabel="SI" offLabel="No" onIcon="ui-icon-check" offIcon="ui-icon-close">  
+                                                            <p:ajax update="grossing" listener="#{cntCuentasAdicionarBacking.activaGrossing(e)}"/>  
+                                                        </p:selectBooleanButton> 
+                                                        <p:selectOneMenu value="#{cntCuentasAdicionarBacking.grossingUp}" id="grossing" disabled="#{cntCuentasAdicionarBacking.comboGrossinUpHabilita}">  
+                                                            <f:selectItems value="#{cntCuentasAdicionarBacking.listadoDeRetencion()}" var="g" itemLabel="#{g.descripcion}" itemValue="#{g.codigo}"/>
+                                                               <p:ajax update="comboRetencion" listener="#{cntCuentasAdicionarBacking.igualavalorGrossingRetencion(e)}"/>  
+                                                        </p:selectOneMenu> 
+                                                    </h:panelGrid>
+
+                                                    <h:outputText value="CENTRO DE COSTOS:" rendered="#{cntCuentasAdicionarBacking.deshabilitaCentrocostoSegundoNivel}" />
+                                                    <h:panelGrid columns="2" rendered="#{cntCuentasAdicionarBacking.deshabilitaCentrocostoSegundoNivel}">
+                                                        <p:selectBooleanButton disabled="#{cntCuentasAdicionarBacking.botonCentroDeCostoHabilita}" id="centroDeCosto" value="#{cntCuentasAdicionarBacking.centroDeCostoHabilita}" onLabel="SI" offLabel="No" onIcon="ui-icon-check" offIcon="ui-icon-close">  
+                                                            <p:ajax update="btnCentroDeCosto" listener="#{cntCuentasAdicionarBacking.activaCentroDeCosto(e)}"/>  
+                                                        </p:selectBooleanButton> 
+                                                        <p:commandButton id="btnCentroDeCosto" 
+                                                                         action="#{cntCuentasAdicionarBacking.inicializaValoresAsignacionCentrosDeCosto()}"
+                                                                         update=":form:dialogoCC"
+                                                                         value="Centros de Costo" 
+                                                                         onclick="PF('dialogoCC').show()"   
+                                                                         disabled="#{cntCuentasAdicionarBacking.botonIrACentroDeCosto}"/>
+                                                    </h:panelGrid>
+
+                                                    <h:outputText value="AUXILIAR: " rendered="#{cntCuentasAdicionarBacking.deshabilitaCentrocostoSegundoNivel}"/>
+                                                    <h:panelGrid columns="2" rendered="#{cntCuentasAdicionarBacking.deshabilitaCentrocostoSegundoNivel}">
+                                                        <p:selectBooleanButton id="auxiliar" value="#{cntCuentasAdicionarBacking.auxiliarHabilita}" onLabel="SI" offLabel="No" onIcon="ui-icon-check" offIcon="ui-icon-close">  
+                                                            <p:ajax update="btnAuxiliar" listener="#{cntCuentasAdicionarBacking.activaAuxiliar(e)}"/>  
+                                                        </p:selectBooleanButton> 
+                                                        <p:commandButton id="btnAuxiliar" 
+                                                                         type="button" 
+                                                                         value="Asignacion de Auxiliar" 
+                                                                         onclick="PF('dialogoAA').show()"
+                                                                         disabled="#{cntCuentasAdicionarBacking.botonIrAsignacionAuxiliar}"/>
+                                                    </h:panelGrid>
+
+                                                </h:panelGrid>
+                                            </fieldset>
+                                        </p:panel>       
+                                    </h:panelGrid>
+                                    <p:panel id="panelAjuste">
+                                        <h:panelGrid columns="2">
+                                            <h:outputText style="font-weight: bold" value="Tipo de Ajuste:"/>  
+                                            <p:selectOneMenu value="#{cntCuentasAdicionarBacking.ajuste}" disabled="#{cntCuentasAdicionarBacking.botonAjusteHabilita}">
+                                                <f:selectItems value="#{cntCuentasAdicionarBacking.parAjustesList}" var="a" itemLabel="#{a.descripcion}" itemValue="#{a.codigo}"/>
+                                            </p:selectOneMenu>
+                                        </h:panelGrid>
+                                    </p:panel>
+                                </p:panel>
+
+                            </p:panel>     
+                        </h:panelGrid> 
+                    </h:panelGrid> 
+                    <p:dialog header="ASIGNACIÓN DE AUXILIARES" widgetVar="dialogoAA" resizable="false" closable="false"  
+                              width="950" height="400" showEffect="clip" hideEffect="fold" style="text-align: center">
+                        <div align="center" style="padding:1em 2.2em;">
+                            <p:panel>
+                                <p:dataTable var="var" 
+                                             value="#{cntCuentasAdicionarBacking.listaAuxiliaresPorAsignar()}" 
+                                             rowKey="#{var.sigla}" 
+                                             selection="#{cntCuentasAdicionarBacking.selectAuxiliarParaAsignacion}" 
+                                             emptyMessage="No existe cuentas para seleccionar con el valor"
+                                             widgetVar="auxiliaresTable" style="width: 100%;height:80%" 
+                                             scrollable="true" scrollHeight="250">
+                                    <f:facet name="header">  
+                                        Lista de Auxiliares  
+                                    </f:facet>  
+                                    <p:column  headerText="Nro." width="1%">  
+                                        #{var.numero}
+                                    </p:column> 
+                                    <p:column  headerText="Nombre" width="5%">  
+                                        #{var.nombre}
+                                    </p:column> 
+                                    <p:column  headerText="Sigla" width="5%">  
+                                        #{var.sigla}
+                                    </p:column> 
+                                    <p:column selectionMode="multiple" width="5%"/>  
+                                </p:dataTable>
+
+                                <p:commandButton 
+                                    onclick="PF('dialogoAA').hide();"
+                                    icon="#{cntCuentasAdicionarBacking.iconoAtras()}"
+                                    title="Icon Only" value="Guardar Selecci&oacute;n"/>
+
+                                <p:commandButton
+                                    value="Cancelar"
+                                    onclick="PF('dialogoAA').hide();"
+                                    action="#{cntCuentasAdicionarBacking.limpiaListaDeAuxiliaresSeleccionados()}"
+                                    ajax="false"
+                                    icon="#{cntCuentasAdicionarBacking.iconoRegistra()}"/>
+
+                            </p:panel>
+                        </div>
+
+                    </p:dialog>  
+
+                    <p:dialog header="ASIGNACIÓN DE CENTROS DE COSTO" widgetVar="dialogoCC" width="1200" height="500" closable="false" >  
+                        <h:panelGrid id="dialogoCC" columns="2" cellpadding="4">  
+
+                            <div align="center" style="padding:1em 2.2em;">
+                                <h:panelGrid columns="2" style="overflow-y:auto; overflow-x: auto;">
+                                    <p:panel style="border-style: hidden">
+                                        <div align="center" >
+                                            <h:panelGrid columns="2">
+                                                <p:dataTable id="detalleComprobante2" 
+                                                             var="item" 
+                                                             value="#{cntCuentasAdicionarBacking.listaCentrosDeCosto}" 
+                                                             rowKey="#{item}" 
+                                                             selection="#{cntCuentasAdicionarBacking.listaCentrosDeCostoElegidaParaQuitarse}"                                                                                                             
+                                                             emptyMessage="No existe cuenta con el valor"
+                                                             scrollable="true" scrollHeight="200"
+                                                             widgetVar="detalleComprobante2" style="width: 100%;height: 90%">  
+                                                    <!--<p:ajax event="rowSelect" listener="# {cntFormularioComprobanteBacking.selecDetalleComprobanteParaInsertarEvento(e)}" update="detalleComprobante :Campo:inserta modifica "/>-->  
+                                                    <f:facet name="header">  
+                                                        Estructura de Centros de Costo
+                                                    </f:facet> 
+                                                    <p:column selectionMode="multiple" style="width:3%" />  
+                                                    <p:column headerText="Código" style="width:20%">  
+                                                        #{item.mascaraGenerada}
+                                                    </p:column>  
+                                                    <p:column headerText="Centro de Costo" style="width:50%">  
+                                                        #{cntCuentasAdicionarBacking.insertaPuntosAutomaticos(item)}
+                                                    </p:column>  
+
+                                                    <f:facet name="footer">  
+                                                        <p:spacer width="10" height="25" />
+                                                    </f:facet>  
+                                                </p:dataTable>
+                                                <p:panel  style="border-style: hidden">
+                                                    <h:panelGrid columns="1">
+                                                        <p:commandButton
+                                                            id="modifica4"
+                                                            action="#{cntCuentasAdicionarBacking.enviaRegistroSiguienteLista()}"
+                                                            update="detalleComprobante2 :form:carList"
+                                                            icon="ui-icon-arrowthick-1-e">
+                                                        </p:commandButton>  
+                                                        <p:commandButton
+                                                            id="modifica5"
+                                                            action="#{cntCuentasAdicionarBacking.enviaTodosLosRegistroSiguienteLista()}"
+                                                            update="detalleComprobante2 :form:carList"
+                                                            icon="ui-icon-arrowthickstop-1-e">
+                                                        </p:commandButton>  
+                                                        <p:commandButton
+                                                            id="modifica6"
+                                                            update="detalleComprobante2 :form:carList"
+                                                            action="#{cntCuentasAdicionarBacking.quitaRegistroSiguienteLista()}"
+                                                            icon="ui-icon-arrowthick-1-w">
+                                                        </p:commandButton>  
+                                                        <p:commandButton
+                                                            id="modifica7"
+                                                            action="#{cntCuentasAdicionarBacking.enviaTodosLosRegistroListaOriginalLista()}"
+                                                            update="detalleComprobante2 :form:carList"
+                                                            icon="ui-icon-arrowthickstop-1-w">
+                                                        </p:commandButton>  
+                                                    </h:panelGrid>
+                                                </p:panel>
+                                            </h:panelGrid>
+                                        </div>
+                                    </p:panel>
+                                    <p:panel style="border-style: hidden">
+                                        <div align="center" style="padding:1em 2.2em;">
+                                            <p:panel rendered="#{cntCuentasAdicionarBacking.esDefinicion}">
+                                                <h:outputText style="font-weight: bold" value="Cuenta:" />  
+                                                <h:inputText value="#{cntCuentasAdicionarBacking.cntEntidad.mascaraGenerada}" id="cuentaPC" disabled="true"/>  
+                                                <h:inputText value="#{cntCuentasAdicionarBacking.cntEntidad.descripcion}" id="descripcionPC" disabled="true" size="50"/>     
+                                            </p:panel>
+                                            <p:dataTable var="car" 
+                                                         value="#{cntCuentasAdicionarBacking.listaCntConfiguracionCentrocosto}" 
+                                                         id="carList" 
+                                                         rowKey="#{car}" 
+                                                         editable="true"
+                                                         emptyMessage="No existe cuenta con el valor"
+                                                         selection="#{cntCuentasAdicionarBacking.listaCentrosDeCostoElegidaParaQuitarseAux}"                                                                                                             
+                                                         scrollable="true" scrollHeight="150"
+                                                         widgetVar="carList" style="width: 100%;height: 40%">  
+                                                <p:column selectionMode="multiple" style="width:2%" />  
+                                                <f:facet name="header">  
+                                                    In-Cell Editing  
+                                                </f:facet>  
+                                                <p:ajax event="rowEdit" listener="#{cntCuentasAdicionarBacking.onEdit}" update="carList :form:sumaPorcentaje :form:disponibilidad :form:messages" />  
+                                                <p:ajax event="rowEditCancel" listener="#{cntCuentasAdicionarBacking.onCancel}" update="carList :form:disponibilidad :form:messages" />  
+                                                <p:column headerText="Código" style="width:20%">  
+                                                    <p:cellEditor>  
+                                                        <f:facet name="output">  
+                                                            <h:outputText value="#{car.idCentroCosto.mascaraGenerada}"/>  
+                                                        </f:facet>  
+                                                        <f:facet name="input">  
+                                                            <p:inputText value="#{car.idCentroCosto.mascaraGenerada}" disabled="true" style="width:100%"/>  
+                                                        </f:facet>  
+                                                    </p:cellEditor>  
+                                                </p:column>  
+                                                <p:column headerText="Centro de Costo" style="width:20%">  
+                                                    <p:cellEditor>  
+                                                        <f:facet name="output">  
+                                                            <h:outputText value="#{car.idCentroCosto.descripcion}" />  
+                                                        </f:facet>  
+                                                        <f:facet name="input">  
+                                                            <p:inputText value="#{car.idCentroCosto.descripcion}" disabled="true" style="width:100%"/>  
+                                                        </f:facet>  
+                                                    </p:cellEditor>  
+                                                </p:column>  
+                                                <p:column headerText="Porcentaje" style="width:20%" id="porcentaje">  
+                                                    <p:cellEditor>  
+                                                        <f:facet name="output">  
+                                                            <h:outputText value="#{car.porcentaje}" />  
+                                                        </f:facet>  
+                                                        <f:facet name="input">  
+                                                            <p:inputText value="#{car.porcentaje}" style="width:100%" />  
+                                                        </f:facet>  
+                                                    </p:cellEditor>  
+                                                </p:column>  
+                                                <p:focus for="porcentaje" />
+                                                <p:column style="width:6%">  
+                                                    <p:rowEditor />  
+                                                </p:column>  
+                                                <f:facet name="footer">  
+                                                    <p:spacer width="30" height="20"/>
+                                                </f:facet>  
+                                            </p:dataTable>  
+                                            <p:panel>
+                                                <h:panelGrid columns="4">
+                                                    <p:outputLabel value="Disponibilidad: " style="font-weight: bold"/>
+                                                    <h:inputText value="#{cntCuentasAdicionarBacking.disponibilidad} %" id="disponibilidad" disabled="true" style="text-align:right"/>
+                                                    <p:outputLabel value="Suma porcentaje: " style="font-weight: bold"/>
+                                                    <h:inputText value="#{cntCuentasAdicionarBacking.sumaPorsentajeTotal} %" id="sumaPorcentaje" disabled="true" style="text-align:right"/>
+                                                </h:panelGrid>
+                                                <h:panelGrid columns="2">
+                                                    <p:commandButton 
+                                                        onclick="PF('dialogoCC').hide();"
+                                                        action="#{cntCuentasAdicionarBacking.validaValoresAntesDeGuardarPorcentajes()}"
+                                                        icon="#{cntCuentasAdicionarBacking.iconoRegistra()}"
+                                                        title="Icon Only" value="GUARDAR SELECCI&Oacute;N"/>
+
+                                                    <p:commandButton
+                                                        value="CANCELAR"
+                                                        title=""
+                                                        onclick="PF('dialogoCC').hide();"
+                                                        action="#{cntCuentasAdicionarBacking.limpiaListaDeCentrosDeCostoSeleccionados()}"
+                                                        ajax="false"
+                                                        icon="#{cntCuentasAdicionarBacking.iconoAtras()}"/>
+                                                </h:panelGrid>
+                                            </p:panel>
+                                            <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" />  
+                                        </div>
+                                    </p:panel>
+                                </h:panelGrid>
+                            </div>
+                        </h:panelGrid>  
+                    </p:dialog>  
+                    <p:dialog header="Dialogo Guardar Plan Cuentas" widgetVar="itemDialog" resizable="false" closable="false" width="400" >  
+
+                        <div align="center" style="padding:1em 2.2em;">
+                            <h:outputText value="Desea asignar Centros de Costo a la Cuenta."/>  
+                            <h:panelGrid columns="3">
+                                <p:commandButton 
+                                    onclick="PF('dialogoCC').show();
+                                            PF('itemDialog').hide();"
+                                    icon="#{cntCuentasAdicionarBacking.iconoRegistra()}"
+                                    title="Icon Only" value="ASIGNAR CENTRO DE COSTO"
+                                    update=":form:cuentaPC :form:descripcionPC"
+                                    disabled="#{cntCuentasAdicionarBacking.habilitaDialogoCC}"/>
+                                <p:commandButton
+                                    value="TERMINAR"
+                                    action="#{cntCuentasAdicionarBacking.irPlanCuentasParaAdicionarEntidad()}"
+                                    ajax="false"
+                                    icon="#{cntCuentasAdicionarBacking.iconoRegistra()}"/>
+                            </h:panelGrid>
+                        </div>
+                    </p:dialog>  
+                    <div align="center">
+                        <p:panel id="botones" style="border-style: hidden">
+                            <h:panelGrid columns="2">
+                                <p:commandButton
+                                    id="botonGuardarEntidadOriginal"
+                                    value="GUARDAR"
+                                    action="#{cntCuentasAdicionarBacking.saveCntEntidad_action()}"
+                                    disabled="#{cntCuentasAdicionarBacking.muestraDialogo}"
+                                    ajax="false"
+                                    icon="#{cntCuentasAdicionarBacking.iconoRegistra()}"
+                                    rendered="#{cntCuentasAdicionarBacking.activaBotonGuardarGeneral}"/>
+                                <p:commandButton
+                                    id="botonGuardarPadre"
+                                    value="GUARDAR"
+                                    onclick="PF('nuevaCuentaGeneral').show();"
+                                    disabled="#{cntCuentasAdicionarBacking.muestraDialogo}"
+                                    icon="#{cntCuentasAdicionarBacking.iconoRegistra()}"
+                                    rendered="#{cntCuentasAdicionarBacking.activaBotonGuardaPadre}"/>
+                                <p:commandButton
+                                    value="CANCELAR"
+                                    action="#{cntCuentasAdicionarBacking.cancelar()}"
+                                    ajax="false"
+                                    immediate="true"
+                                    icon="#{cntCuentasAdicionarBacking.iconoAtras()}"/>      
+                            </h:panelGrid>  
+                        </p:panel>
+                    </div> 
+                    <p:dialog id="dialogoNiveles" header="Dialogo Guardar Plan Cuentas" widgetVar="nuevaCuentaGeneral" resizable="false" closable="false" width="400" height="400">  
+                        <div align="center" style="padding:1em 2.2em;">
+                            <p:panel id="panelDialogo">
+                                <h:panelGrid columns="3">
+                                    <h:outputText value="Cuenta:"/>  
+                                    <h:inputText value="#{cntCuentasAdicionarBacking.codigo}" disabled="true"/>
+                                    <h:inputText id="descripcionDialogo" value="#{cntCuentasAdicionarBacking.descripcion}" disabled="true"/>
+                                </h:panelGrid>   
+                                <p:dataTable var="item" 
+                                             value="#{cntCuentasAdicionarBacking.listaCuentasGeneralesPorAsignar()}" 
+                                             rowKey="#{item.codigo}" 
+                                             selection="#{cntCuentasAdicionarBacking.selectParCuentasGenerales}" 
+                                             emptyMessage="No existe cuentas para seleccionar con el valor"
+                                             widgetVar="cuentaGeneralTable" style="width: 80%;height: 60%" >
+                                    <f:facet name="header">  
+                                        Lista de Cuentas Generales  
+                                    </f:facet>  
+                                    <p:column selectionMode="single" style="width:4%" />  
+                                    <p:column  headerText="Descripci&oacute;n" style="width: 10px">  
+                                        #{item.descripcion}"
+                                    </p:column> 
+                                </p:dataTable>
+                                <p:messages id="mesaje" showDetail="true" autoUpdate="true" closable="true"/>  
+                                <p:commandButton
+                                    value="GUARDAR SELECCI&Oacute;N"
+                                    action="#{cntCuentasAdicionarBacking.saveCntEntidadyCuentaGeneral_action()}"
+                                    ajax="false"
+                                    update="mesaje"
+                                    icon="#{cntCuentasAdicionarBacking.iconoRegistra()}"/>
+                                <p:commandButton 
+                                    onclick="PF('nuevaCuentaGeneral').hide();"
+                                    icon="#{cntCuentasAdicionarBacking.iconoAtras()}"
+                                    title="Icon Only" value="CANCELAR"/>
+                            </p:panel>
+                        </div>
+                    </p:dialog>  
+                </div> 
+            </h:form>  
+        </p:panel>
+    </ui:define>
+</ui:composition>

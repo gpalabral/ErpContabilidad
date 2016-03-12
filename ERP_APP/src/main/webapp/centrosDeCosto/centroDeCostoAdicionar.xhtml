@@ -1,0 +1,89 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition  xmlns="http://www.w3.org/1999/xhtml"
+                 xmlns:h="http://java.sun.com/jsf/html"
+                 xmlns:p="http://primefaces.org/ui"
+                 xmlns:ui="http://java.sun.com/jsf/facelets"
+                 xmlns:f="http://java.sun.com/jsf/core"
+                 template="#{sessionState.pathTemplate}"
+                 xmlns:c="http://java.sun.com/jsp/jstl/core"
+                 xmlns:bap="http://java.sun.com/jsf/composite/bap.comp">
+    <ui:define name="content">
+        <p:panel header="ADICIONAR CENTRO DE COSTO" style="border-style: hidden">
+            <h:form id="form">  
+
+                <div align="center" style="padding:1em 2.2em;">
+                    <h:panelGrid id="display" columns="1">  
+                        <p:panel>
+                            <h:panelGrid id="display1" columns="2">  
+                                <p:panel style="border-style: hidden">
+                                    <h:panelGrid columns="3">
+                                        <h:outputText style="font-weight: bold" value="Cuenta:" />  
+                                        <h:outputText value="#{cntCentrosDeCostoAdicionarBacking.centrosCostoNuevo.mascaraGenerada}" id="cuen"/>  
+                                        <h:outputText value="#{cntCentrosDeCostoAdicionarBacking.centrosCostoNuevo.descripcion}" id="des"/>                                                                
+                                    </h:panelGrid>
+                                    <hr width="100%"/>
+                                    <p:outputPanel id="customPanel1">  
+                                        <p:selectOneRadio id="customRadioNiveles" value="#{cntCentrosDeCostoAdicionarBacking.mascaraNuevoOpcion}" layout="custom">  
+                                            <f:selectItem itemLabel="Nivel" itemValue="N" />  
+                                            <f:selectItem itemLabel="Sub Nivel" itemValue="S" />
+                                        </p:selectOneRadio> 
+                                        <h:panelGrid columns="4">  
+                                            <p:radioButton id="nivelRadio" for="customRadioNiveles" itemIndex="0"/>
+                                            <h:outputLabel for="nivelRadio" value="Nivel" />
+                                            <p:panel>
+                                                #{cntCentrosDeCostoAdicionarBacking.mascaraNivelPosicionUno}
+                                                <h:inputText value="#{cntCentrosDeCostoAdicionarBacking.nivelIn}" size="#{cntCentrosDeCostoAdicionarBacking.longitudNivel}" maxlength="#{cntCentrosDeCostoAdicionarBacking.longitudNivel}">
+                                                    <p:ajax event="keyup" update="verifica1" listener="#{cntCentrosDeCostoAdicionarBacking.generaPruebaNivel(e)}"/>  
+                                                </h:inputText>
+                                                #{cntCentrosDeCostoAdicionarBacking.mascaraNivelPosicionDos}
+                                            </p:panel>
+                                            <h:outputText id="verifica1" value="#{cntCentrosDeCostoAdicionarBacking.mensajeVerifica1}" style="color: #{cntCentrosDeCostoAdicionarBacking.mensajeVerifica1== 'Codigo Existente'?'red':'#045491'}"/>  
+                                            <p:radioButton id="subNivelRadio" for="customRadioNiveles" itemIndex="1" rendered="#{cntCentrosDeCostoAdicionarBacking.desactivaRadioButtonSubNivel}"/>  
+                                            <h:outputLabel for="subNivelRadio" value="Sub Nivel" rendered="#{cntCentrosDeCostoAdicionarBacking.desactivaRadioButtonSubNivel}"/>  
+                                            <p:panel rendered="#{cntCentrosDeCostoAdicionarBacking.desactivaRadioButtonSubNivel}">
+                                                #{cntCentrosDeCostoAdicionarBacking.mascaraSubNivelPosicionUno}
+                                                <h:inputText value="#{cntCentrosDeCostoAdicionarBacking.subNivelIn}" size="#{cntCentrosDeCostoAdicionarBacking.longitudSubNivel}" maxlength="#{cntCentrosDeCostoAdicionarBacking.longitudSubNivel}">
+                                                    <p:ajax event="keyup" update="verifica2" listener="#{cntCentrosDeCostoAdicionarBacking.generaPruebaSubNivel(e)}"/>  
+                                                </h:inputText>
+                                                #{cntCentrosDeCostoAdicionarBacking.mascaraSubNivelPosicionDos}
+                                            </p:panel>
+                                            <h:outputText id="verifica2" value="#{cntCentrosDeCostoAdicionarBacking.mensajeVerifica2}" style="color: #{cntCentrosDeCostoAdicionarBacking.mensajeVerifica2== 'Codigo Existente'?'red':'#045491'}"/>
+                                        </h:panelGrid>
+                                        <h:panelGrid columns="2">
+                                            <h:outputText style="font-weight: bold" value="Descripci&oacute;n: "/>
+                                            <p:inputTextarea value="#{cntCentrosDeCostoAdicionarBacking.centrosCosto.descripcion}" 
+                                                             id="Descripción" rows="3" cols="40" onkeyup="this.value=this.value.toUpperCase()">
+                                                <f:validator validatorId="validaEsVacio"/>
+                                            </p:inputTextarea>
+                                        </h:panelGrid>
+                                    </p:outputPanel>
+                                </p:panel>
+                            </h:panelGrid> 
+                        </p:panel>
+
+
+                    </h:panelGrid>  
+                </div>
+
+                <div align="center" style="padding:1em 2.2em;">
+                    <h:panelGrid columns="2">
+                        <p:commandButton
+                            value="GUARDAR"
+                            action="#{cntCentrosDeCostoAdicionarBacking.saveCntCentrosCosto_action()}"
+                            ajax="false"
+                            title="Guardar el Centro de Costo"
+                            icon="#{cntCentrosDeCostoAdicionarBacking.iconoRegistra()}"/>                                     
+                                                        
+                        <p:commandButton id="decline" value="CANCELAR" 
+                                         action="#{cntCentrosDeCostoAdicionarBacking.cancelarCntCentrosCosto_action()}"
+                                         ajax="false"
+                                         immediate="true"
+                                         title="Volver al listado de Centro de Costo"
+                                         icon="#{cntCentrosDeCostoAdicionarBacking.iconoAtras()}"/>                                     
+                    </h:panelGrid>  
+                </div>
+            </h:form>  
+        </p:panel>
+    </ui:define>
+</ui:composition>

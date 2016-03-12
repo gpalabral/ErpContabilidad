@@ -1,0 +1,98 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition  xmlns="http://www.w3.org/1999/xhtml"
+                 xmlns:h="http://java.sun.com/jsf/html"
+                 xmlns:p="http://primefaces.org/ui"
+                 xmlns:ui="http://java.sun.com/jsf/facelets"
+                 xmlns:f="http://java.sun.com/jsf/core"
+                 template="#{sessionState.pathTemplate}">
+    <ui:define name="content">       
+        <h:form>
+            <div align="center">
+                <p:panel header="COMPROBANTE DE : #{cntFormularioComprobanteBacking.cntComprobante.parTipoComprobante.descripcion}" >
+                    <h:panelGrid columns="8" id="datosParaIVA">
+                        <p:outputLabel style="font-weight: bold" value="Número Comprobante:"/>
+                        <h:inputText value="#{cntFormularioComprobanteBacking.cntComprobante.numero}" style="text-align: right; font-weight: bold" size="14" maxlength="10" disabled="true"/>
+                        <p:spacer width="30"></p:spacer>
+                        <p:outputLabel style="font-weight: bold" value="Fecha:"/>
+                        <h:inputText value="#{cntFormularioComprobanteBacking.cntComprobante.fecha}" style="text-align: right; font-weight: bold" size="14" maxlength="10" disabled="true">
+                            <f:convertDateTime pattern="#{sessionState.dateFormat}"/>
+                        </h:inputText>
+                        <p:spacer width="30"></p:spacer>
+                        <p:outputLabel style="font-weight: bold" value="Tipo de Cambio"/>
+                        <h:inputText value="#{cntFormularioComprobanteBacking.cntComprobante.tipoCambio}" style="text-align: right; font-weight: bold" size="14" maxlength="10" disabled="true"/>
+                    </h:panelGrid>
+                    <h:panelGrid columns="5" id="datosPara">
+                        <p:outputLabel style="font-weight: bold" value="Total Debe:"/>
+                        <h:inputText value="#{cntFormularioComprobanteBacking.sumaTotalDebe}" style="text-align: right; " size="14" maxlength="10" disabled="true"/>
+                        <p:outputLabel style="font-weight: bold" value="Bs."/>
+                        <h:inputText value="#{cntFormularioComprobanteBacking.sumaTotalHaber/cntFormularioComprobanteBacking.cntComprobante.tipoCambio}" disabled="true" style="text-align: right" size="14" maxlength="10"/>
+                        <p:outputLabel style="font-weight: bold" value="$us."/>
+                        <p:outputLabel style="font-weight: bold" value="Total Haber:"/>
+                        <h:inputText value="#{cntFormularioComprobanteBacking.sumaTotalDebe}" style="text-align: right; " size="14" maxlength="10" disabled="true"/>
+                        <p:outputLabel style="font-weight: bold" value="Bs."/>
+                        <h:inputText value="#{cntFormularioComprobanteBacking.sumaTotalHaber/cntFormularioComprobanteBacking.cntComprobante.tipoCambio}" disabled="true" style="text-align: right" size="14" maxlength="10"/>
+                        <p:outputLabel style="font-weight: bold" value="$us."/>
+                        <p:outputLabel style="font-weight: bold" value="Diferencia:"/>
+                        <h:inputText value="#{cntFormularioComprobanteBacking.diferencia}" style="text-align: right; " size="14" maxlength="10" disabled="true"/>
+                        <p:outputLabel style="font-weight: bold" value="Bs."/>
+                        <h:inputText value="#{cntFormularioComprobanteBacking.diferencia/cntFormularioComprobanteBacking.cntComprobante.tipoCambio}" disabled="true" style="text-align: right" size="14" maxlength="10"/>
+                        <p:outputLabel style="font-weight: bold" value="$us."/>
+                        <p:outputLabel style="font-weight: bold" value="Movimientos:"/>
+                        <h:inputText value="#{cntFormularioComprobanteBacking.numeroMovimientos}" style="text-align: right; " size="14" maxlength="10" disabled="true"/>
+                    </h:panelGrid>
+                    <h:panelGrid columns="2">                       
+                        <p:outputLabel id="pagado" style="font-weight: bold" value="#{cntFormularioComprobanteBacking.remitente}"/>
+                        <p:inputText id="Pagado_A" value="#{cntFormularioComprobanteBacking.cntComprobante.descripcion}" autocomplete="off"  maxlength="80" size="80">
+                            <f:validator validatorId="validaEsVacio"/>
+                        </p:inputText>
+
+                    </h:panelGrid>
+                    <h:panelGrid columns="2">
+                        <h:outputText style="font-weight: bold" value="Glosa del Comprobante:"/>  
+                        <p:inputTextarea value="#{cntFormularioComprobanteBacking.cntComprobante.glosaComprobante}" 
+                                         id="Glosa_del_Comprobante" rows="8" cols="60" >
+                            <f:validator validatorId="validaEsVacio"/>
+                        </p:inputTextarea>
+                    </h:panelGrid>
+                    <h:panelGrid columns="2" style="margin-bottom:10px" cellpadding="5">  
+
+                        <h:outputText  style="font-weight: bold"  value="Guardar en: " />  
+                        <p:selectOneRadio id="options" value="#{cntFormularioComprobanteBacking.cntComprobante.tipoMoneda}">  
+                            <f:selectItem itemLabel="Ambas Monedas" itemValue="AMB" />  
+                            <f:selectItem itemLabel="Solo en Bolivianos" itemValue="BOL" />  
+                            <f:selectItem itemLabel="Solo en Dolares" itemValue="SUS" />  
+                        </p:selectOneRadio>  
+
+                    </h:panelGrid>  
+                    <div align="center">
+                        <h:panelGrid columns="2">
+                            <p:commandButton
+                                value="GUARDAR"
+                                action="#{cntFormularioComprobanteBacking.guardaComprobanteAndListaDetalleComprobante()}"
+                                icon="ui-icon ui-icon-disk"
+                                ajax="false"
+                                rendered="#{!cntFormularioComprobanteBacking.activaModificacion}"/>          
+                            <p:commandButton
+                                value="GUARDAR MODIFICACI&Oacute;N"
+                                action="#{cntFormularioComprobanteBacking.modificarComprobanteTotal()}"
+                                ajax="false"
+                                icon="#{cntFormularioComprobanteBacking.iconoRegistra()}"
+                                rendered="#{cntFormularioComprobanteBacking.activaModificacion}"/>            
+                            <p:commandButton
+                                value="CANCELAR"
+                                action="#{cntFormularioComprobanteBacking.cancelaGuardadoComprobante()}"
+                                ajax="false"
+                                immediate="true"
+                                icon="ui-icon ui-icon-disk"/>                               
+                        </h:panelGrid>  
+                    </div> 
+                </p:panel>
+            </div> 
+            <div align="center">
+
+            </div>
+        </h:form>            
+    </ui:define>
+</ui:composition>
+

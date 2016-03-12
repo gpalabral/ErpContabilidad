@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="libroMayor" language="groovy" pageWidth="612" pageHeight="792" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="cb881d68-0d36-451f-8f9b-89cc7d3790da">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="fechaModificacion" class="java.util.Date">
+		<fieldDescription><![CDATA[fechaModificacion]]></fieldDescription>
+	</field>
+	<field name="fechaBaja" class="java.util.Date">
+		<fieldDescription><![CDATA[fechaBaja]]></fieldDescription>
+	</field>
+	<field name="parTipoComprobante" class="com.bap.erp.modelo.entidades.par.ParTipoComprobante">
+		<fieldDescription><![CDATA[parTipoComprobante]]></fieldDescription>
+	</field>
+	<field name="totalComprobantes" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[totalComprobantes]]></fieldDescription>
+	</field>
+	<field name="estado" class="java.lang.String">
+		<fieldDescription><![CDATA[estado]]></fieldDescription>
+	</field>
+	<field name="tipoCambio" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[tipoCambio]]></fieldDescription>
+	</field>
+	<field name="numero" class="java.lang.Long">
+		<fieldDescription><![CDATA[numero]]></fieldDescription>
+	</field>
+	<field name="idAntecesor" class="java.lang.Long">
+		<fieldDescription><![CDATA[idAntecesor]]></fieldDescription>
+	</field>
+	<field name="usuarioModificacion" class="java.lang.String">
+		<fieldDescription><![CDATA[usuarioModificacion]]></fieldDescription>
+	</field>
+	<field name="usuarioAlta" class="java.lang.String">
+		<fieldDescription><![CDATA[usuarioAlta]]></fieldDescription>
+	</field>
+	<field name="glosaComprobante" class="java.lang.String">
+		<fieldDescription><![CDATA[glosaComprobante]]></fieldDescription>
+	</field>
+	<field name="motivoAnulacion" class="java.lang.String">
+		<fieldDescription><![CDATA[motivoAnulacion]]></fieldDescription>
+	</field>
+	<field name="modulo" class="java.lang.String">
+		<fieldDescription><![CDATA[modulo]]></fieldDescription>
+	</field>
+	<field name="fechaAlta" class="java.util.Date">
+		<fieldDescription><![CDATA[fechaAlta]]></fieldDescription>
+	</field>
+	<field name="idComprobante" class="java.lang.Long">
+		<fieldDescription><![CDATA[idComprobante]]></fieldDescription>
+	</field>
+	<field name="loginUsuario" class="java.lang.String">
+		<fieldDescription><![CDATA[loginUsuario]]></fieldDescription>
+	</field>
+	<field name="fecha" class="java.util.Date">
+		<fieldDescription><![CDATA[fecha]]></fieldDescription>
+	</field>
+	<field name="descripcion" class="java.lang.String">
+		<fieldDescription><![CDATA[descripcion]]></fieldDescription>
+	</field>
+	<field name="tipoMoneda" class="java.lang.String">
+		<fieldDescription><![CDATA[tipoMoneda]]></fieldDescription>
+	</field>
+	<field name="periodo" class="java.lang.String">
+		<fieldDescription><![CDATA[periodo]]></fieldDescription>
+	</field>
+	<field name="totalComprobantesSegMoneda" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[totalComprobantesSegMoneda]]></fieldDescription>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="79" splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band height="35" splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="61" splitType="Stretch">
+			<staticText>
+				<reportElement x="40" y="2" width="100" height="20" uuid="c49f6bb2-46be-466a-8315-96eba4b0bcf1"/>
+				<text><![CDATA[numero]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="161" y="2" width="100" height="20" uuid="2475f294-e2b5-452d-9e9d-f90e2c2436ce"/>
+				<text><![CDATA[descripcion]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="243" y="2" width="100" height="20" uuid="e8b8048a-720a-418b-84c5-41f6c3b295d8"/>
+				<text><![CDATA[fecha]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="350" y="2" width="100" height="20" uuid="0ca9793b-fa75-446e-9223-2ab74d8e9486"/>
+				<text><![CDATA[idComprobante]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="125" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="100" height="20" uuid="d84199d9-1a12-4578-8b00-9ed30c70cf96"/>
+				<textFieldExpression><![CDATA[$F{numero}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="100" y="0" width="100" height="20" uuid="078cdeb4-c07d-4046-849f-4754166a81c2"/>
+				<textFieldExpression><![CDATA[$F{descripcion}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="200" y="0" width="100" height="20" uuid="e48a45b9-73b3-4d4e-bdd6-702c9ae3517f"/>
+				<textFieldExpression><![CDATA[$F{fecha}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="300" y="0" width="100" height="20" uuid="863fb6ba-f78b-4b4d-89cb-34b845aeec73"/>
+				<textFieldExpression><![CDATA[$F{idComprobante}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

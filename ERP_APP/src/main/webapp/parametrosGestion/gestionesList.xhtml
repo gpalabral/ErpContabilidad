@@ -1,0 +1,50 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="#{sessionState.pathTemplate}"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core" 
+                xmlns:p="http://primefaces.org/ui">
+
+    <ui:define name="content">
+        <h:form id="formularioExterno">    
+            <p:panel header="Parametros de Gestión" style="overflow-y:auto ; overflow-x: auto; ">               
+                <p:fieldset style="width: 50" id="field">
+                    <p:focus context="field"/> 
+                    <div align="center">
+                        <h:panelGrid columns="4" >
+                            <h:outputText value="Razon Social: "/>                            
+                        </h:panelGrid>
+                        <p:commandButton
+                            value="Adicionar Gestión"
+                            action ="#{cntGestionesBacking.irGestionesForm()}"
+                            ajax="false"
+                            icon="ui-icon ui-icon-pencil"/>
+                    </div>                    
+                    <div align="center" style="padding:1em 2.2em;">
+                        <p:dataTable id="dataTable" 
+                                     var="item" 
+                                     value="#{cntGestionesBacking.listaTodasLasGestiones()}"
+                                     rowKey="#{item.nombreGestion}"
+                                     selection="#{cntGestionesBacking.cntGestionesSeleccionado}"
+                                     selectionMode="single"
+                                     filteredValue="#{cntGestionesBacking.listaGestionesFiltrada}"
+                                     style="width: 50%; height: 50%">
+                            <p:column sortBy="#{item.nombreGestion}" headerText="Gestión" id="gestion">
+                                #{item.nombreGestion}
+                            </p:column>
+                            <p:column sortBy="#{item.periodoInicial}" headerText="Periodo Inicial" id="periodoInicial">
+                                #{item.periodoInicial}
+                            </p:column>
+                            <p:column sortBy="#{item.periodoFinal}" headerText="Periodo Final" id="periodoFinal">
+                                #{item.periodoFinal}
+                            </p:column>                                                                                                                       
+                        </p:dataTable>
+                    </div> 
+
+                </p:fieldset>
+            </p:panel>             
+        </h:form>
+    </ui:define>
+</ui:composition>

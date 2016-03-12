@@ -1,0 +1,195 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition  xmlns="http://www.w3.org/1999/xhtml"
+                 xmlns:h="http://java.sun.com/jsf/html"
+                 xmlns:p="http://primefaces.org/ui"
+                 xmlns:ui="http://java.sun.com/jsf/facelets"
+                 xmlns:f="http://java.sun.com/jsf/core"
+                 template="#{sessionState.pathTemplate}"
+                 xmlns:c="http://java.sun.com/jsp/jstl/core"
+                 xmlns:bap="http://java.sun.com/jsf/composite/bap.comp">
+    <ui:define name="content">
+        <p:panel header="ASIGNACIÓN DE CENTROS DE COSTOS" style="border-style: hidden;text-align: center">
+            <h:form id="form">  
+                <div align="center" style="padding:1em 2.2em;">
+                    <h:panelGrid columns="2" style="overflow-y:auto; overflow-x: auto;">
+                        <p:panel style="border-style: hidden">
+                            <div align="center" >
+                                <h:panelGrid columns="2">
+                                    <p:dataTable id="detalleComprobante2" 
+                                                 var="item" 
+                                                 value="#{cntAsignacionCentrosDeCostoBacking.listaCentrosDeCosto}" 
+                                                 rowKey="#{item}" 
+                                                 selection="#{cntAsignacionCentrosDeCostoBacking.listaCentrosDeCostoElegidaParaQuitarse}"                                                                                                             
+                                                 emptyMessage="No existe cuenta con el valor"
+                                                 scrollable="true" scrollHeight="200"
+                                                 widgetVar="detalleComprobante2" style="width: 90%;height: 90%">  
+                                        <!--<p:ajax event="rowSelect" listener="# {cntFormularioComprobanteBacking.selecDetalleComprobanteParaInsertarEvento(e)}" update="detalleComprobante :Campo:inserta modifica "/>-->  
+                                        <f:facet name="header">  
+                                            Estructura de Centros de Costo
+                                        </f:facet> 
+                                        <p:column selectionMode="multiple" style="width:2%" />  
+                                        <p:column headerText="C&oacute;digo">  
+                                            #{item.mascaraGenerada}
+                                        </p:column>  
+                                        <p:column headerText="Centro de Costo">  
+                                            #{cntAsignacionCentrosDeCostoBacking.insertaPuntosAutomatio(item)}
+                                        </p:column>  
+
+                                        <f:facet name="footer">  
+                                            <p:spacer width="10" height="25" />
+                                        </f:facet>  
+                                    </p:dataTable>
+                                    <p:panel  style="border-style: hidden">
+                                        <h:panelGrid columns="1">
+                                            <p:commandButton
+                                                id="modifica4"
+                                                action="#{cntAsignacionCentrosDeCostoBacking.enviaRegistroSiguienteLista()}"
+                                                update="detalleComprobante2 :form:detalleComprobante3"
+                                                ajax="false"
+                                                icon="ui-icon-arrowthick-1-e">
+                                            </p:commandButton>  
+                                            <p:commandButton
+                                                id="modifica5"
+                                                action="#{cntAsignacionCentrosDeCostoBacking.enviaTodosLosRegistroSiguienteLista()}"
+                                                update="detalleComprobante2 :form:detalleComprobante3"
+                                                ajax="false"
+                                                icon="ui-icon-arrowthickstop-1-e">
+                                            </p:commandButton>  
+                                            <p:commandButton
+                                                id="modifica6"
+                                                action="#{cntAsignacionCentrosDeCostoBacking.quitaRegistroSiguienteLista()}"
+                                                ajax="false"
+                                                icon="ui-icon-arrowthick-1-w">
+                                            </p:commandButton>  
+                                            <p:commandButton
+                                                id="modifica7"
+                                                action="#{cntAsignacionCentrosDeCostoBacking.enviaTodosLosRegistroListaOriginalLista()}"
+                                                update="detalleComprobante2 :form:detalleComprobante3"
+                                                ajax="false"
+                                                icon="ui-icon-arrowthickstop-1-w">
+                                            </p:commandButton>  
+                                        </h:panelGrid>
+                                    </p:panel>
+                                </h:panelGrid>
+                            </div>
+                        </p:panel>
+                        <p:panel style="border-style: hidden">
+                            <div align="center" style="padding:1em 2.2em;">
+                                <p:panel>
+                                    <h:outputText style="font-weight: bold" value="Codigo:" />  
+                                    <h:inputText value="#{cntAsignacionCentrosDeCostoBacking.recetasDistribucionCentroCosto.codigo}" id="codigo" disabled="true"/>  
+
+                                    <p:inputText value="#{cntAsignacionCentrosDeCostoBacking.recetasDistribucionCentroCosto.descripcion}" id="descripcion" size="50">  
+                                        <p:ajax  listener="#{cntAsignacionCentrosDeCostoBacking.validaNombreReceta(e)}" update="carList :form:sumaPorcentaje :form:disponibilidad :form:messages :form:grabarAlternativa: form:modificacion" /> 
+                                    </p:inputText>
+                                </p:panel>
+                                <p:dataTable var="car" 
+                                             value="#{cntAsignacionCentrosDeCostoBacking.listaCntConfiguracionCentrocosto}" 
+                                             id="carList" 
+                                             rowKey="#{car}" 
+                                             editable="true"
+                                             emptyMessage="No existe cuenta con el valor"
+                                             selection="#{cntAsignacionCentrosDeCostoBacking.listaCentrosDeCostoElegidaParaQuitarseAux}"                                                                                                             
+                                             scrollable="true" scrollHeight="150"
+                                             widgetVar="carList" style="width: 100%;height: 40%">  
+                                    <p:column selectionMode="multiple" style="width:2%" />  
+                                    <f:facet name="header">  
+                                        Cuentas de Centros de Costos
+                                    </f:facet>  
+                                    <p:ajax event="rowEdit" listener="#{cntAsignacionCentrosDeCostoBacking.onEdit}" update="carList :form:sumaPorcentaje :form:disponibilidad :form:messages" />  
+                                    <p:ajax event="rowEditCancel" listener="#{cntAsignacionCentrosDeCostoBacking.onCancel}" update="carList :form:disponibilidad :form:messages" />  
+                                    <p:column headerText="C&oacute;digo" style="width:30%">  
+                                        <p:cellEditor>  
+                                            <div align="center">
+                                                <f:facet name="output">  
+                                                    <h:outputText value="#{car.idCentroCosto.mascaraGenerada}"/>  
+                                                </f:facet>  
+                                            </div>
+                                            <f:facet name="input">  
+                                                <p:inputText value="#{car.idCentroCosto.mascaraGenerada}" disabled="true" style="width:100%"/>  
+                                            </f:facet>  
+                                        </p:cellEditor>  
+                                    </p:column>  
+                                    <p:column headerText="Centro de Costo" style="width:40%">  
+                                        <p:cellEditor>  
+                                            <f:facet name="output">  
+                                                <h:outputText value="#{car.idCentroCosto.descripcion}" />  
+                                            </f:facet>  
+                                            <f:facet name="input">  
+                                                <p:inputText value="#{car.idCentroCosto.descripcion}" disabled="true" style="width:100%"/>  
+                                            </f:facet>  
+                                        </p:cellEditor>  
+                                    </p:column>  
+                                    <div align="right">
+                                        <p:column headerText="Porcentaje" style="width:10%;" id="porcentaje">  
+                                            <p:cellEditor>  
+                                                <f:facet name="output">  
+                                                    <div align="right">
+                                                        <h:outputText value="#{car.porcentaje}" />  
+                                                    </div>
+                                                </f:facet>  
+                                                <f:facet name="input">  
+                                                    <p:inputText value="#{car.porcentaje}" style="width:100%" />  
+                                                </f:facet>  
+                                            </p:cellEditor>  
+                                        </p:column>  
+                                    </div>
+                                    <p:focus for="porcentaje" />
+                                    <p:column style="width:6%">  
+                                        <p:rowEditor />  
+                                    </p:column>  
+                                    <f:facet name="footer">  
+                                        <p:spacer width="30" height="20"/>
+                                    </f:facet>  
+                                </p:dataTable>  
+                                <p:panel>
+                                    <h:panelGrid columns="4">
+                                        <p:outputLabel value="Disponibilidad: " style="font-weight: bold"/>
+                                        <h:inputText value="#{cntAsignacionCentrosDeCostoBacking.disponibilidad} %" id="disponibilidad" disabled="true" style="text-align:right"/>
+                                        <p:outputLabel value="Suma porcentaje: " style="font-weight: bold"/>
+                                        <h:inputText value="#{cntAsignacionCentrosDeCostoBacking.sumaPorsentajeTotal} %" id="sumaPorcentaje" disabled="true" style="text-align:right"/>
+                                    </h:panelGrid>
+                                    <h:panelGrid columns="4">
+                                        <p:commandButton
+                                            id="grabarAlternativa"
+                                            value="GUARDAR"
+                                            action="#{cntAsignacionCentrosDeCostoBacking.guardarCntConfiguracionCentroCostoAlternativa()}"
+                                            ajax="false"
+                                            title="Guardar los Centros de Costo asignados a esta receta"
+                                            disabled="#{cntAsignacionCentrosDeCostoBacking.validaBotonGuardar}"
+                                            rendered="#{!cntAsignacionCentrosDeCostoBacking.modificaReceta}"
+                                            icon="#{cntAsignacionCentrosDeCostoBacking.iconoRegistra()}">
+                                        </p:commandButton>  
+                                        <p:commandButton
+                                            id="modificacion"
+                                            value="GUARDAR"
+                                            action="#{cntAsignacionCentrosDeCostoBacking.modificaCntConfiguracionCentroCostoPorAlternativa()}"
+                                            ajax="false"
+                                            title="Modificar los Centros de Costo asignados a esta receta"
+                                            rendered="#{cntAsignacionCentrosDeCostoBacking.modificaReceta}"
+                                            icon="#{cntAsignacionCentrosDeCostoBacking.iconoEdita()}">
+                                        </p:commandButton>  
+                                        <p:commandButton
+                                            id="cancelarAlternativa"
+                                            value="CANCELAR"
+                                            action="#{cntAsignacionCentrosDeCostoBacking.irListaDistribucionDeCentrosDeCosto()}"
+                                            ajax="false"
+                                            icon="#{cntAsignacionCentrosDeCostoBacking.iconoAtras()}">
+                                        </p:commandButton> 
+<!--                                        <p:commandButton
+                                            value="Eliminar"
+                                            icon="# {cntAsignacionCentrosDeCostoBacking.iconoElimina()}" 
+                                            onclick="dialogoEliminacion.show()"/>  -->
+                                        
+                                </h:panelGrid>
+                            </p:panel>
+                            <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" />  
+                        </div>
+                    </p:panel>
+                </h:panelGrid>
+            </div>
+        </h:form>  
+    </p:panel>
+</ui:define>
+</ui:composition>

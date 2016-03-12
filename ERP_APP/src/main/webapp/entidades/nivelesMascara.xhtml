@@ -1,0 +1,139 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition  xmlns="http://www.w3.org/1999/xhtml"
+                 xmlns:h="http://java.sun.com/jsf/html"
+                 xmlns:p="http://primefaces.org/ui"
+                 xmlns:ui="http://java.sun.com/jsf/facelets"
+                 xmlns:f="http://java.sun.com/jsf/core"
+                 template="#{sessionState.pathTemplate}">
+    <ui:define name="content">
+        <h:form id="form"> 
+                
+            <div align="center">
+            <p:panel id="panelMayor" header="CREACI&Oacute;N DE NIVEL PARA PLAN DE CUENTAS" style="overflow-y:auto ; overflow-x: auto; border-style: hidden">
+<!--                    <h:panelGrid style="margin-bottom:10px" cellpadding="5">  
+                       <p:selectOneRadio id="options" value="# {cntNivelesMascarBacking.gruposNivelCombo}">  
+                            <f:selectItem itemLabel="Plan Cuentas" itemValue="PCTA" />
+                            <f:selectItem itemLabel="Centros de Costo" itemValue="CCOS"/>
+                            <p:ajax event="change" update="form,panelMayor" listener="# {cntNivelesMascarBacking.activaOpciones(e)}" />
+                        </p:selectOneRadio>
+                    </h:panelGrid>    -->
+                    <h:panelGrid columns="2" id="mascarasCuentasAndCostos">
+                        <h:outputText value="N&uacute;mero de Niveles a crear : "/>
+                        <p:selectOneMenu value="#{cntNivelesMascarBacking.numeroObjetosNivel}" disabled="#{!cntNivelesMascarBacking.habilitaSeleccionDeCuentas}">
+                            <f:selectItems  value="#{cntNivelesMascarBacking.tamanioNumerosList}" var="a" itemLabel="#{a}"/>
+                            <p:ajax event="change" update="itemsTable,mascara,mascaraCostos" listener="#{cntNivelesMascarBacking.agregarNivel(e)}" />        
+                        </p:selectOneMenu>
+                        <h:outputText value="Mascara : "/>
+                        <h:inputText value="#{cntNivelesMascarBacking.generacionMascara}" 
+                                     disabled="true" id="mascara" style="width: 150%"
+                                     rendered="#{!cntNivelesMascarBacking.swActivaOpciones}"/>
+                        <h:inputText disabled="true" value="#{cntNivelesMascarBacking.mascaraC}" 
+                                     style="width: 150%" id="mascaraCostos"
+                                     rendered="#{cntNivelesMascarBacking.swActivaOpciones}"/>
+                    </h:panelGrid>
+                    <div align="center" style="padding:1em 2.2em;">
+                        <p:dataTable var="item" 
+                                     value="#{cntNivelesMascarBacking.auxCntNivelesList}" 
+                                     rowKey="#{item.nivel}" 
+                                     selection="#{cntNivelesMascarBacking.selectedNiveles}" 
+                                     selectionMode="single" 
+                                     filteredValue="#{cntNivelesMascarBacking.filteredCntNiveles}" 
+                                     id="itemsTable"
+                                     style="width: 50%;height: 50%">  
+
+                            <p:ajax event="rowSelect" update=":form:dialogo" oncomplete="itemDialog.show()" listener="#{cntNivelesMascarBacking.seleccionarNivel(event)}" disabled="#{!cntNivelesMascarBacking.habilitaSeleccionDeCuentas}"/>  
+
+                            <p:column headerText="Posici&oacute;n" id="model" >  
+                                #{item.nivel}  
+                            </p:column>  
+
+                            <p:column headerText="Descripci&oacute;n" id="year">  
+                                #{item.descripcion}  
+                            </p:column>  
+
+                            <p:column headerText="Tamaño" id="manufacturer">  
+                                #{item.tamanio}  
+                            </p:column>  
+
+                            <p:column headerText="Tipo" width="100" rendered="#{cntNivelesMascarBacking.swActivaOpciones}">                        
+                                #{item.tipoNivel.descripcion}
+                            </p:column>  
+
+                        </p:dataTable>  
+                    </div>
+                    <p:dialog header="Modificar" widgetVar="itemDialog" resizable="false" closable="false"  
+                              width="400" showEffect="clip" hideEffect="fold">  
+                        <h:panelGrid id="dialogo" columns="2" cellpadding="4">  
+                            <f:facet name="header">  
+                                <h:outputText value="Modifique los datos del Nivel" />  
+                            </f:facet>  
+                            <h:outputText value="Posici&oacute;n:" />  
+                            <h:outputText value="#{cntNivelesMascarBacking.nivelModifica}" id="model"/>  
+                            <h:outputText value="Descripci&oacute;n:" />  
+                            <p:inputText value="#{cntNivelesMascarBacking.descripcionModifica}" id="year" onkeyup="this.value=this.value.toUpperCase()" maxlength="30"/>  
+                            <h:outputText value="Tamaño:" rendered="#{cntNivelesMascarBacking.nivelModifica==1?'false':'true'}"/>  
+                            <p:selectOneMenu value="#{cntNivelesMascarBacking.tamanioModifica}" rendered="#{cntNivelesMascarBacking.nivelModifica==1?'false':'true'}"
+                                             effect="fold" id="manufacturer1" style="width: 50%">
+                                <f:selectItem itemLabel="1" itemValue="1"/>
+                                <f:selectItem itemLabel="2" itemValue="2"/>
+                                <f:selectItem itemLabel="3" itemValue="3"/>
+                                <f:selectItem itemLabel="4" itemValue="4"/>
+                                <f:selectItem itemLabel="5" itemValue="5"/>
+                                <f:selectItem itemLabel="6" itemValue="6"/>
+                                <f:selectItem itemLabel="7" itemValue="7"/>
+                                <f:selectItem itemLabel="8" itemValue="8"/>
+                                <f:selectItem itemLabel="9" itemValue="9"/>
+                            </p:selectOneMenu>
+                            <h:outputText value="Tipo:" rendered="#{cntNivelesMascarBacking.swActivaOpciones}"/>          
+                            <p:selectOneMenu value="#{cntNivelesMascarBacking.tipo}"
+                                             effect="fold" id="tip" style="width: 100%"
+                                             rendered="#{cntNivelesMascarBacking.swActivaOpciones}">
+                                <f:selectItems value="#{cntNivelesMascarBacking.parTiposDatoNivelList}" var="item_tipo" 
+                                               itemLabel="#{item_tipo.descripcion}" itemValue="#{item_tipo.codigo}"
+                                               rendered="#{cntNivelesMascarBacking.swActivaOpciones}"/>
+                            </p:selectOneMenu>
+                            <div align="center" style="padding:1em 2.2em;">
+                                <h:panelGrid columns="3">
+                                    <p:commandButton
+                                        value="GUARDAR"
+                                        title="Adiciona los niveles del Plan de Cuentas"
+                                        action="#{cntNivelesMascarBacking.editaCntNivelList_action()}"
+                                        ajax="false"
+                                        icon="ui-icon ui-icon-pencil"
+                                        rendered="#{!cntNivelesMascarBacking.swActivaOpciones}"/>
+                                    <p:commandButton
+                                        value="MODIFICAR"
+                                        title="Modifca los niveles del Plan de Cuentas"
+                                        action="#{cntNivelesMascarBacking.editaNivelesCentrosCosto()}"
+                                        ajax="false"
+                                        icon="#{cntNivelesMascarBacking.iconoModificar()}"
+                                        rendered="#{cntNivelesMascarBacking.swActivaOpciones}"/>
+                                    <p:commandButton
+                                        value="CANCELAR"
+                                        immediate="true"
+                                        actionListener="#{cntNivelesMascarBacking.cierrraDialogo(e)}"
+                                        ajax="false"
+                                        icon="#{cntNivelesMascarBacking.iconoAtras()}" />
+                                </h:panelGrid>
+                            </div>
+                        </h:panelGrid>  
+                    </p:dialog>  
+                <div align="center" >
+                 
+                    <h:panelGrid columns="3">
+                        <p:commandButton
+                            value="GUARDAR"
+                            title="Adiciona los niveles configurados del Plan de Cuentas"
+                            action="#{cntNivelesMascarBacking.saveCntNiveles_action()}"
+                            ajax="false"
+                            disabled="#{!cntNivelesMascarBacking.habilitaSeleccionDeCuentas}"
+                            icon="#{cntNivelesMascarBacking.iconoGuardar()}"/>
+                    </h:panelGrid>
+                    <p:outputLabel value="La creaci&oacute;n de niveles para el Plan de Cuentas ya fue efectuada" rendered="#{!cntNivelesMascarBacking.habilitaSeleccionDeCuentas}" style="color: red"/>
+                </div>
+            </p:panel>
+                </div>
+        </h:form>
+    </ui:define>
+</ui:composition>

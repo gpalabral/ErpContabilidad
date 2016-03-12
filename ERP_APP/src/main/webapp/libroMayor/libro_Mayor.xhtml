@@ -1,0 +1,329 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition  xmlns="http://www.w3.org/1999/xhtml"
+                 xmlns:h="http://java.sun.com/jsf/html"
+                 xmlns:p="http://primefaces.org/ui"
+                 xmlns:ui="http://java.sun.com/jsf/facelets"
+                 xmlns:f="http://java.sun.com/jsf/core"
+                 template="#{sessionState.pathTemplate}"
+                 xmlns:bap="http://java.sun.com/jsf/composite/bap.comp"
+                 xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+    <ui:define name="content">
+        <p:panel header="LIBRO MAYOR" style="border-style: hidden;text-align: center">
+            <div align="center" >
+
+                <h:form id="Campo">
+                    <h:inputHidden id="scrollPos" value="#{sessionState.scrollPos}" />
+                    <div align="left">
+                        <p:panel id="panelCreaDetalleComprobante" style="border-style: hidden;width: 100%;">
+                            <p:panel style="width: 50%;border-style: hidden">
+                                <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" />  
+                            </p:panel>
+                            <p:panelGrid columns="3" style="border-style: hidden">
+                                <p:outputLabel value="Cuenta Inicial:  "/>
+                                <h:panelGroup>
+                                    <p:commandButton onclick="PF('dialogoPlanCuentasParametrizacion').show();"
+                                                     actionListener="#{cntLibroMayorBacking.cargaPrimeraCuenta(e)}"
+                                                     icon="ui-icon-disk"
+                                                     title="Icon Only" 
+                                                     value="+"/> 
+                                    <h:inputText id="codigo" value="#{cntLibroMayorBacking.cntEntidadSelecion.mascaraGenerada}" size="18" disabled="true"/>
+                                    <p:watermark for="codigo" value="Nº de Cuenta" />
+                                    <h:inputText id="descripcion" value="#{cntLibroMayorBacking.cntEntidadSelecion.descripcion}" size="65" disabled="true"/>
+                                    <p:watermark for="descripcion" value="Descripcion" />
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel value="Desde:"/>
+                                    <p:spacer width="15" height="2" />
+                                    <p:calendar value="#{cntLibroMayorBacking.fechaInicial}" pattern="dd/MM/yyyy" size="12" style="text-align:center" id="Fecha_Inicial">
+                                    </p:calendar>
+                                </h:panelGroup>
+                            </p:panelGrid>
+                        </p:panel>
+                        <p:panel id="cuenta2" style="border-style: hidden;width: 100%;">
+                            <p:panelGrid columns="12" style="border-style: hidden">
+                                <p:outputLabel value="Cuenta  Final   :   "/>
+                                <h:panelGroup>
+                                    <p:commandButton onclick="PF('dialogoPlanCuentasParametrizacion').show();"
+                                                     actionListener="#{cntLibroMayorBacking.cargaSegundaCuenta(e)}"
+                                                     icon="ui-icon-disk"
+                                                     title="Icon Only" 
+                                                     value="+"/> 
+                                    <h:inputText id="codigoDos" value="#{cntLibroMayorBacking.cntEntidadSelecionDos.mascaraGenerada}" size="18" disabled="true" />
+                                    <p:watermark for="codigoDos" value="Nº de Cuenta" />
+                                    <h:inputText id="descripcionDos" value="#{cntLibroMayorBacking.cntEntidadSelecionDos.descripcion}" size="66" disabled="true" />
+                                    <p:watermark for="descripcionDos" value="Descripcion" />
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel value="Hasta:"/>
+                                    <p:spacer width="15" height="2" />
+                                    <p:calendar value="#{cntLibroMayorBacking.fechaFinal}" pattern="dd/MM/yyyy" size="12" style="text-align:center" id="Fecha_Final">
+                                    </p:calendar>
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:commandButton
+                                        value="Aceptar"
+                                        action="#{cntLibroMayorBacking.listaEntidadesPorRango()}"                                
+                                        ajax="false"       
+                                        update="panelDeBotones"
+                                        onclick="PF('itemDialog').hide();"/>
+                                </h:panelGroup>
+                            </p:panelGrid>
+                        </p:panel>
+                    </div>
+
+                    <p:dialog id="dialogoPlanCuentasParametrizacion" header="BAP SRL" widgetVar="dialogoPlanCuentasParametrizacion"  width="50%" height="50%">  
+                        <p:growl id="msgs" showDetail="true" />
+                        <p:dataTable id="eventsDT" var="item" value="#{cntLibroMayorBacking.cntObjetosPorGrupoNivelList()}" 
+                                     selectionMode="single" 
+                                     filteredValue="#{cntLibroMayorBacking.filteredcntEntidad}"
+                                     widgetVar="eventsDT"  
+                                     selection="#{cntLibroMayorBacking.selected}" rowKey="#{item.idEntidad}" scrollable="true" scrollHeight="230"
+                                     rowStyleClass="#{fn:contains(item.descripcion, cntLibroMayorBacking.valorEntidad)?cntLibroMayorBacking.color : null}">
+                            <f:facet name="header">
+                                PLAN DE CUENTAS
+                                <p:outputPanel>  
+                                    <h:outputText value="Buscar: "/>
+                                    <p:inputText id="globalFilter" disabled="#{cntLibroMayorBacking.eleccionTodos == true?true:false}" onkeyup="this.value = this.value.toUpperCase();
+                                            eventsDT.filter()" style="width:150px" value="#{cntLibroMayorBacking.valorEntidad}" autocomplete="off">                                               
+                                    </p:inputText>     
+                                    <h:outputText id="resMarcados" value=" Resultados Marcados: "/>  
+                                    <p:selectBooleanCheckbox id="resMarcadosCheckBox" value="#{cntLibroMayorBacking.eleccionTodos}" >  
+                                        <p:ajax update="eventsDT" listener="#{cntLibroMayorBacking.listaTodo()}"/>  
+                                    </p:selectBooleanCheckbox>   
+                                </p:outputPanel> 
+                            </f:facet>
+                            <p:ajax event="rowSelect" listener="#{cntLibroMayorBacking.obtieneObjetoPlanCuentas(e)}" update="SeleccionarCC"/>
+                            <!--<p:ajax event="rowUnselect" listener="# {cntParametrosDeGestionBacking.onRowUnselect}"/>-->
+                            <p:column headerText="DESCRIPCI&Oacute;N" filterBy="descripcion" filterStyle="display:none">
+                                <h:outputText value="#{item.mascaraGenerada}  #{cntLibroMayorBacking.insertaPuntosAutomatio(item)}" />
+                            </p:column>
+                            <f:facet name="footer">
+                                <p:commandButton id="SeleccionarCC" value="Seleccionar" 
+                                                 disabled="#{cntLibroMayorBacking.activaBotonSeleccion}"
+                                                 update="tabView"
+                                                 icon="ui-icon ui-icon-search" 
+                                                 action="#{cntLibroMayorBacking.seleccionar()}" ajax="false"/>  
+                                <p:commandButton onclick="PF('dialogoPlanCuentasParametrizacion').hide();"
+                                                 value="Cancelar"
+                                                 icon="#{cntLibroMayorBacking.iconoAtras()}"/>
+                            </f:facet> 
+                        </p:dataTable>
+                    </p:dialog>
+                    <p:panel style="border-style: hidden;width: 100%; height: 100%">
+                        <p:dialog id="ctaDebF" header="BAP SRL" widgetVar="ctaDebF"  width="100%" height="100%">  
+                            <bap:plan id="ctaDebFPlan" entidadSeleccionada="#{cntLibroMayorBacking.cntEntidad}" cerrarWidget="ctaDebF" updateComp=":Campo:panelCreaDetalleComprobante" updateFormId=":Campo" actualizaDatosDetalleComprobante="#{cntLibroMayorBacking.metodoSelecionaEntidad()}" activaListaRetenciones="false"/>  
+                        </p:dialog> 
+
+                        <!--<div align="center" style="padding:1em 2.2em;height:100%;">-->
+                        <h:panelGrid style="center" id="panelGridListado" columns="1"> 
+                            <p:dataTable id="planTable" 
+                                         var="item" 
+                                         value="#{cntLibroMayorBacking.listaDetalleComprobante}" 
+                                         rowKey="#{item}" 
+                                         selection="#{cntLibroMayorBacking.cntLibroMayorSeleccion}"         
+                                         selectionMode="single"
+                                         style="width: 100%;height: 100%"
+                                         emptyMessage="No existe cuenta con el valor"
+                                         resizableColumns="true"
+                                         scrollRows="1000"
+                                         scrollable="true" scrollHeight="300"
+                                         liveScroll="true">  
+                                <p:ajax event="rowSelect" listener="#{cntLibroMayorBacking.obtieneObjeto(e)}" update=":Campo:panelGridListado" onsuccess="saveScrollPos()"/>
+                                <f:facet name="Exportar">
+                                    <h:commandLink>  
+                                        <p:graphicImage value="/resources/images/xls.jpg" width="24"/>
+                                        <p:dataExporter type="xls"
+                                                        postProcessor="#{cntLibroMayorBacking.postProcessXLS}"
+                                                        target="planTable" fileName="myexcel" pageOnly="true"/>
+                                    </h:commandLink>
+
+                                    <h:commandLink>
+                                        <p:graphicImage value="/resources/images/xlsfile.png" width="24"/>
+                                        <p:dataExporter type="xls" target="planTable" fileName="cars" />
+                                    </h:commandLink>
+
+                                    <h:commandLink>
+                                        <p:graphicImage value="/resources/images/csv.png" width="24"/>
+                                        <p:dataExporter type="csv" target="planTable" fileName="cars" />
+                                    </h:commandLink>
+                                </f:facet>
+                                <p:column headerText="Fecha" width="6%">  
+                                    <h:outputText value="#{item.fecha}">
+                                        <f:convertDateTime pattern="#{sessionState.dateFormat}"/>
+                                    </h:outputText>                                
+                                </p:column>  
+                                <p:column headerText="Cbte" width="6%">  
+                                    <p:outputLabel value="#{item.numero}"/>
+                                </p:column>  
+                                <p:column width="2%" headerText="T">  
+                                    <p:outputLabel value="#{item.tipoComprobante=='EGRE' ? 'E' : item.tipoComprobante == 'TRAS' ? 'T' : item.tipoComprobante == 'INGR'? 'I': ' '}"/>
+                                </p:column>  
+                                <p:column width="41%" headerText="Glosa">  
+                                    <p:outputLabel value="#{item.glosa}"/>
+                                </p:column>                                                      
+                                <p:column width="7%" colspan="3" headerText="Debe " rendered="#{cntLibroMayorBacking.moneda == 'BOL'? true : false}" style="text-align: right">  
+                                    <p:outputLabel value="#{item.debe}">
+                                        <f:convertNumber pattern="#,##0.00" />
+                                    </p:outputLabel>
+                                </p:column>                                                      
+                                <p:column width="7%" headerText="Debe" rendered="#{cntLibroMayorBacking.moneda == 'SUS'? true : false}" style="text-align: right">  
+                                    <p:outputLabel value="#{item.debeDolar}">
+                                        <f:convertNumber pattern="#,##0.00" />
+                                    </p:outputLabel>
+                                </p:column>                                                      
+                                <p:column width="7%" colspan="3" headerText="Haber" rendered="#{cntLibroMayorBacking.moneda == 'BOL'? true : false}" style="text-align: right">  
+                                    <p:outputLabel value="#{item.haber}">
+                                        <f:convertNumber minFractionDigits="2" type="number"/>
+                                    </p:outputLabel>
+                                </p:column>                                                      
+                                <p:column width="7%" headerText="Haber" rendered="#{cntLibroMayorBacking.moneda == 'SUS'? true : false}" style="text-align: right">  
+                                    <p:outputLabel value="#{item.haberDolar}">
+                                        <f:convertNumber pattern="#,##0.00" />
+                                    </p:outputLabel>
+                                </p:column>                                                      
+                                <p:column headerText="Saldo" width="7%" rendered="#{cntLibroMayorBacking.moneda == 'BOL'? true : false}" style="text-align: right">  
+                                    <p:outputLabel value="#{item.saldo}">
+                                        <f:convertNumber minFractionDigits="2" type="number"/>
+                                    </p:outputLabel>
+                                </p:column>  
+                                <p:column headerText="Saldo" width="7%" rendered="#{cntLibroMayorBacking.moneda == 'SUS'? true : false}" style="text-align: right">  
+                                    <p:outputLabel value="#{item.saldoDolar}">
+                                        <f:convertNumber pattern="#,##0.00" />
+                                    </p:outputLabel>
+                                </p:column>  
+                                <p:column width="7%" headerText="Cheque">
+                                    <p:outputLabel value="#{item.numeroCheque}"/>                                 
+                                </p:column> 
+                                <p:column width="9%" headerText="Auxiliar">  
+                                    <p:outputLabel value="#{cntLibroMayorBacking.nombreAuxiliar(item.idDetalleComprobante.idAuxiliar)}"/>
+                                </p:column> 
+                                <p:column width="7%" headerText="Proyecto">  
+                                    <p:outputLabel value="#{cntLibroMayorBacking.nombreProyecto(item.idDetalleComprobante.idProyecto)}"/>
+                                </p:column> 
+                                <p:columnGroup type="footer">  
+                                </p:columnGroup>  
+                                <f:facet name="footer">
+                                    <h:commandLink>  
+                                        <p:graphicImage value="/resources/images/xls.jpg" width="24"/>
+                                        <p:dataExporter type="xls"
+                                                        postProcessor="#{cntLibroMayorBacking.postProcessXLS}"
+                                                        target="planTable" fileName="myexcel" pageOnly="true"/>
+                                    </h:commandLink>
+
+                                    <h:commandLink>
+                                        <p:graphicImage value="/resources/images/xlsfile.png" width="24"/>
+                                        <p:dataExporter type="xls" target="planTable" fileName="cars" />
+                                    </h:commandLink>
+
+                                    <h:commandLink>
+                                        <p:graphicImage value="/resources/images/csv.png" width="24"/>
+                                        <p:dataExporter type="csv" target="planTable" fileName="cars" />
+                                    </h:commandLink>
+                                </f:facet>
+                            </p:dataTable>
+
+
+                            <h:panelGrid columns="8"  id="panelDeBotones" >
+                                <p:commandButton 
+                                    value="Cancelar"
+                                    action="# {cntLibroMayorBacking.cancelaImpresionDeComprobantes()}"
+                                    title="Cancelar"
+                                    rendered="#{cntLibroMayorBacking.deshabilitaBotonDeCuentas}"/>
+                                <p:commandButton 
+                                    value="Volver"
+                                    action="#{cntLibroMayorBacking.vuelveADetalleComprobante()}"
+                                    title="Volver" 
+                                    rendered="#{cntLibroMayorBacking.habilitaVolverAComprobante}"/>
+                                <p:commandButton 
+                                    value="Volver"
+                                    action="#{cntLibroMayorBacking.vuelveAPlanDeCuentas()}"
+                                    title="Volver" 
+                                    rendered="#{cntLibroMayorBacking.habilitaVolverAPlanDeCuentas}"/>
+                                <p:commandButton 
+                                    value="Volver"
+                                    action="#{cntLibroMayorBacking.vuelveABalanceGral()}"
+                                    title="Volver" 
+                                    rendered="#{cntLibroMayorBacking.habilitaVolverBG}"
+                                    ajax="false"
+                                    immediate="true"
+                                    icon="ui-icon-arrowthick-1-w"/>
+                                <p:commandButton 
+                                    value="Volver "
+                                    action="#{cntLibroMayorBacking.vuelveABalanceGral()}"
+                                    title="Volver" 
+                                    rendered="#{cntLibroMayorBacking.habilitaVolverEERR}"
+                                    ajax="false"
+                                    immediate="true"
+                                    icon="ui-icon-arrowthick-1-w"/>
+                                <p:commandButton 
+                                    value="VolverSS"
+                                    action="#{cntLibroMayorBacking.vuelveASumasSaldos()}"
+                                    title="Volver" 
+                                    rendered="#{cntLibroMayorBacking.habilitaVolverSS}"
+                                    ajax="false"
+                                    immediate="true"
+                                    icon="ui-icon-arrowthick-1-w"/>
+                                <p:selectOneRadio id="moneda" value="#{cntLibroMayorBacking.moneda}">  
+                                    <f:selectItem itemLabel="Bolivianos" itemValue="BOL" />  
+                                    <f:selectItem itemLabel="Dolares" itemValue="SUS" /> 
+                                    <p:ajax update="planTable" />
+                                </p:selectOneRadio>
+                                <h:commandLink action="#{cntLibroMayorBacking.reporteLibrosMayoresBsSUS_action()}" 
+                                               value="Imprimir Libro Mayor"
+                                               target="popupWindow"  disabled="#{!cntLibroMayorBacking.habilitaReporte}">
+                                    <p:graphicImage value="/resources/images/printer.png" style="border: 0px"/>
+                                </h:commandLink>
+                                <p:commandButton value="RESULTADOS" type="button" onclick="PF('dlg2').show();" />
+
+                                <p:dialog header="Resultados" widgetVar="dlg2" modal="true" height="100">
+                                    <p:panelGrid columns="7">
+                                        <h:outputText value="TOTALES" />
+                                        <h:outputText value="Debe: " />
+                                        <h:outputText value="#{cntLibroMayorBacking.sumaDebe}" >
+                                            <f:convertNumber pattern="###,###,###,##0.00" />
+                                        </h:outputText>
+                                        <h:outputText value="Haber: " />
+                                        <h:outputText value="#{cntLibroMayorBacking.sumaHaber}" >
+                                            <f:convertNumber pattern="###,###,###,##0.00" />
+                                        </h:outputText>
+                                        <h:outputText value="Saldo1111: " />
+                                        <h:outputText value="#{cntLibroMayorBacking.sumaSaldoTotal}" >
+                                            <f:convertNumber pattern="###,###,###,##0.00" />
+                                        </h:outputText>
+                                    </p:panelGrid>
+                                    <p:panelGrid columns="5">
+                                        <h:outputText value="NETO  : " />
+                                        <h:outputText value="Debe: " />
+                                        <h:outputText value="#{cntLibroMayorBacking.sumaNetoDebe}" >
+                                            <f:convertNumber pattern="###,###,###,##0.00" />
+                                        </h:outputText>
+                                        <h:outputText value="Haber: " />
+                                        <h:outputText value="#{cntLibroMayorBacking.sumaNetoHaber}" >
+                                            <f:convertNumber pattern="###,###,###,##0.00" />
+                                        </h:outputText>
+                                        <h:outputText value="SALDO 11222F: " />
+                                        <h:outputText value="Debe: " />
+                                        <h:outputText value="#{cntLibroMayorBacking.sumaNetoDebe}" >
+                                            <f:convertNumber pattern="###,###,###,##0.00" />
+                                        </h:outputText>
+                                        <h:outputText value="Haber: " />
+                                        <h:outputText value="#{cntLibroMayorBacking.sumaNetoHaber}" >
+                                            <f:convertNumber pattern="###,###,###,##0.00" />
+                                        </h:outputText>
+                                    </p:panelGrid>
+                                </p:dialog>
+                                <p:commandButton id="vercbte" value="VER COMPROBANTE"                                                  
+                                                 action="#{cntLibroMayorBacking.verComprobante()}"                                                  
+                                                 ajax="false"/>
+                            </h:panelGrid> 
+                        </h:panelGrid>
+                    </p:panel>
+
+                </h:form>
+            </div>
+        </p:panel>
+    </ui:define>
+
+</ui:composition>
+
